@@ -17,6 +17,30 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+  input[type="number"] {
+    appearance: none;
+    -moz-appearance: textfield;
+  }
+}
+
+@media print {
+  /* Hide sidebar, header, and buttons */
+  aside, 
+  nav,
+  button,
+  .no-print,
+  a[href^="/"] {
+    display: none !important;
+  }
+  
+  /* Reset margins for main content */
+  main,
+  .p-6,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
 }
 
 body {

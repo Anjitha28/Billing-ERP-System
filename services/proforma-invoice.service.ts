@@ -1,0 +1,219 @@
+import { PrismaClient, ProformaInvoiceStatus } from "@prisma/client";
+import { TaxEngine } from "@/lib/tax";
+import { BUSINESS_LOCATION } from "@/lib/config/business";
+
+const prisma = new PrismaClient();
+
+export type CreateProformaInvoiceInput = {
+  customerId: string;
+  invoiceDate: string | Date;
+  validUntil?: string | Date | null;
+  notes?: string | null;
+  tdsRate?: number;
+  items: {
+    productId: string;
+    description?: string | null;
+    quantity: number;
+    unitPrice: number;
+    discountPercent: number;
+    gstRate: number;
+    unit: string;
+  }[];
+};
+
+export class ProformaInvoiceService {
+  private static async generateInvoiceNumber(): Promise<string> {
+    const year = new Date().getFullYear();
+    const prefix = `PI-${year}-`;
+    
+    const latestInvoice = await prisma.proformaInvoice.findFirst({
+      where: {
+        invoiceNumber: {
+          startsWith: prefix,
+        },
+      },
+      orderBy: {
+        invoiceNumber: 'desc',
+      },
+    });
+
+    if (!latestInvoice) {
+      return `${prefix}0001`;
+    }
+
+    const lastSequenceStr = latestInvoice.invoiceNumber.replace(prefix, "");
+    const nextSequence = parseInt(lastSequenceStr, 10) + 1;
+    return `${prefix}${nextSequence.toString().padStart(4, "0")}`;
+  }
+
+  static async getProformaInvoices(params?: { search?: string; status?: ProformaInvoiceStatus }) {
+    const { search, status } = params || {};
+    const where: any = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (search) {
+      where.OR = [
+        { invoiceNumber: { contains: search } },
+        { customer: { legalName: { contains: search } } },
+        { customer: { tradeName: { contains: search } } },
+      ];
+    }
+
+    return await prisma.proformaInvoice.findMany({
+      where,
+      include: {
+        customer: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }
+
+  static async getProformaInvoiceById(id: string) {
+    return await prisma.proformaInvoice.findUnique({
+      where: { id },
+      include: {
+        customer: true,
+        items: {
+          include: {
+            product: true,
+          }
+        },
+      },
+    });
+  }
+
+  private static async processCalculations(data: CreateProformaInvoiceInput) {
+    const customer = await prisma.customer.findUnique({ where: { id: data.customerId } });
+    if (!customer) throw new Error("Customer not found");
+
+    const mappedItems = data.items.map(item => {
+      const grossAmount = Number((item.quantity * item.unitPrice).toFixed(2));
+      const discountAmount = Number(((grossAmount * item.discountPercent) / 100).toFixed(2));
+      const taxableAmount = Number((grossAmount - discountAmount).toFixed(2));
+
+      return {
+        ...item,
+        grossAmount,
+        discountAmount,
+        taxableAmount,
+      };
+    });
+
+    return TaxEngine.calculateInvoiceTaxes({
+      items: mappedItems,
+      businessState: BUSINESS_LOCATION.state,
+      customerState: customer.state || BUSINESS_LOCATION.state, // Fallback to intra-state if customer state is missing
+      tdsRate: data.tdsRate || 0,
+    });
+  }
+
+  static async createProformaInvoiceWithUnits(data: CreateProformaInvoiceInput) {
+    const invoiceNumber = await this.generateInvoiceNumber();
+    const calculationResult = await this.processCalculations(data);
+
+    return await prisma.proformaInvoice.create({
+      data: {
+        invoiceNumber,
+        customerId: data.customerId,
+        invoiceDate: new Date(data.invoiceDate),
+        validUntil: data.validUntil ? new Date(data.validUntil) : null,
+        notes: data.notes,
+        status: "DRAFT",
+        
+        subtotal: calculationResult.subtotal,
+        totalDiscount: calculationResult.totalDiscount,
+        totalCGST: calculationResult.totalCGST,
+        totalSGST: calculationResult.totalSGST,
+        totalIGST: calculationResult.totalIGST,
+        totalTax: calculationResult.totalGST,
+        tdsRate: calculationResult.tdsRate,
+        tdsAmount: calculationResult.tdsAmount,
+        grossAmount: calculationResult.grossAmount,
+        netAmount: calculationResult.netAmount,
+        totalAmount: calculationResult.netAmount, // Backward compatibility for legacy totalAmount
+
+        items: {
+          create: calculationResult.calculatedItems.map(item => ({
+            productId: item.productId,
+            description: item.description,
+            quantity: item.quantity,
+            unit: item.unit,
+            unitPrice: item.unitPrice,
+            discountPercent: item.discountPercent,
+            taxableAmount: item.taxableAmount,
+            gstRate: item.gstRate,
+            cgstAmount: item.cgstAmount,
+            sgstAmount: item.sgstAmount,
+            igstAmount: item.igstAmount,
+            totalGST: item.totalGST,
+            totalAmount: item.totalAmount,
+          }))
+        }
+      }
+    });
+  }
+
+  static async updateProformaInvoice(id: string, data: CreateProformaInvoiceInput) {
+    const invoice = await prisma.proformaInvoice.findUnique({ where: { id } });
+    if (!invoice) throw new Error("Invoice not found.");
+    if (invoice.status !== "DRAFT") throw new Error("Only draft invoices can be edited.");
+
+    const calculationResult = await this.processCalculations(data);
+
+    return await prisma.$transaction(async (tx) => {
+      await tx.proformaInvoiceItem.deleteMany({
+        where: { proformaInvoiceId: id }
+      });
+
+      return await tx.proformaInvoice.update({
+        where: { id },
+        data: {
+          customerId: data.customerId,
+          invoiceDate: new Date(data.invoiceDate),
+          validUntil: data.validUntil ? new Date(data.validUntil) : null,
+          notes: data.notes,
+          
+          subtotal: calculationResult.subtotal,
+          totalDiscount: calculationResult.totalDiscount,
+          totalCGST: calculationResult.totalCGST,
+          totalSGST: calculationResult.totalSGST,
+          totalIGST: calculationResult.totalIGST,
+          totalTax: calculationResult.totalGST,
+          tdsRate: calculationResult.tdsRate,
+          tdsAmount: calculationResult.tdsAmount,
+          grossAmount: calculationResult.grossAmount,
+          netAmount: calculationResult.netAmount,
+          totalAmount: calculationResult.netAmount,
+
+          items: {
+            create: calculationResult.calculatedItems.map(item => ({
+              productId: item.productId,
+              description: item.description,
+              quantity: item.quantity,
+              unit: item.unit,
+              unitPrice: item.unitPrice,
+              discountPercent: item.discountPercent,
+              taxableAmount: item.taxableAmount,
+              gstRate: item.gstRate,
+              cgstAmount: item.cgstAmount,
+              sgstAmount: item.sgstAmount,
+              igstAmount: item.igstAmount,
+              totalGST: item.totalGST,
+              totalAmount: item.totalAmount,
+            }))
+          }
+        }
+      });
+    });
+  }
+
+  static async updateStatus(id: string, status: ProformaInvoiceStatus) {
+    return await prisma.proformaInvoice.update({
+      where: { id },
+      data: { status }
+    });
+  }
+}

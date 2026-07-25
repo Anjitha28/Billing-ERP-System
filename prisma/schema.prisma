@@ -1,0 +1,404 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id                String   @id @default(uuid())
+  name              String
+  email             String   @unique
+  password          String
+  role              Role     @default(USER)
+  isActive          Boolean  @default(true)
+  mustResetPassword Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model CompanySettings {
+  id                    String   @id @default(uuid())
+  businessName          String
+  businessAddress       String
+  GSTIN                 String?
+  state                 String?
+  stateCode             String?
+  financialYear         String?
+  invoicePrefix         String?
+  proformaInvoicePrefix String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+enum CustomerType {
+  B2B
+  B2C
+}
+
+model Customer {
+  id           String       @id @default(uuid())
+  customerType CustomerType
+  legalName    String
+  tradeName    String?
+  gstin        String?      @unique
+  pan          String?
+  email        String?
+  phone        String?
+  address      String?
+  city         String?
+  state        String?
+  stateCode    String?
+  pinCode      String?
+  country      String?      @default("India")
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  proformaInvoices ProformaInvoice[]
+  taxInvoices  TaxInvoice[]
+}
+
+
+
+enum ProductType {
+  PRODUCT
+  SERVICE
+}
+
+model Product {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  type            ProductType
+  hsnSacCode      String
+  unit            String
+  sellingPrice    Decimal
+  purchasePrice   Decimal?
+  gstRate         Decimal
+  cessRate        Decimal?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  proformaInvoiceItems ProformaInvoiceItem[]
+}
+
+
+enum ProformaInvoiceStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  CONVERTED
+  REJECTED
+  EXPIRED
+  CANCELLED
+}
+
+model ProformaInvoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String   @unique
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id])
+  invoiceDate     DateTime @default(now())
+  validUntil      DateTime?
+  status          ProformaInvoiceStatus @default(DRAFT)
+  subtotal        Decimal
+  totalDiscount   Decimal @default(0)
+  totalCGST       Decimal @default(0)
+  totalSGST       Decimal @default(0)
+  totalIGST       Decimal @default(0)
+  totalTax        Decimal @default(0)
+  tdsRate         Decimal @default(0)
+  tdsAmount       Decimal @default(0)
+  grossAmount     Decimal @default(0)
+  netAmount       Decimal @default(0)
+  totalAmount     Decimal
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  items           ProformaInvoiceItem[]
+}
+
+model ProformaInvoiceItem {
+  id                String   @id @default(cuid())
+  proformaInvoiceId String
+  proformaInvoice   ProformaInvoice @relation(fields: [proformaInvoiceId], references: [id], onDelete: Cascade)
+  productId         String
+  product           Product @relation(fields: [productId], references: [id])
+  description       String?
+  quantity          Decimal
+  unit              String
+  unitPrice         Decimal
+  discountPercent   Decimal @default(0)
+  taxableAmount     Decimal
+  gstRate           Decimal
+  cgstAmount        Decimal @default(0)
+  sgstAmount        Decimal @default(0)
+  igstAmount        Decimal @default(0)
+  totalGST          Decimal @default(0)
+  totalAmount       Decimal
+}
+
+enum TaxInvoiceStatus {
+  CONFIRMED
+  PAID
+  PARTIALLY_PAID
+  CANCELLED
+}
+
+model TaxInvoice {
+  id              String   @id @default(cuid())
+  invoiceNumber   String   @unique
+  sourceProformaId String?  @unique
+  
+  // Relations
+  customerId      String
+  customer        Customer @relation(fields: [customerId], references: [id])
+  
+  // Snapshots
+  customerNameSnapshot String?
+  businessNameSnapshot String?
+  gstinSnapshot        String?
+  stateSnapshot        String?
+  stateCodeSnapshot    String?
+  addressSnapshot      String?
+
+  invoiceDate     DateTime @default(now())
+  status          TaxInvoiceStatus @default(CONFIRMED)
+
+  subtotal        Decimal
+  totalDiscount   Decimal @default(0)
+  taxableAmount   Decimal
+
+  totalCGST       Decimal @default(0)
+  totalSGST       Decimal @default(0)
+  totalIGST       Decimal @default(0)
+  totalGST        Decimal @default(0)
+
+  tdsRate         Decimal?
+  tdsAmount       Decimal @default(0)
+
+  grossAmount     Decimal
+  netAmount       Decimal
+
+  notes           String?
+  cancellationReason String?
+  cancelledAt     DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  items           TaxInvoiceItem[]
+}
+
+model TaxInvoiceItem {
+  id            String   @id @default(cuid())
+
+  taxInvoiceId  String
+  taxInvoice    TaxInvoice @relation(fields: [taxInvoiceId], references: [id], onDelete: Cascade)
+
+  productId     String?
+
+  // Snapshots
+  name          String
+  description   String?
+  hsnSacCode    String
+  
+  quantity      Decimal
+  unit          String
+  unitPrice     Decimal
+
+  discountPercent Decimal @default(0)
+  discountAmount  Decimal @default(0)
+
+  taxableAmount   Decimal
+
+  gstRate         Decimal
+  cgstRate        Decimal @default(0)
+  cgstAmount      Decimal @default(0)
+
+  sgstRate        Decimal @default(0)
+  sgstAmount      Decimal @default(0)
+
+  igstRate        Decimal @default(0)
+  igstAmount      Decimal @default(0)
+
+  totalGST        Decimal @default(0)
+  totalAmount     Decimal
+}
+
+// ----------------------------------------------------------------------------
+// Phase 7: Expense Management
+// ----------------------------------------------------------------------------
+
+model ExpenseCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+
+  expenses    Expense[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Vendor {
+  id          String   @id @default(cuid())
+
+  name        String
+  businessName String?
+
+  gstin       String?
+  pan         String?
+
+  email       String?
+  phone       String?
+
+  address     String?
+  city        String?
+  state       String?
+  stateCode   String?
+
+  isActive    Boolean  @default(true)
+
+  expenses    Expense[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ExpenseStatus {
+  DRAFT
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PARTIALLY_PAID
+  PAID
+}
+
+model Expense {
+  id                String   @id @default(cuid())
+
+  expenseNumber     String   @unique
+
+  expenseDate       DateTime
+  description       String
+
+  vendorId          String?
+  vendor            Vendor?  @relation(fields: [vendorId], references: [id])
+
+  categoryId        String
+  category          ExpenseCategory @relation(fields: [categoryId], references: [id])
+
+  status            ExpenseStatus @default(DRAFT)
+  paymentStatus     PaymentStatus @default(UNPAID)
+
+  subtotal          Decimal
+  discountAmount    Decimal @default(0)
+  taxableAmount     Decimal
+
+  inputCGST         Decimal @default(0)
+  inputSGST         Decimal @default(0)
+  inputIGST         Decimal @default(0)
+  totalInputGST     Decimal @default(0)
+
+  tdsRate           Decimal?
+  tdsAmount         Decimal @default(0)
+
+  grossAmount       Decimal
+  netAmount         Decimal
+
+  notes             String?
+
+  cancellationReason String?
+  cancelledAt       DateTime?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  items             ExpenseItem[]
+}
+
+model ExpenseItem {
+  id              String   @id @default(cuid())
+
+  expenseId       String
+  expense         Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  description     String
+  hsnSacCode      String?
+
+  quantity        Decimal @default(1)
+  unit            String?
+
+  unitPrice       Decimal
+
+  gstRate         Decimal @default(0)
+
+  taxableAmount   Decimal
+
+  cgstRate        Decimal @default(0)
+  cgstAmount      Decimal @default(0)
+
+  sgstRate        Decimal @default(0)
+  sgstAmount      Decimal @default(0)
+
+  igstRate        Decimal @default(0)
+  igstAmount      Decimal @default(0)
+
+  totalGST        Decimal @default(0)
+  totalAmount     Decimal
+}
+
+// ----------------------------------------------------------------------------
+// Phase 8: Financial Ledger
+// ----------------------------------------------------------------------------
+
+enum FinancialTransactionType {
+  REVENUE
+  EXPENSE
+}
+
+model FinancialTransaction {
+  id              String   @id @default(cuid())
+
+  transactionNumber String @unique
+
+  type            FinancialTransactionType
+
+  transactionDate DateTime
+
+  description     String
+
+  amount          Decimal
+
+  taxableAmount   Decimal @default(0)
+
+  totalGST        Decimal @default(0)
+
+  tdsAmount       Decimal @default(0)
+
+  netAmount       Decimal
+
+  paymentStatus   PaymentStatus @default(UNPAID)
+
+  sourceType      String
+  sourceId        String
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
