@@ -1,5 +1,5 @@
-import { auth, signOut } from '@/auth';
-
+import { auth } from '@/auth';
+import { LogoutButton } from './LogoutButton';
 export async function Header() {
   const session = await auth();
   const user = session?.user;
@@ -17,14 +17,7 @@ export async function Header() {
         </div>
         
         {user && (
-          <form action="/api/auth/signout" method="POST">
-            <button
-              type="submit"
-              className="text-sm font-medium text-red-600 hover:text-red-800 focus:outline-none"
-            >
-              Logout
-            </button>
-          </form>
+          <LogoutButton />
         )}
       </div>
     </header>

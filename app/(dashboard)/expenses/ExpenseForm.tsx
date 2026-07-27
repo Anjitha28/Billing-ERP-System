@@ -159,7 +159,10 @@ export function ExpenseForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-700">Category *</label>
+              <a href="/expenses?tab=categories" className="text-xs text-blue-600 hover:underline">Manage Categories</a>
+            </div>
             <select
               required
               value={categoryId}

@@ -15,6 +15,15 @@ export default async function EditProductPage({
     notFound();
   }
 
+  const plainProduct = {
+    ...product,
+    sellingPrice: product.sellingPrice.toString(),
+    customPrice: product.customPrice?.toString() || null,
+    purchasePrice: product.purchasePrice?.toString() || null,
+    gstRate: product.gstRate.toString(),
+    cessRate: product.cessRate?.toString() || null,
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
@@ -22,7 +31,7 @@ export default async function EditProductPage({
         <p className="text-gray-500 text-sm mt-1">Update information for {product.name}.</p>
       </div>
       
-      <ProductForm initialData={product} />
+      <ProductForm initialData={plainProduct} />
     </div>
   );
 }

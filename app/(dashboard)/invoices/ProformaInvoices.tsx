@@ -2,11 +2,7 @@ import Link from "next/link";
 import { ProformaInvoiceService } from "@/services/proforma-invoice.service";
 import { ProformaInvoiceClientList } from "./ProformaInvoiceClientList";
 
-export const metadata = {
-  title: "Proforma Invoices - Billing ERP",
-};
-
-export default async function ProformaInvoicesPage() {
+export async function ProformaInvoices() {
   const invoices = await ProformaInvoiceService.getProformaInvoices();
 
   // Summary Cards Data
@@ -17,12 +13,8 @@ export default async function ProformaInvoicesPage() {
   const totalValue = invoices.reduce((sum, inv) => sum + Number(inv.totalAmount), 0);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Proforma Invoices</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage draft quotations and proposals before converting to tax invoices.</p>
-        </div>
+    <div className="space-y-6 mt-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-end gap-4">
         <Link
           href="/proforma-invoices/new"
           className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"

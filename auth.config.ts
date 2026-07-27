@@ -32,16 +32,25 @@ export const authConfig = {
 
       // Logged in, no password reset needed
       if (isLoginRoute || isChangePasswordRoute) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        if (user.role === 'ADMIN') {
+          return Response.redirect(new URL('/dashboard', nextUrl));
+        } else {
+          return Response.redirect(new URL('/home', nextUrl));
+        }
       }
 
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.role = (user as any).role;
         token.id = user.id;
         token.mustResetPassword = (user as any).mustResetPassword;
+      }
+      if (trigger === "update" && session !== undefined) {
+        if (session.mustResetPassword === false) {
+          token.mustResetPassword = false;
+        }
       }
       return token;
     },

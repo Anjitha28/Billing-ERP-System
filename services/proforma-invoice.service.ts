@@ -46,12 +46,16 @@ export class ProformaInvoiceService {
     return `${prefix}${nextSequence.toString().padStart(4, "0")}`;
   }
 
-  static async getProformaInvoices(params?: { search?: string; status?: ProformaInvoiceStatus }) {
-    const { search, status } = params || {};
+  static async getProformaInvoices(params?: { search?: string; status?: ProformaInvoiceStatus; customerId?: string }) {
+    const { search, status, customerId } = params || {};
     const where: any = {};
 
     if (status) {
       where.status = status;
+    }
+
+    if (customerId) {
+      where.customerId = customerId;
     }
 
     if (search) {

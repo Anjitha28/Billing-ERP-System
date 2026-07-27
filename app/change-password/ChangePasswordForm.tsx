@@ -1,13 +1,28 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { changePassword } from './actions';
 
+import { useSession } from 'next-auth/react';
+
 export default function ChangePasswordForm() {
+  const { update } = useSession();
   const [state, formAction, isPending] = useActionState(
     changePassword,
     { success: false, error: '' },
   );
+
+  useEffect(() => {
+    if (state?.success) {
+      update({ mustResetPassword: false }).then((newSession) => {
+        if (newSession?.user?.role === 'ADMIN') {
+          window.location.href = '/dashboard';
+        } else {
+          window.location.href = '/home';
+        }
+      });
+    }
+  }, [state, update]);
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-50">

@@ -28,12 +28,16 @@ export class TaxInvoiceService {
     return `${prefix}${nextSequence.toString().padStart(4, "0")}`;
   }
 
-  static async getTaxInvoices(params?: { search?: string; status?: TaxInvoiceStatus }) {
-    const { search, status } = params || {};
+  static async getTaxInvoices(params?: { search?: string; status?: TaxInvoiceStatus; customerId?: string }) {
+    const { search, status, customerId } = params || {};
     const where: any = {};
 
     if (status) {
       where.status = status;
+    }
+
+    if (customerId) {
+      where.customerId = customerId;
     }
 
     if (search) {

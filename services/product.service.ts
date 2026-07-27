@@ -9,6 +9,7 @@ export type CreateProductInput = {
   hsnSacCode: string;
   unit: string;
   sellingPrice: string | number; // Handling decimal input via string or number
+  customPrice?: string | number | null;
   purchasePrice?: string | number | null;
   gstRate: string | number;
   cessRate?: string | number | null;
@@ -68,6 +69,7 @@ export class ProductService {
         ...data,
         // Convert string inputs to Prisma Decimal using string constructor if necessary, Prisma Decimal accepts strings or numbers
         sellingPrice: data.sellingPrice,
+        customPrice: data.customPrice || null,
         purchasePrice: data.purchasePrice || null,
         gstRate: data.gstRate,
         cessRate: data.cessRate || null,

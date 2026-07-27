@@ -2,9 +2,7 @@ import Link from "next/link";
 import { TaxInvoiceService } from "@/services/tax-invoice.service";
 import { TaxInvoiceStatus } from "@prisma/client";
 
-export const dynamic = "force-dynamic";
-
-export default async function TaxInvoicesPage({
+export async function ConfirmedInvoices({
   searchParams,
 }: {
   searchParams: { q?: string; status?: TaxInvoiceStatus };
@@ -28,12 +26,8 @@ export default async function TaxInvoicesPage({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tax Invoices</h1>
-          <p className="text-gray-500 text-sm mt-1">Manage confirmed business records and tax invoices.</p>
-        </div>
+    <div className="space-y-6 mt-6">
+      <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
         <Link 
           href="/proforma-invoices/new" 
           className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"

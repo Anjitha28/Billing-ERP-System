@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { ProformaInvoiceStatus } from "@prisma/client";
-import { updateProformaInvoiceStatusAction } from "./actions";
+import { updateProformaInvoiceStatusAction } from "./proforma-actions";
 
 export function ProformaInvoiceClientList({
   initialInvoices,

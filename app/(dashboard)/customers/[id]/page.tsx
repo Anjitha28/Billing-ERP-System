@@ -1,7 +1,7 @@
 import { CustomerService } from "@/services/customer.service";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-
+import { TaxInvoiceService } from "@/services/tax-invoice.service";
 export default async function CustomerDetailPage({
   params,
 }: {
@@ -14,6 +14,12 @@ export default async function CustomerDetailPage({
   if (!customer) {
     notFound();
   }
+
+  const taxInvoices = await TaxInvoiceService.getTaxInvoices({ customerId: id });
+  
+  const totalRevenue = taxInvoices.reduce((sum, inv) => sum + Number(inv.netAmount), 0);
+  const totalPaid = taxInvoices.filter(i => i.status === 'PAID').reduce((sum, inv) => sum + Number(inv.netAmount), 0);
+  const outstandingBalance = totalRevenue - totalPaid;
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -33,6 +39,12 @@ export default async function CustomerDetailPage({
           </div>
         </div>
         <div className="flex gap-3">
+          <Link
+            href={`/customers/${customer.id}/statement`}
+            className="px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
+          >
+            View Statement
+          </Link>
           <Link
             href={`/customers/${customer.id}/edit`}
             className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
@@ -92,25 +104,62 @@ export default async function CustomerDetailPage({
         </div>
 
         <div className="col-span-1 space-y-6">
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center h-48">
-            <h4 className="text-gray-500 text-sm font-medium mb-2">Outstanding Balance</h4>
-            <span className="text-3xl font-bold text-gray-900">₹0.00</span>
-            <p className="text-xs text-gray-400 mt-2">Financial calculations will be available in Phase 8</p>
+          <div className="bg-orange-50 border border-orange-200 rounded-xl p-6 flex flex-col items-center justify-center text-center h-48">
+            <h4 className="text-orange-700 text-sm font-medium mb-2">Outstanding Balance</h4>
+            <span className="text-3xl font-bold text-orange-900">₹{outstandingBalance.toFixed(2)}</span>
           </div>
           
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center text-center h-48">
-            <h4 className="text-gray-500 text-sm font-medium mb-2">Total Revenue</h4>
-            <span className="text-3xl font-bold text-gray-900">₹0.00</span>
-            <p className="text-xs text-gray-400 mt-2">Revenue ledger will be available in Phase 8</p>
+          <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex flex-col items-center justify-center text-center h-48">
+            <h4 className="text-green-700 text-sm font-medium mb-2">Total Billed</h4>
+            <span className="text-3xl font-bold text-green-900">₹{totalRevenue.toFixed(2)}</span>
           </div>
         </div>
       </div>
 
-      {/* Placeholders for future history tables */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
-        <h3 className="text-lg font-semibold text-gray-900 border-b pb-3 mb-4">Recent Invoices</h3>
-        <div className="py-8 text-center text-gray-500 text-sm bg-gray-50 rounded-lg border border-dashed border-gray-300">
-          Invoice generation will be implemented in Phase 6.
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-gray-900">Recent Invoices</h3>
+          <Link href={`/customers/${customer.id}/statement`} className="text-sm font-medium text-blue-600 hover:text-blue-800">
+            View All →
+          </Link>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold bg-gray-50">
+                <th className="px-6 py-3">Date</th>
+                <th className="px-6 py-3">Invoice #</th>
+                <th className="px-6 py-3 text-right">Amount</th>
+                <th className="px-6 py-3 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {taxInvoices.slice(0, 5).length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">No recent invoices.</td>
+                </tr>
+              ) : (
+                taxInvoices.slice(0, 5).map(inv => (
+                  <tr key={inv.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 text-sm text-gray-900">{new Date(inv.invoiceDate).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-sm font-medium text-blue-600">
+                      <Link href={`/invoices/${inv.id}`}>{inv.invoiceNumber}</Link>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-right text-gray-900 font-medium">₹{Number(inv.netAmount).toFixed(2)}</td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
+                        inv.status === 'PAID' ? 'bg-green-100 text-green-800' :
+                        inv.status === 'CANCELLED' ? 'bg-gray-100 text-gray-600' :
+                        'bg-orange-100 text-orange-800'
+                      }`}>
+                        {inv.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

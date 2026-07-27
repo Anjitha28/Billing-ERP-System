@@ -3,11 +3,11 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  createExpenseCategoryAction, 
+  createExpenseCategoryAction,
   updateExpenseCategoryAction, 
   toggleExpenseCategoryStatusAction,
   seedCategoriesAction
-} from "./actions";
+} from "./category-actions";
 
 export function CategoryClient({ initialCategories, query }: { initialCategories: any[], query: string }) {
   const router = useRouter();
@@ -20,7 +20,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const q = formData.get("q") as string;
-    router.push(`/expense-categories?q=${encodeURIComponent(q)}`);
+    router.push(`/expenses?tab=categories&q=${encodeURIComponent(q)}`);
   };
 
   const handleToggle = (id: string, currentStatus: boolean) => {

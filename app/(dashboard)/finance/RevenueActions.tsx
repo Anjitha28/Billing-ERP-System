@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition, useState } from "react";
-import { updateLedgerPaymentStatusAction } from "../ledger/actions";
+import { updateLedgerPaymentStatusAction } from "./ledger-actions";
 import { PaymentStatus } from "@prisma/client";
 
 export function RevenueActions({ 

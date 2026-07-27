@@ -2,7 +2,7 @@
 
 import { useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { createProformaInvoiceAction, updateProformaInvoiceAction } from "./actions";
+import { createProformaInvoiceAction, updateProformaInvoiceAction } from "../invoices/proforma-actions";
 import { TaxEngine, TDS_RATES } from "@/lib/tax";
 import { BUSINESS_LOCATION } from "@/lib/config/business";
 
@@ -101,7 +101,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           if (product) {
             updated.description = product.description || "";
             updated.unit = product.unit;
-            updated.unitPrice = Number(product.sellingPrice);
+            updated.unitPrice = Number(product.customPrice || product.sellingPrice);
             updated.gstRate = Number(product.gstRate);
           }
         }
@@ -269,7 +269,9 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                       >
                         <option value="">Select...</option>
                         {products.map(p => (
-                          <option key={p.id} value={p.id}>{p.name}</option>
+                          <option key={p.id} value={p.id}>
+                            {p.name} {p.customPrice ? '(Custom Price)' : ''}
+                          </option>
                         ))}
                       </select>
                     </td>

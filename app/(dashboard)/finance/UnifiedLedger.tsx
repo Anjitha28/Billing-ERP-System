@@ -1,15 +1,13 @@
-import { requireAdmin } from '@/lib/auth-utils';
 import { FinancialTransactionService } from '@/services/financial-transaction.service';
 import { PaymentStatus, FinancialTransactionType } from '@prisma/client';
 import Link from 'next/link';
-import { RevenueActions } from '../revenue/RevenueActions'; // We can reuse this component since the action is shared
+import { RevenueActions } from './RevenueActions';
 
-export default async function LedgerPage({
+export async function UnifiedLedger({
   searchParams,
 }: {
   searchParams: { q?: string; status?: PaymentStatus; type?: FinancialTransactionType; from?: string; to?: string };
 }) {
-  await requireAdmin();
 
   const query = await Promise.resolve(searchParams.q || "");
   const statusFilter = await Promise.resolve(searchParams.status);
@@ -28,10 +26,7 @@ export default async function LedgerPage({
   const summary = await FinancialTransactionService.getLedgerSummary();
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Unified Financial Ledger</h1>
-      </div>
+    <div className="space-y-6 mt-6">
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">

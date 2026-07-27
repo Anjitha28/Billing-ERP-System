@@ -42,5 +42,5 @@ export async function changePassword(
     return { success: false, error: 'Failed to update password.' };
   }
 
-  redirect('/dashboard');
+  return { success: true, error: '' };
 }

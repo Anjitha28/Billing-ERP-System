@@ -83,6 +83,7 @@ model Product {
   hsnSacCode      String
   unit            String
   sellingPrice    Decimal
+  customPrice     Decimal?
   purchasePrice   Decimal?
   gstRate         Decimal
   cessRate        Decimal?

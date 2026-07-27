@@ -6,7 +6,7 @@ import { Product, ProductType } from "@prisma/client";
 import { createProductAction, updateProductAction } from "./actions";
 
 type ProductFormProps = {
-  initialData?: Product;
+  initialData?: any;
 };
 
 export function ProductForm({ initialData }: ProductFormProps) {
@@ -21,6 +21,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
     hsnSacCode: initialData?.hsnSacCode || "",
     unit: initialData?.unit || "Piece",
     sellingPrice: initialData ? initialData.sellingPrice.toString() : "",
+    customPrice: initialData?.customPrice ? initialData.customPrice.toString() : "",
     purchasePrice: initialData?.purchasePrice ? initialData.purchasePrice.toString() : "",
     gstRate: initialData ? initialData.gstRate.toString() : "18",
     cessRate: initialData?.cessRate ? initialData.cessRate.toString() : "",
@@ -40,6 +41,9 @@ export function ProductForm({ initialData }: ProductFormProps) {
     if (!formData.unit) return setError("Unit is required.");
     if (!formData.sellingPrice || isNaN(Number(formData.sellingPrice)) || Number(formData.sellingPrice) < 0) {
       return setError("Selling Price must be a valid non-negative number.");
+    }
+    if (formData.customPrice && (isNaN(Number(formData.customPrice)) || Number(formData.customPrice) < 0)) {
+      return setError("Custom Price must be a valid non-negative number.");
     }
     if (formData.purchasePrice && (isNaN(Number(formData.purchasePrice)) || Number(formData.purchasePrice) < 0)) {
       return setError("Purchase Price must be a valid non-negative number.");
@@ -201,6 +205,24 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Custom/Override Price (₹)
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                name="customPrice"
+                value={formData.customPrice}
+                onChange={handleChange}
+                placeholder="Optional override price"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-purple-50"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Purchase Price (₹)
