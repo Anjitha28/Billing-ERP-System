@@ -15,9 +15,13 @@ export async function authenticate(
         case 'CredentialsSignin':
           return 'Invalid credentials or inactive account.';
         default:
-          return 'Something went wrong.';
+          return `Auth Error: ${error.type} - ${error.message}`;
       }
     }
-    throw error;
+    // If it's a redirect, throw it so Next.js handles it
+    if ((error as any)?.message?.includes('NEXT_REDIRECT')) {
+      throw error;
+    }
+    return `Server Error: ${error instanceof Error ? error.message : String(error)}`;
   }
 }
