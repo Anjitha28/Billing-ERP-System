@@ -12,23 +12,44 @@ async function main() {
     where: { role: "ADMIN" },
   });
 
-  if (existingAdmin) {
-    console.log("Admin user already exists. Skipping seed.");
-    return;
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.create({
+      data: {
+        name: "System Administrator",
+        email: email,
+        password: hashedPassword,
+        role: "ADMIN",
+      },
+    });
+    console.log(`Seeded admin user with email: ${email}`);
+  } else {
+    console.log("Admin user already exists. Skipping admin seed.");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const userEmail = "user@example.com";
+  const userPassword = "user123";
 
-  await prisma.user.create({
-    data: {
-      name: "System Administrator",
-      email: email,
-      password: hashedPassword,
-      role: "ADMIN",
-    },
+  const existingUser = await prisma.user.findFirst({
+    where: { email: userEmail },
   });
 
-  console.log(`Seeded admin user with email: ${email}`);
+  if (!existingUser) {
+    const hashedUserPassword = await bcrypt.hash(userPassword, 10);
+
+    await prisma.user.create({
+      data: {
+        name: "Standard User",
+        email: userEmail,
+        password: hashedUserPassword,
+        role: "USER",
+      },
+    });
+    console.log(`Seeded standard user with email: ${userEmail}`);
+  } else {
+    console.log("Standard user already exists. Skipping user seed.");
+  }
 }
 
 main()
