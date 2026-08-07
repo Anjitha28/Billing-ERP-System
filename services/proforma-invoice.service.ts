@@ -1,8 +1,8 @@
+import { prisma } from "@/lib/prisma";
 import { PrismaClient, ProformaInvoiceStatus } from "@prisma/client";
 import { TaxEngine } from "@/lib/tax";
 import { BUSINESS_LOCATION } from "@/lib/config/business";
 
-const prisma = new PrismaClient();
 
 export type CreateProformaInvoiceInput = {
   customerId: string;

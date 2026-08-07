@@ -1,8 +1,7 @@
+import { prisma } from "@/lib/prisma";
 import { requireAdmin } from '@/lib/auth-utils';
-import { PrismaClient } from '@prisma/client';
 import Link from 'next/link';
 
-const prisma = new PrismaClient();
 
 export default async function BalanceSheetPage({
   searchParams,

@@ -1,6 +1,6 @@
+import { prisma } from "@/lib/prisma";
 import { PrismaClient, FinancialTransactionType, PaymentStatus, Prisma } from "@prisma/client";
 
-const prisma = new PrismaClient();
 
 export class FinancialTransactionService {
   private static async generateTransactionNumber(tx: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">): Promise<string> {

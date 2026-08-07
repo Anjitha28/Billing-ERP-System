@@ -1,7 +1,7 @@
+import { prisma } from "@/lib/prisma";
 import { PrismaClient, TaxInvoiceStatus } from "@prisma/client";
 import { FinancialTransactionService } from "./financial-transaction.service";
 
-const prisma = new PrismaClient();
 
 export class TaxInvoiceService {
   private static async generateInvoiceNumber(): Promise<string> {

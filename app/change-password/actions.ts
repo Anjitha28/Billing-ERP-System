@@ -1,11 +1,10 @@
+import { prisma } from "@/lib/prisma";
 'use server';
 
 import { auth } from '@/auth';
-import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { redirect } from 'next/navigation';
 
-const prisma = new PrismaClient();
 
 export async function changePassword(
   prevState: any,

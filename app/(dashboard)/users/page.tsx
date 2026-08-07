@@ -1,8 +1,7 @@
+import { prisma } from "@/lib/prisma";
 import { requireAdmin } from '@/lib/auth-utils';
-import { PrismaClient } from '@prisma/client';
 import { UserClientList } from './UserClientList';
 
-const prisma = new PrismaClient();
 
 export const metadata = {
   title: 'User Management - Billing ERP',

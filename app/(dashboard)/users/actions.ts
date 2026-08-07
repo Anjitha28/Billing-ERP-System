@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 'use server';
 
 import { PrismaClient, Role } from '@prisma/client';
@@ -5,7 +6,6 @@ import bcrypt from 'bcryptjs';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/auth-utils';
 
-const prisma = new PrismaClient();
 
 export async function createUser(formData: FormData) {
   await requireAdmin();

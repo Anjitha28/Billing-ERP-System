@@ -1,6 +1,6 @@
+import { prisma } from "@/lib/prisma";
 import { PrismaClient, CustomerType } from "@prisma/client";
 
-const prisma = new PrismaClient();
 
 export type CreateCustomerInput = {
   customerType: CustomerType;

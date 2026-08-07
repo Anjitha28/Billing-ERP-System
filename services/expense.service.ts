@@ -1,7 +1,7 @@
+import { prisma } from "@/lib/prisma";
 import { PrismaClient, ExpenseStatus, PaymentStatus } from "@prisma/client";
 import { FinancialTransactionService } from "./financial-transaction.service";
 
-const prisma = new PrismaClient();
 
 export class ExpenseService {
   private static async generateExpenseNumber(): Promise<string> {
