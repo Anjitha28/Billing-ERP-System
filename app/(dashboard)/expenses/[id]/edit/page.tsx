@@ -3,6 +3,7 @@ import { ExpenseService } from "@/services/expense.service";
 import { VendorService } from "@/services/vendor.service";
 import { ExpenseCategoryService } from "@/services/expense-category.service";
 import { notFound, redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 
 export default async function EditExpensePage({
   params,
@@ -21,9 +22,10 @@ export default async function EditExpensePage({
     redirect(`/expenses/${expense.id}`); // Only drafts can be edited
   }
 
-  const [vendors, categories] = await Promise.all([
+  const [vendors, categories, products] = await Promise.all([
     VendorService.getVendors({ isActive: true }),
-    ExpenseCategoryService.getExpenseCategories({ isActive: true })
+    ExpenseCategoryService.getExpenseCategories({ isActive: true }),
+    prisma.product.findMany({ where: { isActive: true } })
   ]);
 
   return (
@@ -33,7 +35,7 @@ export default async function EditExpensePage({
         <p className="text-gray-500 text-sm mt-1">Update draft information for {expense.expenseNumber}.</p>
       </div>
 
-      <ExpenseForm initialData={expense} vendors={vendors} categories={categories} />
+      <ExpenseForm initialData={expense} vendors={vendors} categories={categories} products={products} />
     </div>
   );
 }

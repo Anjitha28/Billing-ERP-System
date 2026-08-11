@@ -1,6 +1,7 @@
 import { ExpenseService } from "@/services/expense.service";
-import { notFound } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import { ExpenseActions } from "./ExpenseActions";
 import { BUSINESS_LOCATION } from "@/lib/config/business";
 

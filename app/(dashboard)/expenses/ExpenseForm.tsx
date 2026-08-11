@@ -5,19 +5,26 @@ import { useRouter } from "next/navigation";
 import { TaxEngine, TaxCalculationResult } from "@/lib/tax";
 import { BUSINESS_LOCATION } from "@/lib/config/business";
 import { createExpenseAction, updateExpenseAction } from "./actions";
+import { createVendorAction } from "../vendors/actions";
+import { createExpenseCategoryAction } from "./category-actions";
 
 export function ExpenseForm({ 
   initialData, 
-  vendors,
-  categories
+  vendors: initialVendors,
+  categories: initialCategories,
+  products = []
 }: { 
   initialData?: any;
   vendors: any[];
   categories: any[];
+  products?: any[];
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const [vendors, setVendors] = useState(initialVendors);
+  const [categories, setCategories] = useState(initialCategories);
 
   const [vendorId, setVendorId] = useState(initialData?.vendorId || "");
   const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
@@ -26,29 +33,91 @@ export function ExpenseForm({
   );
   const [description, setDescription] = useState(initialData?.description || "");
   const [notes, setNotes] = useState(initialData?.notes || "");
+  
+  const initialTdsRate = initialData?.tdsRate !== null && initialData?.tdsRate !== undefined ? Number(initialData.tdsRate) : null;
+  const isInitialTdsCustom = initialTdsRate !== null && ![0, 1, 2, 5, 10].includes(initialTdsRate);
+  
   const [tdsRate, setTdsRate] = useState(initialData?.tdsRate?.toString() || "");
+  const [isCustomTds, setIsCustomTds] = useState(isInitialTdsCustom);
 
   const [items, setItems] = useState<any[]>(
     initialData?.items?.map((item: any) => ({
+      productId: item.productId || "",
       description: item.description,
       hsnSacCode: item.hsnSacCode || "",
       quantity: Number(item.quantity),
       unitPrice: Number(item.unitPrice),
       gstRate: Number(item.gstRate),
+      isCustomGst: ![0, 5, 12, 18, 28].includes(Number(item.gstRate)),
       unit: item.unit || "NOS",
-    })) || [{ description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, unit: "NOS" }]
+    })) || [{ productId: "", description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, unit: "NOS" }]
   );
 
   const selectedVendor = vendors.find(v => v.id === vendorId);
   const isInterState = selectedVendor?.state && selectedVendor.state.toLowerCase() !== BUSINESS_LOCATION.state.toLowerCase();
 
-  const handleItemChange = (index: number, field: string, value: string | number) => {
+  const handleVendorChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value === "ADD_NEW") {
+      const name = window.prompt("Enter new vendor name:");
+      if (name?.trim()) {
+        const res = await createVendorAction({ name: name.trim() });
+        if (res.success && res.data) {
+          setVendors([...vendors, res.data]);
+          setVendorId(res.data.id);
+        } else {
+          alert(res.error);
+        }
+      }
+    } else {
+      setVendorId(e.target.value);
+    }
+  };
+
+  const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value === "ADD_NEW") {
+      const name = window.prompt("Enter new category name:");
+      if (name?.trim()) {
+        const res = await createExpenseCategoryAction({ name: name.trim() });
+        if (res.success && res.data) {
+          setCategories([...categories, res.data]);
+          setCategoryId(res.data.id);
+        } else {
+          alert(res.error);
+        }
+      }
+    } else {
+      setCategoryId(e.target.value);
+    }
+  };
+
+  const handleProductChange = (index: number, productId: string) => {
+    const newItems = [...items];
+    const selectedProduct = products.find(p => p.id === productId);
+    
+    if (selectedProduct) {
+      const gst = Number(selectedProduct.gstRate || 0);
+      newItems[index] = {
+        ...newItems[index],
+        productId,
+        description: selectedProduct.name,
+        hsnSacCode: selectedProduct.hsnSacCode,
+        unitPrice: Number(selectedProduct.purchasePrice || selectedProduct.sellingPrice || 0),
+        gstRate: gst,
+        isCustomGst: ![0, 5, 12, 18, 28].includes(gst)
+      };
+    } else {
+      newItems[index].productId = "";
+    }
+    setItems(newItems);
+  };
+
+  const handleItemChange = (index: number, field: string, value: any) => {
     const newItems = [...items];
     newItems[index][field] = value;
     setItems(newItems);
   };
 
-  const addItem = () => setItems([...items, { description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, unit: "NOS" }]);
+  const addItem = () => setItems([...items, { productId: "", description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, unit: "NOS" }]);
   const removeItem = (index: number) => {
     if (items.length > 1) {
       setItems(items.filter((_, i) => i !== index));
@@ -59,8 +128,8 @@ export function ExpenseForm({
   const taxInput = items.map(item => {
     const grossAmount = Number(item.quantity) * Number(item.unitPrice);
     return {
-      taxableAmount: grossAmount, // Assuming no item level discount for now
-      gstRate: Number(item.gstRate),
+      taxableAmount: grossAmount,
+      gstRate: Number(item.gstRate) || 0,
       grossAmount,
       discountAmount: 0
     };
@@ -109,7 +178,13 @@ export function ExpenseForm({
       netAmount: calc.netAmount,
 
       items: items.map((item, i) => ({
-        ...item,
+        productId: item.productId || null,
+        description: item.description,
+        hsnSacCode: item.hsnSacCode,
+        quantity: item.quantity,
+        unit: item.unit,
+        unitPrice: item.unitPrice,
+        gstRate: item.gstRate,
         taxableAmount: calc.calculatedItems[i].taxableAmount,
         cgstRate: calc.calculatedItems[i].cgstRate,
         cgstAmount: calc.calculatedItems[i].cgstAmount,
@@ -166,13 +241,14 @@ export function ExpenseForm({
             <select
               required
               value={categoryId}
-              onChange={e => setCategoryId(e.target.value)}
+              onChange={handleCategoryChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
               <option value="">Select Category</option>
               {categories.map(c => (
                 <option key={c.id} value={c.id}>{c.name}</option>
               ))}
+              <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Category</option>
             </select>
           </div>
           <div>
@@ -189,13 +265,14 @@ export function ExpenseForm({
             <label className="block text-sm font-medium text-gray-700 mb-1">Vendor (Optional)</label>
             <select
               value={vendorId}
-              onChange={e => setVendorId(e.target.value)}
+              onChange={handleVendorChange}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
             >
               <option value="">No Vendor Specified</option>
               {vendors.map(v => (
                 <option key={v.id} value={v.id}>{v.name} {v.gstin ? `(${v.gstin})` : ''}</option>
               ))}
+              <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Vendor</option>
             </select>
             {isInterState && (
               <p className="text-xs text-blue-600 mt-1 font-medium flex items-center gap-1">
@@ -211,22 +288,29 @@ export function ExpenseForm({
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Items</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left border-collapse min-w-[1200px]">
             <thead>
               <tr className="border-b-2 border-gray-200 text-sm font-medium text-gray-600">
-                <th className="pb-3 w-1/3">Description</th>
-                <th className="pb-3 w-24">HSN/SAC</th>
-                <th className="pb-3 w-20 text-right">Qty</th>
-                <th className="pb-3 w-32 text-right">Rate</th>
-                <th className="pb-3 w-24 text-right">GST Rate</th>
-                <th className="pb-3 w-32 text-right">Amount</th>
-                <th className="pb-3 w-10"></th>
+                <th className="pb-3 px-2 w-28 text-xs uppercase tracking-wider">Date</th>
+                <th className="pb-3 px-2 min-w-[180px] text-xs uppercase tracking-wider">Description</th>
+                <th className="pb-3 px-2 w-48 text-xs uppercase tracking-wider">Item (Optional)</th>
+                <th className="pb-3 px-2 w-32 text-xs uppercase tracking-wider">Category</th>
+                <th className="pb-3 px-2 w-28 text-xs uppercase tracking-wider">HSN/SAC</th>
+                <th className="pb-3 px-2 w-24 text-right text-xs uppercase tracking-wider">Qty</th>
+                <th className="pb-3 px-2 w-28 text-right text-xs uppercase tracking-wider">Rate</th>
+                <th className="pb-3 px-2 w-32 text-right text-xs uppercase tracking-wider">GST Rate</th>
+                <th className="pb-3 px-2 w-24 text-right text-xs uppercase tracking-wider">TDS</th>
+                <th className="pb-3 px-2 w-32 text-right text-xs uppercase tracking-wider">Amount</th>
+                <th className="pb-3 px-2 w-10"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {items.map((item, index) => (
                 <tr key={index} className="group hover:bg-gray-50 transition-colors">
-                  <td className="py-2 pr-2">
+                  <td className="py-3 px-2 text-xs text-gray-500 whitespace-nowrap">
+                    {new Date(expenseDate).toLocaleDateString()}
+                  </td>
+                  <td className="py-2 px-2">
                     <input
                       type="text"
                       required
@@ -235,6 +319,21 @@ export function ExpenseForm({
                       placeholder="Item description"
                       className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
+                  </td>
+                  <td className="py-2 px-2">
+                    <select
+                      value={item.productId}
+                      onChange={e => handleProductChange(index, e.target.value)}
+                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    >
+                      <option value="">Select Item</option>
+                      {products.map(p => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="py-3 px-2 text-xs text-gray-500 whitespace-nowrap truncate max-w-[128px]">
+                    {categories.find(c => c.id === categoryId)?.name || "-"}
                   </td>
                   <td className="py-2 px-2">
                     <input
@@ -267,22 +366,58 @@ export function ExpenseForm({
                     />
                   </td>
                   <td className="py-2 px-2">
-                    <select
-                      value={item.gstRate}
-                      onChange={e => handleItemChange(index, "gstRate", e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right bg-white"
-                    >
-                      <option value="0">0%</option>
-                      <option value="5">5%</option>
-                      <option value="12">12%</option>
-                      <option value="18">18%</option>
-                      <option value="28">28%</option>
-                    </select>
+                    {!item.isCustomGst ? (
+                      <select
+                        value={item.gstRate}
+                        onChange={e => {
+                          if (e.target.value === "CUSTOM") {
+                            handleItemChange(index, "isCustomGst", true);
+                            handleItemChange(index, "gstRate", 0);
+                          } else {
+                            handleItemChange(index, "gstRate", e.target.value);
+                          }
+                        }}
+                        className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right bg-white"
+                      >
+                        <option value="0">0%</option>
+                        <option value="5">5%</option>
+                        <option value="12">12%</option>
+                        <option value="18">18%</option>
+                        <option value="28">28%</option>
+                        <option value="CUSTOM">Custom</option>
+                      </select>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.1"
+                          required
+                          value={item.gstRate}
+                          onChange={e => handleItemChange(index, "gstRate", e.target.value)}
+                          className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right px-1"
+                          placeholder="%"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => {
+                            handleItemChange(index, "isCustomGst", false);
+                            handleItemChange(index, "gstRate", 0);
+                          }}
+                          className="text-gray-400 hover:text-gray-700"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                      </div>
+                    )}
                   </td>
-                  <td className="py-2 pl-2 text-right font-medium text-gray-900">
+                  <td className="py-3 px-2 text-xs text-gray-500 text-right whitespace-nowrap">
+                    {tdsRate ? `${tdsRate}%` : "-"}
+                  </td>
+                  <td className="py-3 px-2 text-right font-medium text-gray-900">
                     ₹{calc.calculatedItems[index].totalAmount.toFixed(2)}
                   </td>
-                  <td className="py-2 text-right">
+                  <td className="py-2 px-2 text-right">
                     <button
                       type="button"
                       onClick={() => removeItem(index)}
@@ -325,17 +460,50 @@ export function ExpenseForm({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">TDS Rate (%)</label>
-                <select
-                  value={tdsRate}
-                  onChange={e => setTdsRate(e.target.value)}
-                  className="w-full max-w-xs border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                >
-                  <option value="">No TDS</option>
-                  <option value="1">1% (Sec 194C)</option>
-                  <option value="2">2% (Sec 194C / 194J)</option>
-                  <option value="5">5%</option>
-                  <option value="10">10% (Sec 194J)</option>
-                </select>
+                {!isCustomTds ? (
+                  <select
+                    value={tdsRate}
+                    onChange={e => {
+                      if (e.target.value === "CUSTOM") {
+                        setIsCustomTds(true);
+                        setTdsRate("");
+                      } else {
+                        setTdsRate(e.target.value);
+                      }
+                    }}
+                    className="w-full max-w-xs border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                  >
+                    <option value="">No TDS</option>
+                    <option value="1">1% (Sec 194C)</option>
+                    <option value="2">2% (Sec 194C / 194J)</option>
+                    <option value="5">5%</option>
+                    <option value="10">10% (Sec 194J)</option>
+                    <option value="CUSTOM">Custom</option>
+                  </select>
+                ) : (
+                  <div className="flex items-center gap-2 max-w-xs">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      required
+                      value={tdsRate}
+                      onChange={e => setTdsRate(e.target.value)}
+                      className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Enter TDS %"
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setIsCustomTds(false);
+                        setTdsRate("");
+                      }}
+                      className="px-3 py-2 text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg bg-gray-50"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
