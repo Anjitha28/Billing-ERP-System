@@ -34,7 +34,7 @@ export default async function VendorDetailPage({
           <ToggleVendorStatusButton vendorId={vendor.id} isActive={vendor.isActive} />
           <Link
             href={`/vendors/${vendor.id}/edit`}
-            className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
           >
             Edit Vendor
           </Link>
@@ -46,7 +46,7 @@ export default async function VendorDetailPage({
           <div className="px-6 py-4 border-b border-theme-border bg-theme-surface-hover">
             <h3 className="text-sm font-bold text-theme-text">Contact Details</h3>
           </div>
-          <div className="p-6 space-y-4 text-sm text-gray-200">
+          <div className="p-6 space-y-4 text-sm text-theme-text">
             <div>
               <span className="block text-theme-text-muted text-xs mb-1">Email</span>
               <span className="font-medium">{vendor.email || "Not provided"}</span>
@@ -62,7 +62,7 @@ export default async function VendorDetailPage({
           <div className="px-6 py-4 border-b border-theme-border bg-theme-surface-hover">
             <h3 className="text-sm font-bold text-theme-text">Tax Information</h3>
           </div>
-          <div className="p-6 space-y-4 text-sm text-gray-200">
+          <div className="p-6 space-y-4 text-sm text-theme-text">
             <div>
               <span className="block text-theme-text-muted text-xs mb-1">GSTIN</span>
               <span className="font-medium">{vendor.gstin || "Not provided"}</span>
@@ -78,7 +78,7 @@ export default async function VendorDetailPage({
           <div className="px-6 py-4 border-b border-theme-border bg-theme-surface-hover">
             <h3 className="text-sm font-bold text-theme-text">Address Details</h3>
           </div>
-          <div className="p-6 text-sm text-gray-200">
+          <div className="p-6 text-sm text-theme-text">
             {vendor.address ? (
               <div className="space-y-1">
                 <p>{vendor.address}</p>

@@ -117,7 +117,7 @@ export default async function TaxInvoiceDetailPage({
         <div className="p-8">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b-2 border-gray-800 text-sm font-bold text-theme-text">
+              <tr className="border-b-2 border-theme-border text-sm font-bold text-theme-text">
                 <th className="py-3 pl-2 w-12">#</th>
                 <th className="py-3">Item Description</th>
                 <th className="py-3 text-right">Qty</th>
@@ -127,7 +127,7 @@ export default async function TaxInvoiceDetailPage({
                 <th className="py-3 text-right pr-2">Amount</th>
               </tr>
             </thead>
-            <tbody className="text-sm text-gray-200">
+            <tbody className="text-sm text-theme-text">
               {invoice.items.map((item, index) => (
                 <tr key={item.id} className="border-b border-theme-border">
                   <td className="py-4 pl-2 text-theme-text-muted">{index + 1}</td>
@@ -193,7 +193,7 @@ export default async function TaxInvoiceDetailPage({
           <div className="flex-1 w-full text-sm">
             <div className="mb-6">
               <h4 className="font-bold text-theme-text mb-2">Total Amount (in words)</h4>
-              <p className="font-medium text-gray-200 italic">
+              <p className="font-medium text-theme-text italic">
                 {numberToWords(Number(invoice.netAmount))}
               </p>
             </div>

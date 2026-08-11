@@ -34,7 +34,7 @@ export default async function CustomerStatementPage({ params }: { params: { id: 
         <div className="flex gap-3">
           <Link 
             href={`/customers/${customerId}`} 
-            className="px-4 py-2 bg-theme-surface text-gray-200 border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
+            className="px-4 py-2 bg-theme-surface text-theme-text border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
           >
             Back to Customer
           </Link>

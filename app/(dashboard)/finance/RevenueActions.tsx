@@ -43,7 +43,7 @@ export function RevenueActions({
             {currentStatus !== "UNPAID" && (
               <button
                 onClick={() => handleStatusChange("UNPAID")}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-theme-surface-hover"
+                className="block w-full text-left px-4 py-2 text-sm text-theme-text hover:bg-theme-surface-hover"
               >
                 Mark as Unpaid
               </button>
@@ -51,7 +51,7 @@ export function RevenueActions({
             {currentStatus !== "PARTIALLY_PAID" && (
               <button
                 onClick={() => handleStatusChange("PARTIALLY_PAID")}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-theme-surface-hover"
+                className="block w-full text-left px-4 py-2 text-sm text-theme-text hover:bg-theme-surface-hover"
               >
                 Mark as Partially Paid
               </button>
@@ -59,7 +59,7 @@ export function RevenueActions({
             {currentStatus !== "PAID" && (
               <button
                 onClick={() => handleStatusChange("PAID")}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-theme-surface-hover"
+                className="block w-full text-left px-4 py-2 text-sm text-theme-text hover:bg-theme-surface-hover"
               >
                 Mark as Paid
               </button>

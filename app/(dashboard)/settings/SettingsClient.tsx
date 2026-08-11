@@ -70,7 +70,7 @@ export function SettingsClient() {
               className={`w-full text-left px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeTab === tab.id 
                   ? 'bg-theme-surface-hover text-theme-primary-dark' 
-                  : 'text-gray-200 hover:bg-theme-surface-hover'
+                  : 'text-theme-text hover:bg-theme-surface-hover'
               }`}
             >
               {tab.label}
@@ -94,47 +94,47 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Business Profile</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Business Name</label>
+                  <label className="block text-sm font-medium text-theme-text">Business Name</label>
                   <input type="text" name="businessName" value={currentValues.businessName} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Legal Name</label>
+                  <label className="block text-sm font-medium text-theme-text">Legal Name</label>
                   <input type="text" name="legalName" value={currentValues.legalName} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-200">Business Address</label>
+                  <label className="block text-sm font-medium text-theme-text">Business Address</label>
                   <textarea name="businessAddress" value={currentValues.businessAddress} onChange={handleChange} rows={3} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">City</label>
+                  <label className="block text-sm font-medium text-theme-text">City</label>
                   <input type="text" name="city" value={currentValues.city} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">State</label>
+                  <label className="block text-sm font-medium text-theme-text">State</label>
                   <input type="text" name="state" value={currentValues.state} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">State Code</label>
+                  <label className="block text-sm font-medium text-theme-text">State Code</label>
                   <input type="text" name="stateCode" value={currentValues.stateCode} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">PIN Code</label>
+                  <label className="block text-sm font-medium text-theme-text">PIN Code</label>
                   <input type="text" name="pinCode" value={currentValues.pinCode} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Country</label>
+                  <label className="block text-sm font-medium text-theme-text">Country</label>
                   <input type="text" name="country" value={currentValues.country} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Phone</label>
+                  <label className="block text-sm font-medium text-theme-text">Phone</label>
                   <input type="text" name="phone" value={currentValues.phone} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Email</label>
+                  <label className="block text-sm font-medium text-theme-text">Email</label>
                   <input type="email" name="email" value={currentValues.email} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Website</label>
+                  <label className="block text-sm font-medium text-theme-text">Website</label>
                   <input type="text" name="website" value={currentValues.website} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
               </div>
@@ -147,19 +147,19 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Tax Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">GSTIN</label>
+                  <label className="block text-sm font-medium text-theme-text">GSTIN</label>
                   <input type="text" name="gstin" value={currentValues.gstin} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">PAN</label>
+                  <label className="block text-sm font-medium text-theme-text">PAN</label>
                   <input type="text" name="pan" value={currentValues.pan} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Default GST Registration State</label>
+                  <label className="block text-sm font-medium text-theme-text">Default GST Registration State</label>
                   <input type="text" name="defaultGstState" value={currentValues.defaultGstState} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Default State Code</label>
+                  <label className="block text-sm font-medium text-theme-text">Default State Code</label>
                   <input type="text" name="defaultGstStateCode" value={currentValues.defaultGstStateCode} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
               </div>
@@ -172,31 +172,31 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Invoice Settings</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Invoice Prefix</label>
+                  <label className="block text-sm font-medium text-theme-text">Invoice Prefix</label>
                   <input type="text" name="invoicePrefix" value={currentValues.invoicePrefix} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Proforma Invoice Prefix</label>
+                  <label className="block text-sm font-medium text-theme-text">Proforma Invoice Prefix</label>
                   <input type="text" name="proformaPrefix" value={currentValues.proformaPrefix} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Starting Invoice Number</label>
+                  <label className="block text-sm font-medium text-theme-text">Starting Invoice Number</label>
                   <input type="text" name="startingInvoiceNumber" value={currentValues.startingInvoiceNumber} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Starting Proforma Number</label>
+                  <label className="block text-sm font-medium text-theme-text">Starting Proforma Number</label>
                   <input type="text" name="startingProformaNumber" value={currentValues.startingProformaNumber} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Invoice Number Format</label>
+                  <label className="block text-sm font-medium text-theme-text">Invoice Number Format</label>
                   <input type="text" name="invoiceNumberFormat" value={currentValues.invoiceNumberFormat} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Default Currency</label>
+                  <label className="block text-sm font-medium text-theme-text">Default Currency</label>
                   <input type="text" name="defaultCurrency" value={currentValues.defaultCurrency} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-200">Default Payment Terms</label>
+                  <label className="block text-sm font-medium text-theme-text">Default Payment Terms</label>
                   <textarea name="defaultPaymentTerms" value={currentValues.defaultPaymentTerms} onChange={handleChange} rows={2} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2"></textarea>
                 </div>
               </div>
@@ -209,11 +209,11 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Financial Year Settings</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Current Financial Year</label>
+                  <label className="block text-sm font-medium text-theme-text">Current Financial Year</label>
                   <input type="text" name="currentFinancialYear" value={currentValues.currentFinancialYear} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Financial Year Start Month</label>
+                  <label className="block text-sm font-medium text-theme-text">Financial Year Start Month</label>
                   <select name="financialYearStartMonth" value={currentValues.financialYearStartMonth} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2">
                     <option value="January">January</option>
                     <option value="April">April</option>
@@ -222,7 +222,7 @@ export function SettingsClient() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Financial Year End Month</label>
+                  <label className="block text-sm font-medium text-theme-text">Financial Year End Month</label>
                   <select name="financialYearEndMonth" value={currentValues.financialYearEndMonth} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2">
                     <option value="December">December</option>
                     <option value="March">March</option>
@@ -240,15 +240,15 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Business Preferences</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Default Country</label>
+                  <label className="block text-sm font-medium text-theme-text">Default Country</label>
                   <input type="text" name="defaultCountry" value={currentValues.defaultCountry} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Default State</label>
+                  <label className="block text-sm font-medium text-theme-text">Default State</label>
                   <input type="text" name="defaultState" value={currentValues.defaultState} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Date Format</label>
+                  <label className="block text-sm font-medium text-theme-text">Date Format</label>
                   <select name="dateFormat" value={currentValues.dateFormat} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2">
                     <option value="DD/MM/YYYY">DD/MM/YYYY</option>
                     <option value="MM/DD/YYYY">MM/DD/YYYY</option>
@@ -256,7 +256,7 @@ export function SettingsClient() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Number Format</label>
+                  <label className="block text-sm font-medium text-theme-text">Number Format</label>
                   <select name="numberFormat" value={currentValues.numberFormat} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2">
                     <option value="en-IN">Indian (1,00,000.00)</option>
                     <option value="en-US">US/International (100,000.00)</option>
@@ -273,27 +273,27 @@ export function SettingsClient() {
               <h2 className="text-lg font-semibold text-theme-text border-b pb-2">Invoice Display Settings</h2>
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Business Logo (URL)</label>
+                  <label className="block text-sm font-medium text-theme-text">Business Logo (URL)</label>
                   <input type="text" name="businessLogo" value={currentValues.businessLogo} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" placeholder="https://example.com/logo.png" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Invoice Header Text</label>
+                  <label className="block text-sm font-medium text-theme-text">Invoice Header Text</label>
                   <textarea name="invoiceHeader" value={currentValues.invoiceHeader} onChange={handleChange} rows={2} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Invoice Footer Text</label>
+                  <label className="block text-sm font-medium text-theme-text">Invoice Footer Text</label>
                   <textarea name="invoiceFooter" value={currentValues.invoiceFooter} onChange={handleChange} rows={2} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Terms and Conditions</label>
+                  <label className="block text-sm font-medium text-theme-text">Terms and Conditions</label>
                   <textarea name="termsAndConditions" value={currentValues.termsAndConditions} onChange={handleChange} rows={4} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">Bank Details</label>
+                  <label className="block text-sm font-medium text-theme-text">Bank Details</label>
                   <textarea name="bankDetails" value={currentValues.bankDetails} onChange={handleChange} rows={3} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" placeholder="Bank Name:&#10;Account No:&#10;IFSC:"></textarea>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-200">UPI ID</label>
+                  <label className="block text-sm font-medium text-theme-text">UPI ID</label>
                   <input type="text" name="upiId" value={currentValues.upiId} onChange={handleChange} className="mt-1 block w-full rounded-md border-theme-border shadow-sm focus:border-theme-primary focus:ring-theme-primary sm:text-sm border p-2" />
                 </div>
               </div>
@@ -315,7 +315,7 @@ export function SettingsClient() {
               <button 
                 type="button" 
                 onClick={() => { setFormValues({}); setIsDirty(false); }}
-                className="px-4 py-2 border border-theme-border rounded-md text-sm font-medium text-gray-200 hover:bg-theme-surface-hover transition-colors"
+                className="px-4 py-2 border border-theme-border rounded-md text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors"
               >
                 Cancel Changes
               </button>

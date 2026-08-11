@@ -32,7 +32,6 @@ export function ExpenseForm({
   const [items, setItems] = useState<any[]>(
     initialData?.items?.map((item: any) => ({
       productId: item.productId || "",
-      description: item.description,
       vendorId: item.vendorId || "",
       categoryId: item.categoryId || "",
       date: item.date ? new Date(item.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -45,7 +44,7 @@ export function ExpenseForm({
       isCustomTds: item.tdsRate !== null && item.tdsRate !== undefined && ![0, 1, 2, 5, 10].includes(Number(item.tdsRate)),
       unit: item.unit || "NOS",
     })) || [{ 
-      productId: "", description: "", vendorId: "", categoryId: "", 
+      productId: "", vendorId: "", categoryId: "", 
       date: new Date().toISOString().split('T')[0], hsnSacCode: "", 
       quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, 
       tdsRate: "", isCustomTds: false, unit: "NOS" 
@@ -101,7 +100,6 @@ export function ExpenseForm({
       newItems[index] = {
         ...newItems[index],
         productId,
-        description: selectedProduct.name,
         hsnSacCode: selectedProduct.hsnSacCode,
         unitPrice: Number(selectedProduct.purchasePrice || selectedProduct.sellingPrice || 0),
         gstRate: gst,
@@ -114,7 +112,7 @@ export function ExpenseForm({
   };
 
   const addItem = () => setItems([...items, { 
-    productId: "", description: "", vendorId: "", categoryId: "", 
+    productId: "", vendorId: "", categoryId: "", 
     date: new Date().toISOString().split('T')[0], hsnSacCode: "", 
     quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, 
     tdsRate: "", isCustomTds: false, unit: "NOS" 
@@ -153,10 +151,6 @@ export function ExpenseForm({
     e.preventDefault();
     setError(null);
 
-    if (items.some(i => !i.description)) {
-      setError("All items must have a description.");
-      return;
-    }
     if (items.some(i => !i.categoryId)) {
       setError("All items must have a category.");
       return;
@@ -164,7 +158,6 @@ export function ExpenseForm({
 
     const payload = {
       expenseDate: items[0]?.date || new Date().toISOString().split('T')[0],
-      description: items[0]?.description || "Expense",
       vendorId: items[0]?.vendorId || null,
       categoryId: items[0]?.categoryId || null,
       notes,
@@ -185,7 +178,6 @@ export function ExpenseForm({
 
       items: items.map((item, i) => ({
         productId: item.productId || null,
-        description: item.description,
         vendorId: item.vendorId || null,
         categoryId: item.categoryId || null,
         date: item.date,
@@ -237,7 +229,6 @@ export function ExpenseForm({
             <thead>
               <tr className="border-b-2 border-theme-border text-sm font-medium text-theme-text-muted">
                 <th className="pb-3 px-2 w-36 text-xs uppercase tracking-wider">Date</th>
-                <th className="pb-3 px-2 min-w-[150px] text-xs uppercase tracking-wider">Description</th>
                 <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Vendor</th>
                 <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Item (Optional)</th>
                 <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Category</th>
@@ -260,16 +251,6 @@ export function ExpenseForm({
                       value={item.date}
                       onChange={e => handleItemChange(index, "date", e.target.value)}
                       className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary text-xs"
-                    />
-                  </td>
-                  <td className="py-2 px-2">
-                    <input
-                      type="text"
-                      required
-                      value={item.description}
-                      onChange={e => handleItemChange(index, "description", e.target.value)}
-                      placeholder="Item description"
-                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm"
                     />
                   </td>
                   <td className="py-2 px-2">
@@ -380,7 +361,7 @@ export function ExpenseForm({
                             handleItemChange(index, "isCustomGst", false);
                             handleItemChange(index, "gstRate", 0);
                           }}
-                          className="text-theme-text-muted hover:text-gray-200"
+                          className="text-theme-text-muted hover:text-theme-text"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -426,7 +407,7 @@ export function ExpenseForm({
                             handleItemChange(index, "isCustomTds", false);
                             handleItemChange(index, "tdsRate", "");
                           }}
-                          className="text-theme-text-muted hover:text-gray-200"
+                          className="text-theme-text-muted hover:text-theme-text"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -454,7 +435,7 @@ export function ExpenseForm({
         <button
           type="button"
           onClick={addItem}
-          className="mt-4 px-4 py-2 border border-theme-border rounded-lg text-sm font-medium text-gray-200 hover:bg-theme-surface-hover flex items-center gap-2"
+          className="mt-4 px-4 py-2 border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Add Another Item
@@ -468,7 +449,7 @@ export function ExpenseForm({
             <h2 className="text-lg font-bold text-theme-text mb-4">Additional Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">Notes</label>
                 <textarea
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
@@ -536,7 +517,7 @@ export function ExpenseForm({
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="flex-1 px-4 py-2 border border-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+                className="flex-1 px-4 py-2 border border-gray-600 text-white rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
               >
                 Cancel
               </button>

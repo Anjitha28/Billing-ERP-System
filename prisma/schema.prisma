@@ -153,9 +153,6 @@ model ProformaInvoiceItem {
   isTdsEnabled      Boolean @default(true)
   tdsRate           Decimal @default(0)
   tdsAmount         Decimal @default(0)
-  
-  isIgstEnabled     Boolean @default(false)
-  igstRate          Decimal @default(0)
 
   totalAmount       Decimal
 }
@@ -364,7 +361,6 @@ model ExpenseItem {
 
   date            DateTime?
 
-  description     String
   hsnSacCode      String?
 
   quantity        Decimal @default(1)

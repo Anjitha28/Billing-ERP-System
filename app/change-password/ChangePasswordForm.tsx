@@ -38,7 +38,7 @@ export default function ChangePasswordForm() {
         <form className="mt-8 space-y-6" action={formAction}>
           <div className="space-y-4 rounded-md shadow-sm">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-theme-text mb-1">
                 New Password
               </label>
               <input
@@ -52,7 +52,7 @@ export default function ChangePasswordForm() {
               />
             </div>
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-theme-text mb-1">
                 Confirm Password
               </label>
               <input

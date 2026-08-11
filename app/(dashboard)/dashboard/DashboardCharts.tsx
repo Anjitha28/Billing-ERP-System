@@ -109,7 +109,7 @@ export function ExpenseCategoryChart({ data }: { data: ExpenseCategory[] }) {
             <li key={index} className="flex items-center justify-between text-sm">
               <div className="flex items-center">
                 <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                <span className="text-gray-200 truncate max-w-[150px]">{entry.category}</span>
+                <span className="text-theme-text truncate max-w-[150px]">{entry.category}</span>
               </div>
               <span className="font-medium text-theme-text">{entry.percentage.toFixed(1)}%</span>
             </li>

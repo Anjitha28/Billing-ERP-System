@@ -51,7 +51,7 @@ export default async function ExpenseDetailPage({
           {expense.status === "DRAFT" && (
             <Link
               href={`/expenses/${expense.id}/edit`}
-              className="px-4 py-2 border border-theme-border text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
+              className="px-4 py-2 border border-theme-border text-theme-text rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
             >
               Edit Draft
             </Link>
@@ -79,7 +79,6 @@ export default async function ExpenseDetailPage({
                 <thead>
                   <tr className="border-b border-theme-border text-theme-text-muted bg-theme-surface">
                     <th className="px-4 py-3 font-semibold">Date</th>
-                    <th className="px-4 py-3 font-semibold">Description</th>
                     <th className="px-4 py-3 font-semibold">Category</th>
                     <th className="px-4 py-3 font-semibold">Vendor</th>
                     <th className="px-4 py-3 font-semibold text-right">Qty</th>
@@ -93,10 +92,6 @@ export default async function ExpenseDetailPage({
                   {expense.items.map((item) => (
                     <tr key={item.id}>
                       <td className="px-4 py-4 text-theme-text">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</td>
-                      <td className="px-4 py-4 text-theme-text font-medium">
-                        {item.description}
-                        {item.hsnSacCode && <div className="text-xs text-theme-text-muted font-normal">HSN: {item.hsnSacCode}</div>}
-                      </td>
                       <td className="px-4 py-4 text-theme-text-muted">{item.category?.name || "-"}</td>
                       <td className="px-4 py-4 text-theme-text-muted">{item.vendor?.name || "-"}</td>
                       <td className="px-4 py-4 text-right text-theme-text-muted">{Number(item.quantity)} {item.unit}</td>

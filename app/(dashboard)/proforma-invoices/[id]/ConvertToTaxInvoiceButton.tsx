@@ -48,7 +48,7 @@ export function ConvertToTaxInvoiceButton({ proformaId }: { proformaId: string }
         <button
           onClick={() => { setShowConfirm(false); setError(null); }}
           disabled={isPending}
-          className="px-3 py-1.5 bg-theme-surface-hover text-gray-200 rounded-md text-sm font-medium hover:bg-theme-surface-hover disabled:opacity-50"
+          className="px-3 py-1.5 bg-theme-surface-hover text-theme-text rounded-md text-sm font-medium hover:bg-theme-surface-hover disabled:opacity-50"
         >
           Cancel
         </button>

@@ -30,7 +30,7 @@ export default async function ExpensesHubPage({
               whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
               ${activeTab === 'list'
                 ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-gray-200 hover:border-theme-border'
+                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
               }
             `}
           >
@@ -42,7 +42,7 @@ export default async function ExpensesHubPage({
               whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
               ${activeTab === 'categories'
                 ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-gray-200 hover:border-theme-border'
+                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
               }
             `}
           >

@@ -47,11 +47,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       gstRate: Number(i.gstRate),
       isTdsEnabled: i.isTdsEnabled ?? true,
       tdsRate: Number(i.tdsRate || 0),
-      isIgstEnabled: i.isIgstEnabled ?? false,
-      igstRate: Number(i.igstRate || 0),
       customGstRate: false,
       customTdsRate: false,
-      customIgstRate: false,
     })) || []
   );
 
@@ -71,8 +68,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         grossAmount,
         discountAmount,
         taxableAmount,
-        // Override state checks based on item-level igst toggle
-        customerState: item.isIgstEnabled ? "IGST_FORCED" : (selectedCustomer?.state || BUSINESS_LOCATION.state),
+        customerState: selectedCustomer?.state || BUSINESS_LOCATION.state,
       };
     });
 
@@ -100,11 +96,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         gstRate: 0,
         isTdsEnabled: true,
         tdsRate: 0,
-        isIgstEnabled: false,
-        igstRate: 0,
         customGstRate: false,
         customTdsRate: false,
-        customIgstRate: false,
       }
     ]);
   };
@@ -179,8 +172,6 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
           gstRate: Number(i.gstRate),
           isTdsEnabled: Boolean(i.isTdsEnabled),
           tdsRate: Number(i.tdsRate),
-          isIgstEnabled: Boolean(i.isIgstEnabled),
-          igstRate: Number(i.igstRate),
         }))
       };
 
@@ -217,7 +208,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         </div>
         
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-200 mb-1">
+          <label className="block text-sm font-medium text-theme-text mb-1">
             Customer <span className="text-red-500">*</span>
           </label>
           <select
@@ -242,7 +233,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-200 mb-1">
+          <label className="block text-sm font-medium text-theme-text mb-1">
             Customer Type <span className="text-red-500">*</span>
           </label>
           <select
@@ -256,7 +247,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-200 mb-1">
+          <label className="block text-sm font-medium text-theme-text mb-1">
             Financial Year <span className="text-red-500">*</span>
           </label>
           <select
@@ -272,7 +263,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-200 mb-1">
+          <label className="block text-sm font-medium text-theme-text mb-1">
             Invoice Date <span className="text-red-500">*</span>
           </label>
           <input
@@ -308,7 +299,6 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                 <th className="px-3 py-3 w-24">Rate</th>
                 <th className="px-3 py-3 w-32">GST</th>
                 <th className="px-3 py-3 w-32">TDS</th>
-                <th className="px-3 py-3 w-32">IGST</th>
                 <th className="px-3 py-3 text-right w-24">Amount</th>
                 <th className="px-3 py-3 w-10"></th>
               </tr>
@@ -449,48 +439,9 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                         </div>
                       )}
                     </td>
-
-                    <td className="px-3 py-3 space-y-2">
-                      <select
-                        value={item.isIgstEnabled ? "yes" : "no"}
-                        onChange={(e) => handleItemChange(item.id, 'isIgstEnabled', e.target.value === "yes")}
-                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
-                      >
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                      {item.isIgstEnabled && (
-                        <div className="flex gap-1">
-                          <select 
-                            value={item.customIgstRate ? "custom" : item.igstRate.toString()}
-                            onChange={(e) => {
-                              if (e.target.value === "custom") {
-                                handleItemChange(item.id, 'customIgstRate', true);
-                              } else {
-                                handleItemChange(item.id, 'customIgstRate', false);
-                                handleItemChange(item.id, 'igstRate', Number(e.target.value));
-                              }
-                            }}
-                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                          >
-                            {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
-                            <option value="custom">Custom</option>
-                          </select>
-                          {item.customIgstRate && (
-                            <input 
-                              type="number" min="0" step="0.1" 
-                              value={item.igstRate} 
-                              onChange={(e) => handleItemChange(item.id, 'igstRate', e.target.value)}
-                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                            />
-                          )}
-                        </div>
-                      )}
-                    </td>
-
                     <td className="px-3 py-3 text-right font-medium text-theme-text">
                       {calc?.totalAmount?.toFixed(2) || "0.00"}
-                      {calc?.tdsAmount > 0 && <div className="text-xs text-red-400 font-normal mt-1">- TDS: {calc.tdsAmount.toFixed(2)}</div>}
+                      {calc?.tdsAmount > 0 && <div className="text-xs text-red-600 font-normal mt-1">- TDS: {calc.tdsAmount.toFixed(2)}</div>}
                     </td>
                     <td className="px-3 py-3 text-center">
                       <button
@@ -521,7 +472,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               Notes / Terms
             </label>
             <textarea
@@ -572,7 +523,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             </div>
 
             {calculationResult.tdsAmount > 0 && (
-              <div className="flex justify-between text-red-400 font-medium pt-1">
+              <div className="flex justify-between text-red-600 font-medium pt-1">
                 <span>Less: Total TDS</span>
                 <span>-₹{calculationResult.tdsAmount.toFixed(2)}</span>
               </div>
@@ -592,7 +543,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
+          className="px-4 py-2 text-sm font-medium text-theme-text bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel
@@ -613,22 +564,22 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
              <h3 className="text-lg font-bold text-theme-text mb-4 border-b border-theme-border pb-2">Add Custom Customer</h3>
              <div className="space-y-4">
                <div>
-                 <label className="block text-sm text-gray-200 mb-1">Legal Name *</label>
+                 <label className="block text-sm text-theme-text mb-1">Legal Name *</label>
                  <input type="text" value={newCustomer.legalName} onChange={e => setNewCustomer({...newCustomer, legalName: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm" />
                </div>
                <div>
-                 <label className="block text-sm text-gray-200 mb-1">Customer Type</label>
+                 <label className="block text-sm text-theme-text mb-1">Customer Type</label>
                  <select value={newCustomer.customerType} onChange={e => setNewCustomer({...newCustomer, customerType: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm">
                    <option value="B2B">B2B</option>
                    <option value="B2C">B2C</option>
                  </select>
                </div>
                <div>
-                 <label className="block text-sm text-gray-200 mb-1">State</label>
+                 <label className="block text-sm text-theme-text mb-1">State</label>
                  <input type="text" value={newCustomer.state} onChange={e => setNewCustomer({...newCustomer, state: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm" />
                </div>
                <div className="flex gap-4 pt-4 border-t border-theme-border justify-end">
-                 <button type="button" onClick={() => setShowAddCustomer(false)} className="text-sm px-4 py-2 text-gray-300 hover:text-white">Cancel</button>
+                 <button type="button" onClick={() => setShowAddCustomer(false)} className="text-sm px-4 py-2 text-theme-text-muted hover:text-white">Cancel</button>
                  <button type="button" onClick={async () => {
                    if (!newCustomer.legalName) return alert("Legal Name is required");
                    // In a real implementation this would call createCustomerAction

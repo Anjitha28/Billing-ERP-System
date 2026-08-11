@@ -113,7 +113,6 @@ export class ExpenseService {
 
           items: {
             create: data.items.map((item: any) => ({
-              description: item.description,
               productId: item.productId || null,
               hsnSacCode: item.hsnSacCode,
               vendorId: item.vendorId || null,
@@ -178,7 +177,6 @@ export class ExpenseService {
 
           items: {
             create: data.items.map((item: any) => ({
-              description: item.description,
               productId: item.productId || null,
               hsnSacCode: item.hsnSacCode,
               vendorId: item.vendorId || null,

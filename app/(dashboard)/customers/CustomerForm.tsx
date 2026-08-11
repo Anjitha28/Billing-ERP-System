@@ -90,7 +90,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
 
       {/* Customer Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">Customer Type</label>
+        <label className="block text-sm font-medium text-theme-text mb-2">Customer Type</label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -125,7 +125,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Primary Details</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               {isB2B ? "Legal / Business Name" : "Customer Name"} <span className="text-red-500">*</span>
             </label>
             <input
@@ -140,7 +140,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
 
           {isB2B && (
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">Trade Name (Optional)</label>
+              <label className="block text-sm font-medium text-theme-text mb-1">Trade Name (Optional)</label>
               <input
                 type="text"
                 name="tradeName"
@@ -152,7 +152,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               GSTIN {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -166,7 +166,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">PAN (Optional)</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">PAN (Optional)</label>
             <input
               type="text"
               name="pan"
@@ -182,7 +182,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Contact Details</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Email</label>
             <input
               type="email"
               name="email"
@@ -193,7 +193,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Phone</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Phone</label>
             <input
               type="tel"
               name="phone"
@@ -209,7 +209,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Billing Address</h3>
         
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-1">
+          <label className="block text-sm font-medium text-theme-text mb-1">
             Address {isB2B && <span className="text-red-500">*</span>}
           </label>
           <input
@@ -223,7 +223,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">City</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">City</label>
             <input
               type="text"
               name="city"
@@ -233,7 +233,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               State {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -245,7 +245,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               State Code {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -258,7 +258,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">PIN Code</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">PIN Code</label>
             <input
               type="text"
               name="pinCode"
@@ -274,7 +274,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
+          className="px-4 py-2 text-sm font-medium text-theme-text bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel

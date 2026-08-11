@@ -55,7 +55,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Contact Name *</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Contact Name *</label>
             <input
               type="text"
               name="name"
@@ -66,7 +66,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Business Name</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Business Name</label>
             <input
               type="text"
               name="businessName"
@@ -76,7 +76,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">GSTIN</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">GSTIN</label>
             <input
               type="text"
               name="gstin"
@@ -86,7 +86,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">PAN</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">PAN</label>
             <input
               type="text"
               name="pan"
@@ -96,7 +96,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Email</label>
             <input
               type="email"
               name="email"
@@ -105,7 +105,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Phone</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Phone</label>
             <input
               type="text"
               name="phone"
@@ -119,7 +119,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
           <h3 className="text-md font-bold text-theme-text mb-4">Address Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-200 mb-1">Address</label>
+              <label className="block text-sm font-medium text-theme-text mb-1">Address</label>
               <input
                 type="text"
                 name="address"
@@ -128,7 +128,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">City</label>
+              <label className="block text-sm font-medium text-theme-text mb-1">City</label>
               <input
                 type="text"
                 name="city"
@@ -138,7 +138,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">State</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">State</label>
                 <input
                   type="text"
                   name="state"
@@ -148,7 +148,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">State Code</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">State Code</label>
                 <input
                   type="text"
                   name="stateCode"
@@ -166,7 +166,7 @@ export function VendorForm({ initialData }: { initialData?: any }) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 border border-theme-border bg-theme-surface text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
+          className="px-4 py-2 border border-theme-border bg-theme-surface text-theme-text rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
         >
           Cancel
         </button>

@@ -78,14 +78,14 @@ export async function RevenueLedger({
             />
             <button
               type="submit"
-              className="bg-theme-surface-hover text-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
+              className="bg-theme-surface-hover text-theme-text px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
             >
               Filter
             </button>
             {(query || statusFilter || fromFilter || toFilter) && (
               <Link
                 href="/revenue"
-                className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-200 border border-theme-border flex items-center justify-center"
+                className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-theme-text border border-theme-border flex items-center justify-center"
               >
                 Clear
               </Link>

@@ -80,7 +80,7 @@ export default async function BalanceSheetPage({
         </div>
         <Link 
           href="/reports" 
-          className="px-4 py-2 bg-theme-surface text-gray-200 border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
+          className="px-4 py-2 bg-theme-surface text-theme-text border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
         >
           Back to Reports
         </Link>
@@ -88,7 +88,7 @@ export default async function BalanceSheetPage({
 
       <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border flex items-end gap-4">
         <form className="flex-1 max-w-xs">
-          <label className="block text-xs font-medium text-gray-200 mb-1">As Of Date</label>
+          <label className="block text-xs font-medium text-theme-text mb-1">As Of Date</label>
           <div className="flex gap-2">
             <input type="date" name="asOf" defaultValue={asOfFilter} className="w-full border-theme-border rounded-md text-sm" />
             <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-theme-primary-dark">
@@ -112,7 +112,7 @@ export default async function BalanceSheetPage({
             
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-sm text-gray-200 mb-2">Current Assets</h4>
+                <h4 className="font-semibold text-sm text-theme-text mb-2">Current Assets</h4>
                 <div className="flex justify-between text-sm py-1">
                   <span className="text-theme-text-muted">Cash & Bank Equivalents</span>
                   <span className="font-medium">₹{cashEquivalents.toFixed(2)}</span>
@@ -136,7 +136,7 @@ export default async function BalanceSheetPage({
             
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-sm text-gray-200 mb-2">Liabilities</h4>
+                <h4 className="font-semibold text-sm text-theme-text mb-2">Liabilities</h4>
                 <div className="flex justify-between text-sm py-1">
                   <span className="text-theme-text-muted">Accounts Payable (AP)</span>
                   <span className="font-medium">₹{accountsPayable.toFixed(2)}</span>
@@ -144,7 +144,7 @@ export default async function BalanceSheetPage({
               </div>
 
               <div>
-                <h4 className="font-semibold text-sm text-gray-200 mb-2">Equity</h4>
+                <h4 className="font-semibold text-sm text-theme-text mb-2">Equity</h4>
                 <div className="flex justify-between text-sm py-1">
                   <span className="text-theme-text-muted">Retained Earnings</span>
                   <span className="font-medium">₹{retainedEarnings.toFixed(2)}</span>

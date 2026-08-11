@@ -64,7 +64,7 @@ export default async function ProfitLossPage({
             {(fromFilter || toFilter) && (
               <Link
                 href="/profit-loss"
-                className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-200 border border-theme-border flex items-center justify-center"
+                className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-theme-text border border-theme-border flex items-center justify-center"
               >
                 Clear
               </Link>
@@ -114,14 +114,14 @@ export default async function ProfitLossPage({
       </div>
 
       <div className="bg-theme-surface rounded-lg shadow border border-theme-border overflow-hidden mb-8 print:shadow-none print:border-0">
-        <div className="p-4 border-b border-theme-border bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-gray-800">
+        <div className="p-4 border-b border-theme-border bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-theme-border">
           <h3 className="text-lg font-bold text-theme-text uppercase">Formal Profit & Loss Statement</h3>
         </div>
         <div className="p-6">
           <div className="mb-6">
             <h4 className="font-bold text-theme-text text-lg border-b pb-2 mb-4">REVENUE</h4>
             <div className="flex justify-between items-center py-2 px-4">
-              <span className="text-gray-200">Sales Revenue</span>
+              <span className="text-theme-text">Sales Revenue</span>
               <span className="font-medium">{formatCurrency(kpis.totalRevenue)}</span>
             </div>
             <div className="flex justify-between items-center py-3 px-4 bg-theme-surface-hover font-bold mt-2 border-t">
@@ -135,7 +135,7 @@ export default async function ProfitLossPage({
             <div className="space-y-1">
               {expenseCategories.map((cat, idx) => (
                 <div key={idx} className="flex justify-between items-center py-2 px-4">
-                  <span className="text-gray-200">{cat.category}</span>
+                  <span className="text-theme-text">{cat.category}</span>
                   <span className="font-medium">{formatCurrency(cat.amount)}</span>
                 </div>
               ))}
@@ -158,7 +158,7 @@ export default async function ProfitLossPage({
             </div>
           </div>
           <div>
-            <div className="flex justify-between items-center py-2 px-4 font-bold text-gray-200">
+            <div className="flex justify-between items-center py-2 px-4 font-bold text-theme-text">
               <span>PROFIT MARGIN</span>
               <span>{kpis.profitMargin.toFixed(2)}%</span>
             </div>

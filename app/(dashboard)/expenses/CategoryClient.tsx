@@ -82,7 +82,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
               placeholder="Search categories..."
               className="flex-1 border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
-            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-gray-800">
+            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-theme-surface-hover">
               Search
             </button>
           </form>
@@ -91,7 +91,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
             <button
               onClick={handleSeed}
               disabled={isPending}
-              className="px-4 py-2 border border-theme-border bg-theme-surface text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover disabled:opacity-50"
+              className="px-4 py-2 border border-theme-border bg-theme-surface text-theme-text rounded-lg text-sm font-medium hover:bg-theme-surface-hover disabled:opacity-50"
             >
               Seed Defaults
             </button>
@@ -174,7 +174,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
               )}
               
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">Name *</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">Name *</label>
                 <input
                   type="text"
                   name="name"
@@ -185,7 +185,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">Description</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">Description</label>
                 <textarea
                   name="description"
                   defaultValue={editingCategory?.description}
@@ -198,7 +198,7 @@ export function CategoryClient({ initialCategories, query }: { initialCategories
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-theme-border bg-theme-surface text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
+                  className="px-4 py-2 border border-theme-border bg-theme-surface text-theme-text rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
                 >
                   Cancel
                 </button>

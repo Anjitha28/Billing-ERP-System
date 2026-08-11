@@ -85,14 +85,14 @@ export default async function GstOutwardSuppliesPage({
             <input type="date" name="to" defaultValue={toFilter || ""} className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary" title="To Date" />
             <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-primary-dark">Filter</button>
             {(fromFilter || toFilter) && (
-              <Link href="/reports/gst/outward-supplies" className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-200 border border-theme-border flex items-center justify-center">Clear</Link>
+              <Link href="/reports/gst/outward-supplies" className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-theme-text border border-theme-border flex items-center justify-center">Clear</Link>
             )}
           </form>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-theme-border">
-            <thead className="bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-gray-800">
+            <thead className="bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-theme-border">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Invoice</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Customer / GSTIN</th>
@@ -126,7 +126,7 @@ export default async function GstOutwardSuppliesPage({
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(inv.totalCGST))}</td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(inv.totalSGST))}</td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(inv.totalIGST))}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-200">{formatCurrency(Number(inv.totalGST))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-theme-text">{formatCurrency(Number(inv.totalGST))}</td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-bold text-theme-text">{formatCurrency(Number(inv.netAmount))}</td>
                   </tr>
                 ))

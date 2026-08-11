@@ -34,7 +34,7 @@ export async function ExpensesList({
       case "UNPAID": return "bg-red-900/20 text-red-700 border border-red-200";
       case "PARTIALLY_PAID": return "bg-orange-50 text-orange-700 border border-orange-200";
       case "PAID": return "bg-theme-surface-hover text-green-700 border border-green-200";
-      default: return "bg-theme-surface-hover text-gray-200 border border-theme-border";
+      default: return "bg-theme-surface-hover text-theme-text border border-theme-border";
     }
   };
 
@@ -100,7 +100,7 @@ export async function ExpensesList({
               <option value="APPROVED">Approved</option>
               <option value="CANCELLED">Cancelled</option>
             </select>
-            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-gray-800">
+            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-theme-surface-hover">
               Filter
             </button>
           </form>
@@ -134,7 +134,7 @@ export async function ExpensesList({
                         {expense.expenseNumber}
                       </Link>
                       <span className="text-xs text-theme-text-muted">{new Date(expense.expenseDate).toLocaleDateString()}</span>
-                      <p className="text-sm text-gray-200 mt-1 truncate max-w-xs">{expense.description || <span className="italic text-theme-text-muted">Multiple items</span>}</p>
+                      <p className="text-sm text-theme-text mt-1 truncate max-w-xs">{expense.description || <span className="italic text-theme-text-muted">Multiple items</span>}</p>
                     </td>
                     <td className="px-6 py-4 font-medium text-theme-text">
                       {expense.vendor?.name || <span className="text-theme-text-muted italic">No Vendor</span>}

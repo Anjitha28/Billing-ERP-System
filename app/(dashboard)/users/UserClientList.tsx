@@ -117,7 +117,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                   </button>
                   <button
                     onClick={() => handleResetPassword(user.id)}
-                    className="text-theme-text-muted hover:text-gray-200 font-medium ml-2"
+                    className="text-theme-text-muted hover:text-theme-text font-medium ml-2"
                     disabled={isPending}
                   >
                     Reset Password
@@ -135,7 +135,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
             <h3 className="text-lg font-bold mb-4">{editingUser ? 'Edit User' : 'Create User'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-200">Name</label>
+                <label className="block text-sm font-medium text-theme-text">Name</label>
                 <input 
                   type="text" 
                   name="name" 
@@ -145,7 +145,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-200">Email ID</label>
+                <label className="block text-sm font-medium text-theme-text">Email ID</label>
                 <input 
                   type="email" 
                   name="email" 
@@ -155,7 +155,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-200">Role</label>
+                <label className="block text-sm font-medium text-theme-text">Role</label>
                 <select 
                   name="role" 
                   defaultValue={editingUser?.role || 'USER'} 
@@ -176,7 +176,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-theme-border rounded-lg text-gray-200 hover:bg-theme-surface-hover text-sm font-medium"
+                  className="px-4 py-2 border border-theme-border rounded-lg text-theme-text hover:bg-theme-surface-hover text-sm font-medium"
                 >
                   Cancel
                 </button>

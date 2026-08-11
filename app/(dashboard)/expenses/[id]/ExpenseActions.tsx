@@ -84,7 +84,7 @@ export function ExpenseActions({ expenseId, status, paymentStatus }: { expenseId
             
             <form onSubmit={handleCancel} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-1">Reason</label>
+                <label className="block text-sm font-medium text-theme-text mb-1">Reason</label>
                 <textarea
                   required
                   value={cancelReason}
@@ -99,7 +99,7 @@ export function ExpenseActions({ expenseId, status, paymentStatus }: { expenseId
                 <button
                   type="button"
                   onClick={() => setShowCancelModal(false)}
-                  className="px-4 py-2 border border-theme-border bg-theme-surface text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
+                  className="px-4 py-2 border border-theme-border bg-theme-surface text-theme-text rounded-lg text-sm font-medium hover:bg-theme-surface-hover"
                 >
                   Close
                 </button>

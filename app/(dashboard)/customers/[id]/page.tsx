@@ -47,7 +47,7 @@ export default async function CustomerDetailPage({
           </Link>
           <Link
             href={`/customers/${customer.id}/edit`}
-            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-gray-200 hover:bg-theme-surface-hover transition-colors"
+            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors"
           >
             Edit Profile
           </Link>

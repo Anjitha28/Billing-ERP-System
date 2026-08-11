@@ -35,7 +35,7 @@ export default async function ProductDetailPage({
         <div className="flex gap-3">
           <Link
             href={`/products/${product.id}/edit`}
-            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-gray-200 hover:bg-theme-surface-hover transition-colors"
+            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors"
           >
             Edit Item
           </Link>

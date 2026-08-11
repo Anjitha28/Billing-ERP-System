@@ -68,7 +68,7 @@ export async function ConfirmedInvoices({
               className="flex-1 border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
             {statusFilter && <input type="hidden" name="status" value={statusFilter} />}
-            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-gray-800">
+            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-theme-surface-hover">
               Search
             </button>
           </form>

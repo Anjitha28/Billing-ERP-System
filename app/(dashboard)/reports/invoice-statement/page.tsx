@@ -116,7 +116,7 @@ export default async function InvoiceStatementPage({
         </div>
         <Link
           href="/reports"
-          className="px-4 py-2 bg-theme-surface text-gray-200 border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
+          className="px-4 py-2 bg-theme-surface text-theme-text border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
         >
           Back to Reports
         </Link>
@@ -124,7 +124,7 @@ export default async function InvoiceStatementPage({
 
       <form className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         <div>
-          <label className="block text-xs font-medium text-gray-200 mb-1">Customer</label>
+          <label className="block text-xs font-medium text-theme-text mb-1">Customer</label>
           <select name="customerId" defaultValue={customerFilter} className="w-full border-theme-border rounded-md text-sm">
             <option value="all">All Customers</option>
             {customers.map((c) => (
@@ -135,7 +135,7 @@ export default async function InvoiceStatementPage({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-200 mb-1">Type</label>
+          <label className="block text-xs font-medium text-theme-text mb-1">Type</label>
           <select name="type" defaultValue={typeFilter} className="w-full border-theme-border rounded-md text-sm">
             <option value="all">All Types</option>
             <option value="proforma">Proforma Invoices</option>
@@ -143,11 +143,11 @@ export default async function InvoiceStatementPage({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-200 mb-1">From Date</label>
+          <label className="block text-xs font-medium text-theme-text mb-1">From Date</label>
           <input type="date" name="from" defaultValue={fromFilter} className="w-full border-theme-border rounded-md text-sm" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-200 mb-1">To Date</label>
+          <label className="block text-xs font-medium text-theme-text mb-1">To Date</label>
           <input type="date" name="to" defaultValue={toFilter} className="w-full border-theme-border rounded-md text-sm" />
         </div>
         <div>

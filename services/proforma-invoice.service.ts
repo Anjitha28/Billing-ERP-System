@@ -115,7 +115,7 @@ export class ProformaInvoiceService {
     return TaxEngine.calculateInvoiceTaxes({
       items: mappedItems.map(item => ({
         ...item,
-        customerState: item.isIgstEnabled ? "IGST_FORCED" : (customer.state || BUSINESS_LOCATION.state),
+        customerState: customer.state || BUSINESS_LOCATION.state,
       })),
       businessState: BUSINESS_LOCATION.state,
       customerState: customer.state || BUSINESS_LOCATION.state, // Fallback to intra-state if customer state is missing
@@ -164,11 +164,8 @@ export class ProformaInvoiceService {
             isTdsEnabled: item.isTdsEnabled,
             tdsRate: item.tdsRate,
             tdsAmount: item.tdsAmount || 0,
-            isIgstEnabled: item.isIgstEnabled,
-            igstRate: item.igstRate,
             cgstAmount: item.cgstAmount,
             sgstAmount: item.sgstAmount,
-            igstAmount: item.igstAmount,
             totalGST: item.totalGST,
             totalAmount: item.totalAmount,
           }))
@@ -224,11 +221,8 @@ export class ProformaInvoiceService {
               isTdsEnabled: item.isTdsEnabled,
               tdsRate: item.tdsRate,
               tdsAmount: item.tdsAmount || 0,
-              isIgstEnabled: item.isIgstEnabled,
-              igstRate: item.igstRate,
               cgstAmount: item.cgstAmount,
               sgstAmount: item.sgstAmount,
-              igstAmount: item.igstAmount,
               totalGST: item.totalGST,
               totalAmount: item.totalAmount,
             }))

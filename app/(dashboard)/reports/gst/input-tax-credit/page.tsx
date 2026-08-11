@@ -80,7 +80,7 @@ export default async function InputTaxCreditPage({
       <div className="bg-theme-surface-hover border-l-4 border-blue-400 p-4 mb-8 no-print">
         <div className="flex">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="h-5 w-5 text-blue-700" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
             </svg>
           </div>
@@ -99,14 +99,14 @@ export default async function InputTaxCreditPage({
             <input type="date" name="to" defaultValue={toFilter || ""} className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary" title="To Date" />
             <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-primary-dark">Filter</button>
             {(fromFilter || toFilter) && (
-              <Link href="/reports/gst/input-tax-credit" className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-200 border border-theme-border flex items-center justify-center">Clear</Link>
+              <Link href="/reports/gst/input-tax-credit" className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-theme-text border border-theme-border flex items-center justify-center">Clear</Link>
             )}
           </form>
         </div>
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-theme-border">
-            <thead className="bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-gray-800">
+            <thead className="bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-theme-border">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Expense Number</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Date</th>

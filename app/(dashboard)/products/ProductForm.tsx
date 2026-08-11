@@ -86,7 +86,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
       {/* Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-200 mb-2">Item Type</label>
+        <label className="block text-sm font-medium text-theme-text mb-2">Item Type</label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -121,7 +121,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
           <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Basic Information</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+            <label className="block text-sm font-medium text-theme-text mb-1">
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -135,7 +135,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">Description</label>
+            <label className="block text-sm font-medium text-theme-text mb-1">Description</label>
             <textarea
               name="description"
               value={formData.description}
@@ -147,7 +147,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 HSN / SAC Code <span className="text-red-500">*</span>
               </label>
               <input
@@ -160,7 +160,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 Unit <span className="text-red-500">*</span>
               </label>
               <select
@@ -191,7 +191,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 Selling Price (₹) <span className="text-red-500">*</span>
               </label>
               <input
@@ -206,7 +206,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 Custom/Override Price (₹)
               </label>
               <input
@@ -224,7 +224,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 Purchase Price (₹)
               </label>
               <input
@@ -241,7 +241,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 GST Rate (%) <span className="text-red-500">*</span>
               </label>
               <select
@@ -259,7 +259,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
+              <label className="block text-sm font-medium text-theme-text mb-1">
                 Cess Rate (%)
               </label>
               <input
@@ -280,7 +280,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
+          className="px-4 py-2 text-sm font-medium text-theme-text bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel
