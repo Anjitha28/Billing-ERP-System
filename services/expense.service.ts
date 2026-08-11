@@ -57,7 +57,12 @@ export class ExpenseService {
     return await prisma.expense.findUnique({
       where: { id },
       include: {
-        items: true,
+        items: {
+          include: {
+            category: true,
+            vendor: true,
+          }
+        },
         vendor: true,
         category: true,
       },
@@ -84,9 +89,9 @@ export class ExpenseService {
         data: {
           expenseNumber,
           expenseDate: new Date(data.expenseDate),
-          description: data.description,
+          description: data.description || null,
           vendorId: data.vendorId || null,
-          categoryId: data.categoryId,
+          categoryId: data.categoryId || null,
           status: "DRAFT",
           paymentStatus: "UNPAID",
 
@@ -109,7 +114,11 @@ export class ExpenseService {
           items: {
             create: data.items.map((item: any) => ({
               description: item.description,
+              productId: item.productId || null,
               hsnSacCode: item.hsnSacCode,
+              vendorId: item.vendorId || null,
+              categoryId: item.categoryId || null,
+              date: item.date ? new Date(item.date) : null,
               quantity: item.quantity,
               unit: item.unit,
               unitPrice: item.unitPrice,
@@ -122,6 +131,8 @@ export class ExpenseService {
               igstRate: item.igstRate || 0,
               igstAmount: item.igstAmount || 0,
               totalGST: item.totalGST || 0,
+              tdsRate: item.tdsRate || 0,
+              tdsAmount: item.tdsAmount || 0,
               totalAmount: item.totalAmount
             }))
           }
@@ -145,9 +156,9 @@ export class ExpenseService {
         where: { id },
         data: {
           expenseDate: new Date(data.expenseDate),
-          description: data.description,
+          description: data.description || null,
           vendorId: data.vendorId || null,
-          categoryId: data.categoryId,
+          categoryId: data.categoryId || null,
 
           subtotal: data.subtotal,
           discountAmount: data.discountAmount || 0,
@@ -168,7 +179,11 @@ export class ExpenseService {
           items: {
             create: data.items.map((item: any) => ({
               description: item.description,
+              productId: item.productId || null,
               hsnSacCode: item.hsnSacCode,
+              vendorId: item.vendorId || null,
+              categoryId: item.categoryId || null,
+              date: item.date ? new Date(item.date) : null,
               quantity: item.quantity,
               unit: item.unit,
               unitPrice: item.unitPrice,
@@ -181,6 +196,8 @@ export class ExpenseService {
               igstRate: item.igstRate || 0,
               igstAmount: item.igstAmount || 0,
               totalGST: item.totalGST || 0,
+              tdsRate: item.tdsRate || 0,
+              tdsAmount: item.tdsAmount || 0,
               totalAmount: item.totalAmount
             }))
           }

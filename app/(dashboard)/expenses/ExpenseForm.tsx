@@ -26,67 +26,72 @@ export function ExpenseForm({
   const [vendors, setVendors] = useState(initialVendors);
   const [categories, setCategories] = useState(initialCategories);
 
-  const [vendorId, setVendorId] = useState(initialData?.vendorId || "");
-  const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
+  // We still keep the header expenseDate because schema.prisma requires it
   const [expenseDate, setExpenseDate] = useState(
     initialData?.expenseDate ? new Date(initialData.expenseDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   );
-  const [description, setDescription] = useState(initialData?.description || "");
   const [notes, setNotes] = useState(initialData?.notes || "");
   
-  const initialTdsRate = initialData?.tdsRate !== null && initialData?.tdsRate !== undefined ? Number(initialData.tdsRate) : null;
-  const isInitialTdsCustom = initialTdsRate !== null && ![0, 1, 2, 5, 10].includes(initialTdsRate);
-  
-  const [tdsRate, setTdsRate] = useState(initialData?.tdsRate?.toString() || "");
-  const [isCustomTds, setIsCustomTds] = useState(isInitialTdsCustom);
-
   const [items, setItems] = useState<any[]>(
     initialData?.items?.map((item: any) => ({
       productId: item.productId || "",
       description: item.description,
+      vendorId: item.vendorId || "",
+      categoryId: item.categoryId || "",
+      date: item.date ? new Date(item.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
       hsnSacCode: item.hsnSacCode || "",
       quantity: Number(item.quantity),
       unitPrice: Number(item.unitPrice),
       gstRate: Number(item.gstRate),
       isCustomGst: ![0, 5, 12, 18, 28].includes(Number(item.gstRate)),
+      tdsRate: item.tdsRate?.toString() || "",
+      isCustomTds: item.tdsRate !== null && item.tdsRate !== undefined && ![0, 1, 2, 5, 10].includes(Number(item.tdsRate)),
       unit: item.unit || "NOS",
-    })) || [{ productId: "", description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, unit: "NOS" }]
+    })) || [{ 
+      productId: "", description: "", vendorId: "", categoryId: "", 
+      date: new Date().toISOString().split('T')[0], hsnSacCode: "", 
+      quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, 
+      tdsRate: "", isCustomTds: false, unit: "NOS" 
+    }]
   );
 
-  const selectedVendor = vendors.find(v => v.id === vendorId);
-  const isInterState = selectedVendor?.state && selectedVendor.state.toLowerCase() !== BUSINESS_LOCATION.state.toLowerCase();
+  const handleItemChange = (index: number, field: string, value: any) => {
+    const newItems = [...items];
+    newItems[index][field] = value;
+    setItems(newItems);
+  };
 
-  const handleVendorChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === "ADD_NEW") {
+  const handleItemVendorChange = async (index: number, value: string) => {
+    if (value === "ADD_NEW") {
       const name = window.prompt("Enter new vendor name:");
       if (name?.trim()) {
         const res = await createVendorAction({ name: name.trim() });
         if (res.success && res.data) {
           setVendors([...vendors, res.data]);
-          setVendorId(res.data.id);
+          handleItemChange(index, "vendorId", res.data.id);
         } else {
           alert(res.error);
         }
       }
     } else {
-      setVendorId(e.target.value);
+      handleItemChange(index, "vendorId", value);
     }
   };
 
-  const handleCategoryChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    if (e.target.value === "ADD_NEW") {
+  const handleItemCategoryChange = async (index: number, value: string) => {
+    if (value === "ADD_NEW") {
       const name = window.prompt("Enter new category name:");
       if (name?.trim()) {
         const res = await createExpenseCategoryAction({ name: name.trim() });
         if (res.success && res.data) {
           setCategories([...categories, res.data]);
-          setCategoryId(res.data.id);
+          handleItemChange(index, "categoryId", res.data.id);
         } else {
           alert(res.error);
         }
       }
     } else {
-      setCategoryId(e.target.value);
+      handleItemChange(index, "categoryId", value);
     }
   };
 
@@ -111,13 +116,13 @@ export function ExpenseForm({
     setItems(newItems);
   };
 
-  const handleItemChange = (index: number, field: string, value: any) => {
-    const newItems = [...items];
-    newItems[index][field] = value;
-    setItems(newItems);
-  };
-
-  const addItem = () => setItems([...items, { productId: "", description: "", hsnSacCode: "", quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, unit: "NOS" }]);
+  const addItem = () => setItems([...items, { 
+    productId: "", description: "", vendorId: "", categoryId: "", 
+    date: new Date().toISOString().split('T')[0], hsnSacCode: "", 
+    quantity: 1, unitPrice: 0, gstRate: 0, isCustomGst: false, 
+    tdsRate: "", isCustomTds: false, unit: "NOS" 
+  }]);
+  
   const removeItem = (index: number) => {
     if (items.length > 1) {
       setItems(items.filter((_, i) => i !== index));
@@ -127,40 +132,44 @@ export function ExpenseForm({
   // Tax Engine Calculation
   const taxInput = items.map(item => {
     const grossAmount = Number(item.quantity) * Number(item.unitPrice);
+    const itemVendor = vendors.find(v => v.id === item.vendorId);
     return {
       taxableAmount: grossAmount,
       gstRate: Number(item.gstRate) || 0,
       grossAmount,
-      discountAmount: 0
+      discountAmount: 0,
+      customerState: itemVendor?.state || BUSINESS_LOCATION.state,
+      tdsRate: Number(item.tdsRate) || 0
     };
   });
 
   const calc = TaxEngine.calculateInvoiceTaxes({
     items: taxInput,
     businessState: BUSINESS_LOCATION.state,
-    customerState: selectedVendor?.state || BUSINESS_LOCATION.state,
-    tdsRate: Number(tdsRate) || 0
+    customerState: BUSINESS_LOCATION.state // fallback
   });
+
+  // Calculate top-level isInterState if we want to show a warning, but we removed Vendor from top-level
+  // so we can just skip it.
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    if (!categoryId) {
-      setError("Expense Category is required.");
-      return;
-    }
-
     if (items.some(i => !i.description)) {
       setError("All items must have a description.");
+      return;
+    }
+    if (items.some(i => !i.categoryId)) {
+      setError("All items must have a category.");
       return;
     }
 
     const payload = {
       expenseDate,
-      description,
-      vendorId: vendorId || null,
-      categoryId,
+      description: items[0]?.description || "Expense",
+      vendorId: items[0]?.vendorId || null,
+      categoryId: items[0]?.categoryId || null,
       notes,
       
       subtotal: calc.subtotal,
@@ -172,7 +181,7 @@ export function ExpenseForm({
       inputIGST: calc.totalIGST,
       totalInputGST: calc.totalGST,
 
-      tdsRate: Number(tdsRate) || 0,
+      tdsRate: 0, // Top level TDS rate is 0 since we track it per-item now
       tdsAmount: calc.tdsAmount,
       grossAmount: calc.grossAmount,
       netAmount: calc.netAmount,
@@ -180,6 +189,9 @@ export function ExpenseForm({
       items: items.map((item, i) => ({
         productId: item.productId || null,
         description: item.description,
+        vendorId: item.vendorId || null,
+        categoryId: item.categoryId || null,
+        date: item.date,
         hsnSacCode: item.hsnSacCode,
         quantity: item.quantity,
         unit: item.unit,
@@ -193,6 +205,8 @@ export function ExpenseForm({
         igstRate: calc.calculatedItems[i].igstRate,
         igstAmount: calc.calculatedItems[i].igstAmount,
         totalGST: calc.calculatedItems[i].totalGST,
+        tdsRate: Number(item.tdsRate) || 0,
+        tdsAmount: calc.calculatedItems[i].tdsAmount || 0,
         totalAmount: calc.calculatedItems[i].totalAmount
       }))
     };
@@ -222,35 +236,6 @@ export function ExpenseForm({
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-            <input
-              type="text"
-              required
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="e.g., Monthly Office Rent"
-            />
-          </div>
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-sm font-medium text-gray-700">Category *</label>
-              <a href="/expenses?tab=categories" className="text-xs text-blue-600 hover:underline">Manage Categories</a>
-            </div>
-            <select
-              required
-              value={categoryId}
-              onChange={handleCategoryChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="">Select Category</option>
-              {categories.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-              <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Category</option>
-            </select>
-          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Expense Date *</label>
             <input
@@ -261,26 +246,7 @@ export function ExpenseForm({
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div className="lg:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Vendor (Optional)</label>
-            <select
-              value={vendorId}
-              onChange={handleVendorChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-            >
-              <option value="">No Vendor Specified</option>
-              {vendors.map(v => (
-                <option key={v.id} value={v.id}>{v.name} {v.gstin ? `(${v.gstin})` : ''}</option>
-              ))}
-              <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Vendor</option>
-            </select>
-            {isInterState && (
-              <p className="text-xs text-blue-600 mt-1 font-medium flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                Vendor is out of state. IGST rules will apply.
-              </p>
-            )}
-          </div>
+          {/* Removed Description, Vendor, and Category from here */}
         </div>
       </div>
 
@@ -288,18 +254,19 @@ export function ExpenseForm({
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Items</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[1200px]">
+          <table className="w-full text-left border-collapse min-w-[1400px]">
             <thead>
               <tr className="border-b-2 border-gray-200 text-sm font-medium text-gray-600">
-                <th className="pb-3 px-2 w-28 text-xs uppercase tracking-wider">Date</th>
-                <th className="pb-3 px-2 min-w-[180px] text-xs uppercase tracking-wider">Description</th>
-                <th className="pb-3 px-2 w-48 text-xs uppercase tracking-wider">Item (Optional)</th>
-                <th className="pb-3 px-2 w-32 text-xs uppercase tracking-wider">Category</th>
+                <th className="pb-3 px-2 w-36 text-xs uppercase tracking-wider">Date</th>
+                <th className="pb-3 px-2 min-w-[150px] text-xs uppercase tracking-wider">Description</th>
+                <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Vendor</th>
+                <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Item (Optional)</th>
+                <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Category</th>
                 <th className="pb-3 px-2 w-28 text-xs uppercase tracking-wider">HSN/SAC</th>
                 <th className="pb-3 px-2 w-24 text-right text-xs uppercase tracking-wider">Qty</th>
                 <th className="pb-3 px-2 w-28 text-right text-xs uppercase tracking-wider">Rate</th>
                 <th className="pb-3 px-2 w-32 text-right text-xs uppercase tracking-wider">GST Rate</th>
-                <th className="pb-3 px-2 w-24 text-right text-xs uppercase tracking-wider">TDS</th>
+                <th className="pb-3 px-2 w-28 text-right text-xs uppercase tracking-wider">TDS</th>
                 <th className="pb-3 px-2 w-32 text-right text-xs uppercase tracking-wider">Amount</th>
                 <th className="pb-3 px-2 w-10"></th>
               </tr>
@@ -307,8 +274,14 @@ export function ExpenseForm({
             <tbody className="divide-y divide-gray-100">
               {items.map((item, index) => (
                 <tr key={index} className="group hover:bg-gray-50 transition-colors">
-                  <td className="py-3 px-2 text-xs text-gray-500 whitespace-nowrap">
-                    {new Date(expenseDate).toLocaleDateString()}
+                  <td className="py-2 px-2">
+                    <input
+                      type="date"
+                      required
+                      value={item.date}
+                      onChange={e => handleItemChange(index, "date", e.target.value)}
+                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs"
+                    />
                   </td>
                   <td className="py-2 px-2">
                     <input
@@ -322,6 +295,19 @@ export function ExpenseForm({
                   </td>
                   <td className="py-2 px-2">
                     <select
+                      value={item.vendorId}
+                      onChange={e => handleItemVendorChange(index, e.target.value)}
+                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    >
+                      <option value="">No Vendor</option>
+                      {vendors.map(v => (
+                        <option key={v.id} value={v.id}>{v.name}</option>
+                      ))}
+                      <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Vendor</option>
+                    </select>
+                  </td>
+                  <td className="py-2 px-2">
+                    <select
                       value={item.productId}
                       onChange={e => handleProductChange(index, e.target.value)}
                       className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
@@ -332,8 +318,19 @@ export function ExpenseForm({
                       ))}
                     </select>
                   </td>
-                  <td className="py-3 px-2 text-xs text-gray-500 whitespace-nowrap truncate max-w-[128px]">
-                    {categories.find(c => c.id === categoryId)?.name || "-"}
+                  <td className="py-2 px-2">
+                    <select
+                      required
+                      value={item.categoryId}
+                      onChange={e => handleItemCategoryChange(index, e.target.value)}
+                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map(c => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                      <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Category</option>
+                    </select>
                   </td>
                   <td className="py-2 px-2">
                     <input
@@ -411,8 +408,51 @@ export function ExpenseForm({
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-2 text-xs text-gray-500 text-right whitespace-nowrap">
-                    {tdsRate ? `${tdsRate}%` : "-"}
+                  <td className="py-2 px-2">
+                    {!item.isCustomTds ? (
+                      <select
+                        value={item.tdsRate}
+                        onChange={e => {
+                          if (e.target.value === "CUSTOM") {
+                            handleItemChange(index, "isCustomTds", true);
+                            handleItemChange(index, "tdsRate", "");
+                          } else {
+                            handleItemChange(index, "tdsRate", e.target.value);
+                          }
+                        }}
+                        className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs text-right bg-white"
+                      >
+                        <option value="">No TDS</option>
+                        <option value="1">1%</option>
+                        <option value="2">2%</option>
+                        <option value="5">5%</option>
+                        <option value="10">10%</option>
+                        <option value="CUSTOM">Custom</option>
+                      </select>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          required
+                          value={item.tdsRate}
+                          onChange={e => handleItemChange(index, "tdsRate", e.target.value)}
+                          className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs text-right px-1"
+                          placeholder="%"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => {
+                            handleItemChange(index, "isCustomTds", false);
+                            handleItemChange(index, "tdsRate", "");
+                          }}
+                          className="text-gray-400 hover:text-gray-700"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                        </button>
+                      </div>
+                    )}
                   </td>
                   <td className="py-3 px-2 text-right font-medium text-gray-900">
                     ₹{calc.calculatedItems[index].totalAmount.toFixed(2)}
@@ -458,53 +498,7 @@ export function ExpenseForm({
                   placeholder="Internal notes regarding this expense..."
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">TDS Rate (%)</label>
-                {!isCustomTds ? (
-                  <select
-                    value={tdsRate}
-                    onChange={e => {
-                      if (e.target.value === "CUSTOM") {
-                        setIsCustomTds(true);
-                        setTdsRate("");
-                      } else {
-                        setTdsRate(e.target.value);
-                      }
-                    }}
-                    className="w-full max-w-xs border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                  >
-                    <option value="">No TDS</option>
-                    <option value="1">1% (Sec 194C)</option>
-                    <option value="2">2% (Sec 194C / 194J)</option>
-                    <option value="5">5%</option>
-                    <option value="10">10% (Sec 194J)</option>
-                    <option value="CUSTOM">Custom</option>
-                  </select>
-                ) : (
-                  <div className="flex items-center gap-2 max-w-xs">
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      required
-                      value={tdsRate}
-                      onChange={e => setTdsRate(e.target.value)}
-                      className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter TDS %"
-                    />
-                    <button 
-                      type="button"
-                      onClick={() => {
-                        setIsCustomTds(false);
-                        setTdsRate("");
-                      }}
-                      className="px-3 py-2 text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg bg-gray-50"
-                    >
-                      Clear
-                    </button>
-                  </div>
-                )}
-              </div>
+              {/* Removed old TDS field from here */}
             </div>
           </div>
         </div>
@@ -524,23 +518,18 @@ export function ExpenseForm({
 
               {calc.totalGST > 0 && (
                 <div className="pt-2 pb-2 space-y-2">
-                  {isInterState ? (
-                    <div className="flex justify-between text-gray-600 text-xs">
-                      <span>Input IGST</span>
-                      <span>₹{calc.totalIGST.toFixed(2)}</span>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex justify-between text-gray-600 text-xs">
-                        <span>Input CGST</span>
-                        <span>₹{calc.totalCGST.toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between text-gray-600 text-xs">
-                        <span>Input SGST</span>
-                        <span>₹{calc.totalSGST.toFixed(2)}</span>
-                      </div>
-                    </>
-                  )}
+                  <div className="flex justify-between text-gray-600 text-xs">
+                    <span>Input CGST</span>
+                    <span>₹{calc.totalCGST.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600 text-xs">
+                    <span>Input SGST</span>
+                    <span>₹{calc.totalSGST.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-600 text-xs">
+                    <span>Input IGST</span>
+                    <span>₹{calc.totalIGST.toFixed(2)}</span>
+                  </div>
                 </div>
               )}
 

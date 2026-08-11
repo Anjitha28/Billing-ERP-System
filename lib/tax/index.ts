@@ -8,6 +8,8 @@ type CalculateInvoiceTaxArgs = {
     gstRate: number;
     grossAmount: number;
     discountAmount: number;
+    customerState?: string;
+    tdsRate?: number;
   }[];
   businessState: string;
   customerState: string;
@@ -29,6 +31,7 @@ export class TaxEngine {
     let totalSGST = 0;
     let totalIGST = 0;
     let totalGST = 0;
+    let totalTdsAmount = 0;
 
     const calculatedItems = items.map(item => {
       subtotal += item.grossAmount;
@@ -39,7 +42,7 @@ export class TaxEngine {
         taxableAmount: item.taxableAmount,
         gstRate: item.gstRate,
         businessState,
-        customerState,
+        customerState: item.customerState || customerState,
       });
 
       totalCGST += gst.cgstAmount;
@@ -47,9 +50,22 @@ export class TaxEngine {
       totalIGST += gst.igstAmount;
       totalGST += gst.totalGST;
 
+      const itemTdsRate = item.tdsRate !== undefined ? item.tdsRate : tdsRate;
+      let itemTdsAmount = 0;
+      if (itemTdsRate > 0) {
+        const tds = TDSCalculator.calculateTDS({
+          taxableAmount: item.taxableAmount,
+          tdsRate: itemTdsRate,
+        });
+        itemTdsAmount = tds.tdsAmount;
+      }
+      totalTdsAmount += itemTdsAmount;
+
       return {
         ...item,
         ...gst,
+        tdsRate: itemTdsRate,
+        tdsAmount: itemTdsAmount,
         totalAmount: Number((item.taxableAmount + gst.totalGST).toFixed(2)),
       };
     });
@@ -61,16 +77,11 @@ export class TaxEngine {
     totalSGST = Number(totalSGST.toFixed(2));
     totalIGST = Number(totalIGST.toFixed(2));
     totalGST = Number(totalGST.toFixed(2));
+    totalTdsAmount = Number(totalTdsAmount.toFixed(2));
 
     const grossAmount = Number((taxableAmount + totalGST).toFixed(2));
     
-    // TDS is calculated on the taxable amount per business rules specified
-    const tds = TDSCalculator.calculateTDS({
-      taxableAmount,
-      tdsRate,
-    });
-
-    const netAmount = Number((grossAmount - tds.tdsAmount).toFixed(2));
+    const netAmount = Number((grossAmount - totalTdsAmount).toFixed(2));
 
     return {
       subtotal,
@@ -81,7 +92,7 @@ export class TaxEngine {
       totalIGST,
       totalGST,
       tdsRate,
-      tdsAmount: tds.tdsAmount,
+      tdsAmount: totalTdsAmount,
       grossAmount,
       netAmount,
       calculatedItems,

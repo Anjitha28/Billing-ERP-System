@@ -116,7 +116,7 @@ export class DashboardService {
     let totalExpenses = 0;
 
     for (const exp of expenses) {
-      const name = exp.category.name;
+      const name = exp.category?.name || "Uncategorized/Multiple";
       const net = Number(exp.netAmount);
       if (!categoryMap[name]) categoryMap[name] = { category: name, amount: 0 };
       categoryMap[name].amount += net;

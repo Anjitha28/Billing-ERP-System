@@ -18,7 +18,7 @@ export default async function ExpenseDetailPage({
     notFound();
   }
 
-  const isInterState = expense.vendor?.state && expense.vendor.state.toLowerCase() !== BUSINESS_LOCATION.state.toLowerCase();
+
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
@@ -43,7 +43,9 @@ export default async function ExpenseDetailPage({
               </span>
             )}
           </div>
-          <p className="text-gray-500 mt-1">{expense.description}</p>
+          {expense.description && (
+            <p className="text-gray-500 mt-1">{expense.description}</p>
+          )}
         </div>
         <div className="flex items-center gap-3">
           {expense.status === "DRAFT" && (
@@ -76,24 +78,32 @@ export default async function ExpenseDetailPage({
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-gray-200 text-gray-500 bg-white">
-                    <th className="px-6 py-3 font-semibold">Description</th>
-                    <th className="px-6 py-3 font-semibold text-right">Qty</th>
-                    <th className="px-6 py-3 font-semibold text-right">Rate</th>
-                    <th className="px-6 py-3 font-semibold text-right">GST %</th>
-                    <th className="px-6 py-3 font-semibold text-right">Amount</th>
+                    <th className="px-4 py-3 font-semibold">Date</th>
+                    <th className="px-4 py-3 font-semibold">Description</th>
+                    <th className="px-4 py-3 font-semibold">Category</th>
+                    <th className="px-4 py-3 font-semibold">Vendor</th>
+                    <th className="px-4 py-3 font-semibold text-right">Qty</th>
+                    <th className="px-4 py-3 font-semibold text-right">Rate</th>
+                    <th className="px-4 py-3 font-semibold text-right">GST %</th>
+                    <th className="px-4 py-3 font-semibold text-right">TDS %</th>
+                    <th className="px-4 py-3 font-semibold text-right">Amount</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {expense.items.map((item) => (
                     <tr key={item.id}>
-                      <td className="px-6 py-4 text-gray-900 font-medium">
+                      <td className="px-4 py-4 text-gray-900">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</td>
+                      <td className="px-4 py-4 text-gray-900 font-medium">
                         {item.description}
                         {item.hsnSacCode && <div className="text-xs text-gray-500 font-normal">HSN: {item.hsnSacCode}</div>}
                       </td>
-                      <td className="px-6 py-4 text-right text-gray-600">{Number(item.quantity)} {item.unit}</td>
-                      <td className="px-6 py-4 text-right text-gray-600">₹{Number(item.unitPrice).toFixed(2)}</td>
-                      <td className="px-6 py-4 text-right text-gray-600">{Number(item.gstRate)}%</td>
-                      <td className="px-6 py-4 text-right text-gray-900 font-medium">₹{Number(item.totalAmount).toFixed(2)}</td>
+                      <td className="px-4 py-4 text-gray-600">{item.category?.name || "-"}</td>
+                      <td className="px-4 py-4 text-gray-600">{item.vendor?.name || "-"}</td>
+                      <td className="px-4 py-4 text-right text-gray-600">{Number(item.quantity)} {item.unit}</td>
+                      <td className="px-4 py-4 text-right text-gray-600">₹{Number(item.unitPrice).toFixed(2)}</td>
+                      <td className="px-4 py-4 text-right text-gray-600">{Number(item.gstRate)}%</td>
+                      <td className="px-4 py-4 text-right text-gray-600">{item.tdsRate ? `${Number(item.tdsRate)}%` : "-"}</td>
+                      <td className="px-4 py-4 text-right text-gray-900 font-medium">₹{Number(item.totalAmount).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -110,10 +120,12 @@ export default async function ExpenseDetailPage({
                 <span>Expense Date</span>
                 <span className="font-medium text-gray-900">{new Date(expense.expenseDate).toLocaleDateString()}</span>
               </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Category</span>
-                <span className="font-medium text-gray-900">{expense.category.name}</span>
-              </div>
+              {expense.category && (
+                <div className="flex justify-between text-gray-600">
+                  <span>Category</span>
+                  <span className="font-medium text-gray-900">{expense.category.name}</span>
+                </div>
+              )}
               {expense.vendor && (
                 <div className="flex justify-between text-gray-600">
                   <span>Vendor</span>
@@ -132,7 +144,7 @@ export default async function ExpenseDetailPage({
                 {Number(expense.totalInputGST) > 0 && (
                   <div className="pt-2 space-y-1">
                     <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Input Taxes</span>
-                    {isInterState ? (
+                    {Number(expense.inputIGST) > 0 ? (
                       <div className="flex justify-between text-gray-600 text-xs">
                         <span>IGST</span>
                         <span>₹{Number(expense.inputIGST).toFixed(2)}</span>
@@ -159,7 +171,7 @@ export default async function ExpenseDetailPage({
 
                 {Number(expense.tdsAmount) > 0 && (
                   <div className="flex justify-between text-red-600 font-medium pt-1">
-                    <span>Less TDS ({Number(expense.tdsRate)}%)</span>
+                    <span>Less TDS</span>
                     <span>-₹{Number(expense.tdsAmount).toFixed(2)}</span>
                   </div>
                 )}

@@ -134,13 +134,13 @@ export async function ExpensesList({
                         {expense.expenseNumber}
                       </Link>
                       <span className="text-xs text-gray-500">{new Date(expense.expenseDate).toLocaleDateString()}</span>
-                      <p className="text-sm text-gray-700 mt-1 truncate max-w-xs">{expense.description}</p>
+                      <p className="text-sm text-gray-700 mt-1 truncate max-w-xs">{expense.description || <span className="italic text-gray-400">Multiple items</span>}</p>
                     </td>
                     <td className="px-6 py-4 font-medium text-gray-900">
                       {expense.vendor?.name || <span className="text-gray-400 italic">No Vendor</span>}
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {expense.category.name}
+                      {expense.category?.name || <span className="text-gray-400 italic">Mixed/Various</span>}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="font-medium text-gray-900">₹{expense.netAmount.toString()}</p>
