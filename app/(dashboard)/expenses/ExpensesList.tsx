@@ -21,20 +21,20 @@ export async function ExpensesList({
 
   const getStatusColor = (status: ExpenseStatus) => {
     switch (status) {
-      case "DRAFT": return "bg-gray-100 text-gray-800";
-      case "APPROVED": return "bg-blue-100 text-blue-800";
+      case "DRAFT": return "bg-theme-surface-hover text-theme-text";
+      case "APPROVED": return "bg-theme-surface-hover text-blue-800";
       case "REJECTED": return "bg-red-100 text-red-800";
-      case "CANCELLED": return "bg-gray-100 text-gray-500 line-through";
-      default: return "bg-gray-100 text-gray-800";
+      case "CANCELLED": return "bg-theme-surface-hover text-theme-text-muted line-through";
+      default: return "bg-theme-surface-hover text-theme-text";
     }
   };
 
   const getPaymentStatusColor = (status: PaymentStatus) => {
     switch (status) {
-      case "UNPAID": return "bg-red-50 text-red-700 border border-red-200";
+      case "UNPAID": return "bg-red-900/20 text-red-700 border border-red-200";
       case "PARTIALLY_PAID": return "bg-orange-50 text-orange-700 border border-orange-200";
-      case "PAID": return "bg-green-50 text-green-700 border border-green-200";
-      default: return "bg-gray-50 text-gray-700 border border-gray-200";
+      case "PAID": return "bg-theme-surface-hover text-green-700 border border-green-200";
+      default: return "bg-theme-surface-hover text-gray-200 border border-theme-border";
     }
   };
 
@@ -43,7 +43,7 @@ export async function ExpensesList({
       <div className="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4">
         <Link 
           href="/expenses/new" 
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary-dark transition-colors"
         >
           Record Expense
         </Link>
@@ -51,39 +51,39 @@ export async function ExpensesList({
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">Total Expenses</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{metrics.totalCount}</p>
+        <div className="bg-theme-surface p-4 rounded-xl border border-theme-border shadow-sm">
+          <p className="text-sm font-medium text-theme-text-muted">Total Expenses</p>
+          <p className="text-2xl font-bold text-theme-text mt-1">{metrics.totalCount}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">Approved</p>
-          <p className="text-2xl font-bold text-blue-600 mt-1">{metrics.approvedCount}</p>
+        <div className="bg-theme-surface p-4 rounded-xl border border-theme-border shadow-sm">
+          <p className="text-sm font-medium text-theme-text-muted">Approved</p>
+          <p className="text-2xl font-bold text-theme-primary mt-1">{metrics.approvedCount}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">Unpaid</p>
+        <div className="bg-theme-surface p-4 rounded-xl border border-theme-border shadow-sm">
+          <p className="text-sm font-medium text-theme-text-muted">Unpaid</p>
           <p className="text-2xl font-bold text-red-600 mt-1">{metrics.unpaidCount}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-          <p className="text-sm font-medium text-gray-500">Total Value</p>
+        <div className="bg-theme-surface p-4 rounded-xl border border-theme-border shadow-sm">
+          <p className="text-sm font-medium text-theme-text-muted">Total Value</p>
           <p className="text-2xl font-bold text-emerald-600 mt-1">₹{metrics.totalValue.toLocaleString('en-IN')}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden">
         {/* Filters */}
-        <div className="p-4 border-b border-gray-200 bg-gray-50 flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <div className="p-4 border-b border-theme-border bg-theme-surface-hover flex flex-col sm:flex-row gap-4 justify-between items-center">
           <form className="flex-1 w-full max-w-2xl flex gap-2">
             <input
               type="text"
               name="q"
               defaultValue={searchParams.q}
               placeholder="Search by ID, vendor or description..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
             <select
               name="categoryId"
               defaultValue={searchParams.categoryId || ""}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
             >
               <option value="">All Categories</option>
               {categories.map(c => (
@@ -93,14 +93,14 @@ export async function ExpensesList({
             <select
               name="status"
               defaultValue={searchParams.status || ""}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
             >
               <option value="">All Statuses</option>
               <option value="DRAFT">Draft</option>
               <option value="APPROVED">Approved</option>
               <option value="CANCELLED">Cancelled</option>
             </select>
-            <button type="submit" className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800">
+            <button type="submit" className="px-4 py-2 bg-theme-bg text-white rounded-lg text-sm font-medium hover:bg-gray-800">
               Filter
             </button>
           </form>
@@ -110,7 +110,7 @@ export async function ExpensesList({
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold">
+              <tr className="bg-theme-surface-hover border-b border-theme-border text-xs uppercase text-theme-text-muted font-semibold">
                 <th className="px-6 py-3">Expense Details</th>
                 <th className="px-6 py-3">Vendor</th>
                 <th className="px-6 py-3">Category</th>
@@ -119,31 +119,31 @@ export async function ExpensesList({
                 <th className="px-6 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-theme-border">
               {expenses.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-12 text-center text-theme-text-muted">
                     No expenses found matching the criteria.
                   </td>
                 </tr>
               ) : (
                 expenses.map((expense) => (
-                  <tr key={expense.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={expense.id} className="hover:bg-theme-surface-hover/50 transition-colors">
                     <td className="px-6 py-4">
-                      <Link href={`/expenses/${expense.id}`} className="font-medium text-blue-600 hover:underline block">
+                      <Link href={`/expenses/${expense.id}`} className="font-medium text-theme-primary hover:underline block">
                         {expense.expenseNumber}
                       </Link>
-                      <span className="text-xs text-gray-500">{new Date(expense.expenseDate).toLocaleDateString()}</span>
-                      <p className="text-sm text-gray-700 mt-1 truncate max-w-xs">{expense.description || <span className="italic text-gray-400">Multiple items</span>}</p>
+                      <span className="text-xs text-theme-text-muted">{new Date(expense.expenseDate).toLocaleDateString()}</span>
+                      <p className="text-sm text-gray-200 mt-1 truncate max-w-xs">{expense.description || <span className="italic text-theme-text-muted">Multiple items</span>}</p>
                     </td>
-                    <td className="px-6 py-4 font-medium text-gray-900">
-                      {expense.vendor?.name || <span className="text-gray-400 italic">No Vendor</span>}
+                    <td className="px-6 py-4 font-medium text-theme-text">
+                      {expense.vendor?.name || <span className="text-theme-text-muted italic">No Vendor</span>}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
-                      {expense.category?.name || <span className="text-gray-400 italic">Mixed/Various</span>}
+                    <td className="px-6 py-4 text-sm text-theme-text-muted">
+                      {expense.category?.name || <span className="text-theme-text-muted italic">Mixed/Various</span>}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <p className="font-medium text-gray-900">₹{expense.netAmount.toString()}</p>
+                      <p className="font-medium text-theme-text">₹{expense.netAmount.toString()}</p>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1 items-center">
@@ -160,7 +160,7 @@ export async function ExpensesList({
                     <td className="px-6 py-4 text-right text-sm">
                       <Link
                         href={`/expenses/${expense.id}`}
-                        className="text-blue-600 hover:text-blue-900 font-medium"
+                        className="text-theme-primary hover:text-blue-900 font-medium"
                       >
                         View
                       </Link>

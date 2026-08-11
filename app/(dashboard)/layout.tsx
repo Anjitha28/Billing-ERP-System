@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   const role = (session?.user as any)?.role || "USER";
 
   return (
-    <div className={`${inter.className} flex h-screen bg-gray-50`}>
+    <div className={`${inter.className} flex h-screen bg-theme-surface-hover`}>
       <Sidebar userRole={role} />
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <Header />

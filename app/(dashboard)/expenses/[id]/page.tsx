@@ -23,14 +23,14 @@ export default async function ExpenseDetailPage({
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-theme-surface p-6 rounded-xl shadow-sm border border-theme-border">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">{expense.expenseNumber}</h1>
+            <h1 className="text-2xl font-bold text-theme-text">{expense.expenseNumber}</h1>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-              ${expense.status === 'APPROVED' ? 'bg-blue-100 text-blue-800' : 
-                expense.status === 'DRAFT' ? 'bg-gray-100 text-gray-800' : 
-                expense.status === 'CANCELLED' ? 'bg-gray-100 text-gray-500' : 
+              ${expense.status === 'APPROVED' ? 'bg-theme-surface-hover text-blue-800' : 
+                expense.status === 'DRAFT' ? 'bg-theme-surface-hover text-theme-text' : 
+                expense.status === 'CANCELLED' ? 'bg-theme-surface-hover text-theme-text-muted' : 
                 'bg-red-100 text-red-800'}`}>
               {expense.status}
             </span>
@@ -44,14 +44,14 @@ export default async function ExpenseDetailPage({
             )}
           </div>
           {expense.description && (
-            <p className="text-gray-500 mt-1">{expense.description}</p>
+            <p className="text-theme-text-muted mt-1">{expense.description}</p>
           )}
         </div>
         <div className="flex items-center gap-3">
           {expense.status === "DRAFT" && (
             <Link
               href={`/expenses/${expense.id}/edit`}
-              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              className="px-4 py-2 border border-theme-border text-gray-200 rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
             >
               Edit Draft
             </Link>
@@ -61,7 +61,7 @@ export default async function ExpenseDetailPage({
       </div>
 
       {expense.status === "CANCELLED" && expense.cancellationReason && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-800 text-sm">
+        <div className="bg-red-900/20 border border-red-200 rounded-xl p-4 text-red-800 text-sm">
           <strong>Cancellation Reason:</strong> {expense.cancellationReason}
           <div className="text-xs text-red-600 mt-1">Cancelled at: {expense.cancelledAt?.toLocaleString()}</div>
         </div>
@@ -70,14 +70,14 @@ export default async function ExpenseDetailPage({
       {/* Main Details */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-              <h3 className="text-sm font-bold text-gray-900">Line Items</h3>
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden">
+            <div className="px-6 py-4 border-b border-theme-border bg-theme-surface-hover flex justify-between items-center">
+              <h3 className="text-sm font-bold text-theme-text">Line Items</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 text-gray-500 bg-white">
+                  <tr className="border-b border-theme-border text-theme-text-muted bg-theme-surface">
                     <th className="px-4 py-3 font-semibold">Date</th>
                     <th className="px-4 py-3 font-semibold">Description</th>
                     <th className="px-4 py-3 font-semibold">Category</th>
@@ -92,18 +92,18 @@ export default async function ExpenseDetailPage({
                 <tbody className="divide-y divide-gray-100">
                   {expense.items.map((item) => (
                     <tr key={item.id}>
-                      <td className="px-4 py-4 text-gray-900">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</td>
-                      <td className="px-4 py-4 text-gray-900 font-medium">
+                      <td className="px-4 py-4 text-theme-text">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</td>
+                      <td className="px-4 py-4 text-theme-text font-medium">
                         {item.description}
-                        {item.hsnSacCode && <div className="text-xs text-gray-500 font-normal">HSN: {item.hsnSacCode}</div>}
+                        {item.hsnSacCode && <div className="text-xs text-theme-text-muted font-normal">HSN: {item.hsnSacCode}</div>}
                       </td>
-                      <td className="px-4 py-4 text-gray-600">{item.category?.name || "-"}</td>
-                      <td className="px-4 py-4 text-gray-600">{item.vendor?.name || "-"}</td>
-                      <td className="px-4 py-4 text-right text-gray-600">{Number(item.quantity)} {item.unit}</td>
-                      <td className="px-4 py-4 text-right text-gray-600">₹{Number(item.unitPrice).toFixed(2)}</td>
-                      <td className="px-4 py-4 text-right text-gray-600">{Number(item.gstRate)}%</td>
-                      <td className="px-4 py-4 text-right text-gray-600">{item.tdsRate ? `${Number(item.tdsRate)}%` : "-"}</td>
-                      <td className="px-4 py-4 text-right text-gray-900 font-medium">₹{Number(item.totalAmount).toFixed(2)}</td>
+                      <td className="px-4 py-4 text-theme-text-muted">{item.category?.name || "-"}</td>
+                      <td className="px-4 py-4 text-theme-text-muted">{item.vendor?.name || "-"}</td>
+                      <td className="px-4 py-4 text-right text-theme-text-muted">{Number(item.quantity)} {item.unit}</td>
+                      <td className="px-4 py-4 text-right text-theme-text-muted">₹{Number(item.unitPrice).toFixed(2)}</td>
+                      <td className="px-4 py-4 text-right text-theme-text-muted">{Number(item.gstRate)}%</td>
+                      <td className="px-4 py-4 text-right text-theme-text-muted">{item.tdsRate ? `${Number(item.tdsRate)}%` : "-"}</td>
+                      <td className="px-4 py-4 text-right text-theme-text font-medium">₹{Number(item.totalAmount).toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -113,49 +113,49 @@ export default async function ExpenseDetailPage({
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-sm font-bold text-gray-900 mb-4 pb-3 border-b border-gray-200">Summary</h3>
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border p-6">
+            <h3 className="text-sm font-bold text-theme-text mb-4 pb-3 border-b border-theme-border">Summary</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-theme-text-muted">
                 <span>Expense Date</span>
-                <span className="font-medium text-gray-900">{new Date(expense.expenseDate).toLocaleDateString()}</span>
+                <span className="font-medium text-theme-text">{new Date(expense.expenseDate).toLocaleDateString()}</span>
               </div>
               {expense.category && (
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-theme-text-muted">
                   <span>Category</span>
-                  <span className="font-medium text-gray-900">{expense.category.name}</span>
+                  <span className="font-medium text-theme-text">{expense.category.name}</span>
                 </div>
               )}
               {expense.vendor && (
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-theme-text-muted">
                   <span>Vendor</span>
-                  <span className="font-medium text-blue-600">
+                  <span className="font-medium text-theme-primary">
                     <Link href={`/vendors/${expense.vendor.id}`}>{expense.vendor.name}</Link>
                   </span>
                 </div>
               )}
 
-              <div className="pt-4 mt-2 border-t border-gray-200 space-y-2">
-                <div className="flex justify-between text-gray-600">
+              <div className="pt-4 mt-2 border-t border-theme-border space-y-2">
+                <div className="flex justify-between text-theme-text-muted">
                   <span>Subtotal</span>
                   <span>₹{Number(expense.subtotal).toFixed(2)}</span>
                 </div>
                 
                 {Number(expense.totalInputGST) > 0 && (
                   <div className="pt-2 space-y-1">
-                    <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Input Taxes</span>
+                    <span className="text-xs font-semibold text-theme-text-muted uppercase tracking-wider">Input Taxes</span>
                     {Number(expense.inputIGST) > 0 ? (
-                      <div className="flex justify-between text-gray-600 text-xs">
+                      <div className="flex justify-between text-theme-text-muted text-xs">
                         <span>IGST</span>
                         <span>₹{Number(expense.inputIGST).toFixed(2)}</span>
                       </div>
                     ) : (
                       <>
-                        <div className="flex justify-between text-gray-600 text-xs">
+                        <div className="flex justify-between text-theme-text-muted text-xs">
                           <span>CGST</span>
                           <span>₹{Number(expense.inputCGST).toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-gray-600 text-xs">
+                        <div className="flex justify-between text-theme-text-muted text-xs">
                           <span>SGST</span>
                           <span>₹{Number(expense.inputSGST).toFixed(2)}</span>
                         </div>
@@ -164,7 +164,7 @@ export default async function ExpenseDetailPage({
                   </div>
                 )}
                 
-                <div className="flex justify-between text-gray-800 font-medium pt-2 border-t border-gray-100">
+                <div className="flex justify-between text-theme-text font-medium pt-2 border-t border-theme-border">
                   <span>Gross Amount</span>
                   <span>₹{Number(expense.grossAmount).toFixed(2)}</span>
                 </div>
@@ -177,8 +177,8 @@ export default async function ExpenseDetailPage({
                 )}
               </div>
 
-              <div className="flex justify-between items-center pt-4 mt-2 border-t border-gray-200">
-                <span className="font-bold text-gray-900">Net Payable</span>
+              <div className="flex justify-between items-center pt-4 mt-2 border-t border-theme-border">
+                <span className="font-bold text-theme-text">Net Payable</span>
                 <span className="text-xl font-bold text-emerald-600">₹{Number(expense.netAmount).toFixed(2)}</span>
               </div>
             </div>

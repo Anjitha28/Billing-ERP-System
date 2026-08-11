@@ -19,7 +19,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'
 
 export function RevenueVsExpenseChart({ data }: { data: RevenueVsExpenseTrend[] }) {
   if (!data || data.length === 0) {
-    return <div className="flex items-center justify-center h-64 text-gray-500">No data available for the selected period.</div>;
+    return <div className="flex items-center justify-center h-64 text-theme-text-muted">No data available for the selected period.</div>;
   }
 
   return (
@@ -49,7 +49,7 @@ export function OperatingResultChart({ data }: { data: RevenueVsExpenseTrend[] }
   }));
 
   if (!resultData || resultData.length === 0) {
-    return <div className="flex items-center justify-center h-64 text-gray-500">No data available for the selected period.</div>;
+    return <div className="flex items-center justify-center h-64 text-theme-text-muted">No data available for the selected period.</div>;
   }
 
   return (
@@ -77,7 +77,7 @@ export function OperatingResultChart({ data }: { data: RevenueVsExpenseTrend[] }
 
 export function ExpenseCategoryChart({ data }: { data: ExpenseCategory[] }) {
   if (!data || data.length === 0) {
-    return <div className="flex items-center justify-center h-64 text-gray-500">No expense data available.</div>;
+    return <div className="flex items-center justify-center h-64 text-theme-text-muted">No expense data available.</div>;
   }
 
   return (
@@ -109,9 +109,9 @@ export function ExpenseCategoryChart({ data }: { data: ExpenseCategory[] }) {
             <li key={index} className="flex items-center justify-between text-sm">
               <div className="flex items-center">
                 <span className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                <span className="text-gray-700 truncate max-w-[150px]">{entry.category}</span>
+                <span className="text-gray-200 truncate max-w-[150px]">{entry.category}</span>
               </div>
-              <span className="font-medium text-gray-900">{entry.percentage.toFixed(1)}%</span>
+              <span className="font-medium text-theme-text">{entry.percentage.toFixed(1)}%</span>
             </li>
           ))}
         </ul>

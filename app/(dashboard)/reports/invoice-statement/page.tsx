@@ -111,21 +111,21 @@ export default async function InvoiceStatementPage({
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Invoice Statement</h1>
-          <p className="text-gray-500 text-sm mt-1">Unified report of all Proforma and Tax Invoices.</p>
+          <h1 className="text-2xl font-bold text-theme-text">Invoice Statement</h1>
+          <p className="text-theme-text-muted text-sm mt-1">Unified report of all Proforma and Tax Invoices.</p>
         </div>
         <Link
           href="/reports"
-          className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 bg-theme-surface text-gray-200 border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
         >
           Back to Reports
         </Link>
       </div>
 
-      <form className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+      <form className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Customer</label>
-          <select name="customerId" defaultValue={customerFilter} className="w-full border-gray-300 rounded-md text-sm">
+          <label className="block text-xs font-medium text-gray-200 mb-1">Customer</label>
+          <select name="customerId" defaultValue={customerFilter} className="w-full border-theme-border rounded-md text-sm">
             <option value="all">All Customers</option>
             {customers.map((c) => (
               <option key={c.id} value={c.id}>
@@ -135,52 +135,52 @@ export default async function InvoiceStatementPage({
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Type</label>
-          <select name="type" defaultValue={typeFilter} className="w-full border-gray-300 rounded-md text-sm">
+          <label className="block text-xs font-medium text-gray-200 mb-1">Type</label>
+          <select name="type" defaultValue={typeFilter} className="w-full border-theme-border rounded-md text-sm">
             <option value="all">All Types</option>
             <option value="proforma">Proforma Invoices</option>
             <option value="tax">Tax Invoices</option>
           </select>
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">From Date</label>
-          <input type="date" name="from" defaultValue={fromFilter} className="w-full border-gray-300 rounded-md text-sm" />
+          <label className="block text-xs font-medium text-gray-200 mb-1">From Date</label>
+          <input type="date" name="from" defaultValue={fromFilter} className="w-full border-theme-border rounded-md text-sm" />
         </div>
         <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">To Date</label>
-          <input type="date" name="to" defaultValue={toFilter} className="w-full border-gray-300 rounded-md text-sm" />
+          <label className="block text-xs font-medium text-gray-200 mb-1">To Date</label>
+          <input type="date" name="to" defaultValue={toFilter} className="w-full border-theme-border rounded-md text-sm" />
         </div>
         <div>
-          <button type="submit" className="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+          <button type="submit" className="w-full bg-theme-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-theme-primary-dark">
             Apply Filters
           </button>
         </div>
       </form>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Total Statements</p>
-          <p className="text-2xl font-bold text-gray-900 mt-1">{allInvoices.length}</p>
+        <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border">
+          <p className="text-sm font-medium text-theme-text-muted">Total Statements</p>
+          <p className="text-2xl font-bold text-theme-text mt-1">{allInvoices.length}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Total Overall Value</p>
+        <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border">
+          <p className="text-sm font-medium text-theme-text-muted">Total Overall Value</p>
           <p className="text-2xl font-bold text-indigo-600 mt-1">₹{totalAmount.toFixed(2)}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Tax Invoices Value</p>
+        <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border">
+          <p className="text-sm font-medium text-theme-text-muted">Tax Invoices Value</p>
           <p className="text-2xl font-bold text-emerald-600 mt-1">₹{totalTax.toFixed(2)}</p>
         </div>
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Proforma Value</p>
-          <p className="text-2xl font-bold text-blue-600 mt-1">₹{totalProforma.toFixed(2)}</p>
+        <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border">
+          <p className="text-sm font-medium text-theme-text-muted">Proforma Value</p>
+          <p className="text-2xl font-bold text-theme-primary mt-1">₹{totalProforma.toFixed(2)}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <tr className="bg-theme-surface-hover border-b border-theme-border text-xs font-medium text-theme-text-muted uppercase tracking-wider">
                 <th className="p-4">Date</th>
                 <th className="p-4">Number</th>
                 <th className="p-4">Type</th>
@@ -189,26 +189,26 @@ export default async function InvoiceStatementPage({
                 <th className="p-4 text-right">Amount (₹)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-theme-border">
               {allInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-gray-50">
-                  <td className="p-4 text-sm text-gray-900">{new Date(inv.date).toLocaleDateString()}</td>
-                  <td className="p-4 text-sm font-medium text-blue-600">
+                <tr key={inv.id} className="hover:bg-theme-surface-hover">
+                  <td className="p-4 text-sm text-theme-text">{new Date(inv.date).toLocaleDateString()}</td>
+                  <td className="p-4 text-sm font-medium text-theme-primary">
                     <Link href={inv.link} className="hover:underline">{inv.number}</Link>
                   </td>
-                  <td className="p-4 text-sm text-gray-600">{inv.type}</td>
-                  <td className="p-4 text-sm text-gray-900">{inv.customer}</td>
+                  <td className="p-4 text-sm text-theme-text-muted">{inv.type}</td>
+                  <td className="p-4 text-sm text-theme-text">{inv.customer}</td>
                   <td className="p-4">
-                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                    <span className="px-2 py-1 text-xs font-medium rounded-full bg-theme-surface-hover text-theme-text">
                       {inv.status}
                     </span>
                   </td>
-                  <td className="p-4 text-sm text-gray-900 font-medium text-right">{inv.amount.toFixed(2)}</td>
+                  <td className="p-4 text-sm text-theme-text font-medium text-right">{inv.amount.toFixed(2)}</td>
                 </tr>
               ))}
               {allInvoices.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-gray-500">
+                  <td colSpan={6} className="p-8 text-center text-theme-text-muted">
                     No invoices found matching the filters.
                   </td>
                 </tr>

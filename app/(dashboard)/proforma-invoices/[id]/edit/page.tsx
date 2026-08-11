@@ -29,8 +29,8 @@ export default async function EditProformaInvoicePage({
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Edit Proforma Invoice</h1>
-        <p className="text-gray-500 text-sm mt-1">Update draft quotation {invoice.invoiceNumber}.</p>
+        <h1 className="text-2xl font-bold text-theme-text">Edit Proforma Invoice</h1>
+        <p className="text-theme-text-muted text-sm mt-1">Update draft quotation {invoice.invoiceNumber}.</p>
       </div>
       
       <ProformaInvoiceForm 

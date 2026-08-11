@@ -4,7 +4,7 @@ export function PrintButton() {
   return (
     <button
       onClick={() => window.print()}
-      className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 border border-gray-300 flex items-center shadow-sm"
+      className="bg-theme-surface-hover text-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-surface-hover border border-theme-border flex items-center shadow-sm"
       title="Print Report"
     >
       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

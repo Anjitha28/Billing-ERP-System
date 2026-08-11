@@ -31,8 +31,8 @@ export default async function EditExpensePage({
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Draft Expense</h1>
-        <p className="text-gray-500 text-sm mt-1">Update draft information for {expense.expenseNumber}.</p>
+        <h1 className="text-2xl font-bold text-theme-text">Edit Draft Expense</h1>
+        <p className="text-theme-text-muted text-sm mt-1">Update draft information for {expense.expenseNumber}.</p>
       </div>
 
       <ExpenseForm initialData={expense} vendors={vendors} categories={categories} products={products} />

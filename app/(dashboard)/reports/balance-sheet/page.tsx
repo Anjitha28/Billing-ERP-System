@@ -75,86 +75,86 @@ export default async function BalanceSheetPage({
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Balance Sheet</h1>
-          <p className="text-gray-500 text-sm mt-1">Snapshot of the business financial position.</p>
+          <h1 className="text-2xl font-bold text-theme-text">Balance Sheet</h1>
+          <p className="text-theme-text-muted text-sm mt-1">Snapshot of the business financial position.</p>
         </div>
         <Link 
           href="/reports" 
-          className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 bg-theme-surface text-gray-200 border border-theme-border rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
         >
           Back to Reports
         </Link>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-end gap-4">
+      <div className="bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border flex items-end gap-4">
         <form className="flex-1 max-w-xs">
-          <label className="block text-xs font-medium text-gray-700 mb-1">As Of Date</label>
+          <label className="block text-xs font-medium text-gray-200 mb-1">As Of Date</label>
           <div className="flex gap-2">
-            <input type="date" name="asOf" defaultValue={asOfFilter} className="w-full border-gray-300 rounded-md text-sm" />
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">
+            <input type="date" name="asOf" defaultValue={asOfFilter} className="w-full border-theme-border rounded-md text-sm" />
+            <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-theme-primary-dark">
               Apply
             </button>
           </div>
         </form>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 bg-gray-50 flex justify-between">
-          <h2 className="text-lg font-bold text-gray-900">As of {asOfDate.toLocaleDateString()}</h2>
-          <span className="text-sm font-medium text-gray-500">Amounts in INR (₹)</span>
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden">
+        <div className="p-6 border-b border-theme-border bg-theme-surface-hover flex justify-between">
+          <h2 className="text-lg font-bold text-theme-text">As of {asOfDate.toLocaleDateString()}</h2>
+          <span className="text-sm font-medium text-theme-text-muted">Amounts in INR (₹)</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-theme-border">
           
           {/* Assets */}
           <div className="p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Assets</h3>
+            <h3 className="text-lg font-bold text-theme-text mb-4 border-b pb-2">Assets</h3>
             
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Current Assets</h4>
+                <h4 className="font-semibold text-sm text-gray-200 mb-2">Current Assets</h4>
                 <div className="flex justify-between text-sm py-1">
-                  <span className="text-gray-600">Cash & Bank Equivalents</span>
+                  <span className="text-theme-text-muted">Cash & Bank Equivalents</span>
                   <span className="font-medium">₹{cashEquivalents.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm py-1">
-                  <span className="text-gray-600">Accounts Receivable (AR)</span>
+                  <span className="text-theme-text-muted">Accounts Receivable (AR)</span>
                   <span className="font-medium">₹{accountsReceivable.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 pt-4 border-t-2 border-gray-900 flex justify-between items-center">
-              <span className="font-bold text-gray-900">Total Assets</span>
-              <span className="font-bold text-gray-900">₹{totalAssets.toFixed(2)}</span>
+              <span className="font-bold text-theme-text">Total Assets</span>
+              <span className="font-bold text-theme-text">₹{totalAssets.toFixed(2)}</span>
             </div>
           </div>
 
           {/* Liabilities & Equity */}
           <div className="p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Liabilities & Equity</h3>
+            <h3 className="text-lg font-bold text-theme-text mb-4 border-b pb-2">Liabilities & Equity</h3>
             
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Liabilities</h4>
+                <h4 className="font-semibold text-sm text-gray-200 mb-2">Liabilities</h4>
                 <div className="flex justify-between text-sm py-1">
-                  <span className="text-gray-600">Accounts Payable (AP)</span>
+                  <span className="text-theme-text-muted">Accounts Payable (AP)</span>
                   <span className="font-medium">₹{accountsPayable.toFixed(2)}</span>
                 </div>
               </div>
 
               <div>
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Equity</h4>
+                <h4 className="font-semibold text-sm text-gray-200 mb-2">Equity</h4>
                 <div className="flex justify-between text-sm py-1">
-                  <span className="text-gray-600">Retained Earnings</span>
+                  <span className="text-theme-text-muted">Retained Earnings</span>
                   <span className="font-medium">₹{retainedEarnings.toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-8 pt-4 border-t-2 border-gray-900 flex justify-between items-center">
-              <span className="font-bold text-gray-900">Total Liabilities & Equity</span>
-              <span className="font-bold text-gray-900">₹{totalLiabilitiesAndEquity.toFixed(2)}</span>
+              <span className="font-bold text-theme-text">Total Liabilities & Equity</span>
+              <span className="font-bold text-theme-text">₹{totalLiabilitiesAndEquity.toFixed(2)}</span>
             </div>
           </div>
 

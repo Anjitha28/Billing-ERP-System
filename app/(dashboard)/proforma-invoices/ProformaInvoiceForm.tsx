@@ -165,26 +165,26 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
   return (
     <form onSubmit={handleSubmit} className="space-y-8 pb-24">
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
+        <div className="bg-red-900/20 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
           {error}
         </div>
       )}
 
       {/* Primary Details */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-3">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2 mb-4">Invoice Details</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2 mb-4">Invoice Details</h3>
         </div>
         
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Customer <span className="text-red-500">*</span>
           </label>
           <select
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
             required
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
           >
             <option value="">Select a customer...</option>
             {customers.map(c => (
@@ -194,9 +194,9 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
             ))}
           </select>
           {selectedCustomer && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-theme-text-muted mt-1">
               Business: {BUSINESS_LOCATION.state} | Customer: {selectedCustomer.state || "Unknown"}
-              <span className={`ml-2 font-medium ${isIntraState ? 'text-blue-600' : 'text-purple-600'}`}>
+              <span className={`ml-2 font-medium ${isIntraState ? 'text-theme-primary' : 'text-purple-600'}`}>
                 ({isIntraState ? 'Intra-State: CGST/SGST' : 'Inter-State: IGST'})
               </span>
             </p>
@@ -204,7 +204,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Invoice Date <span className="text-red-500">*</span>
           </label>
           <input
@@ -212,31 +212,31 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
             required
             value={invoiceDate}
             onChange={(e) => setInvoiceDate(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
           />
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Valid Until
           </label>
           <input
             type="date"
             value={validUntil}
             onChange={(e) => setValidUntil(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
           />
         </div>
       </div>
 
       {/* Items Table */}
-      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-900">Items</h3>
+      <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4 bg-theme-surface-hover border-b border-theme-border flex justify-between items-center">
+          <h3 className="text-lg font-semibold text-theme-text">Items</h3>
           <button
             type="button"
             onClick={handleAddItem}
-            className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1"
+            className="text-sm font-medium text-theme-primary hover:text-theme-primary-dark flex items-center gap-1"
           >
             <span>+</span> Add Item
           </button>
@@ -245,7 +245,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-gray-100 text-xs uppercase text-gray-600 font-semibold">
+              <tr className="bg-theme-surface-hover text-xs uppercase text-theme-text-muted font-semibold">
                 <th className="px-4 py-3 min-w-[200px]">Product/Service</th>
                 <th className="px-4 py-3 w-24">Qty</th>
                 <th className="px-4 py-3 w-32">Price (₹)</th>
@@ -255,17 +255,17 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                 <th className="px-4 py-3 w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-theme-border">
               {items.map((item, index) => {
                 const calc = calculationResult.calculatedItems[index];
                 return (
-                  <tr key={item.id} className="bg-white">
+                  <tr key={item.id} className="bg-theme-surface">
                     <td className="px-4 py-3">
                       <select
                         value={item.productId}
                         onChange={(e) => handleItemChange(item.id, 'productId', e.target.value)}
                         required
-                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:ring-1 focus:ring-blue-500"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm focus:ring-1 focus:ring-theme-primary"
                       >
                         <option value="">Select...</option>
                         {products.map(p => (
@@ -283,7 +283,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                         required
                         value={item.quantity}
                         onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -294,7 +294,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                         required
                         value={item.unitPrice}
                         onChange={(e) => handleItemChange(item.id, 'unitPrice', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
                       />
                     </td>
                     <td className="px-4 py-3">
@@ -305,15 +305,15 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                         step="0.01"
                         value={item.discountPercent}
                         onChange={(e) => handleItemChange(item.id, 'discountPercent', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
                       />
                     </td>
                     <td className="px-4 py-3">
-                      <div className="px-2 py-1.5 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-md text-center">
+                      <div className="px-2 py-1.5 text-sm text-theme-text-muted bg-theme-surface-hover border border-theme-border rounded-md text-center">
                         {item.gstRate}%
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-right font-medium text-gray-900">
+                    <td className="px-4 py-3 text-right font-medium text-theme-text">
                       {calc?.totalAmount?.toFixed(2) || "0.00"}
                     </td>
                     <td className="px-4 py-3 text-center">
@@ -334,7 +334,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
             </tbody>
           </table>
           {items.length === 0 && (
-            <div className="text-center py-8 text-sm text-gray-500">
+            <div className="text-center py-8 text-sm text-theme-text-muted">
               No items added. Click "Add Item" to start.
             </div>
           )}
@@ -344,16 +344,16 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
       {/* Footer and Totals */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Optional Deductions</h3>
+          <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6">
+            <h3 className="text-sm font-semibold text-theme-text mb-3">Optional Deductions</h3>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 TDS Application
               </label>
               <select
                 value={tdsRate}
                 onChange={(e) => setTdsRate(Number(e.target.value))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
               >
                 {TDS_RATES.map(rate => (
                   <option key={rate.code} value={rate.rate}>
@@ -365,23 +365,23 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               Notes / Terms
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               placeholder="Add any additional notes for the customer..."
             />
           </div>
         </div>
         
-        <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2 mb-4">Summary</h3>
+        <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6">
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2 mb-4">Summary</h3>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-theme-text-muted">
               <span>Subtotal</span>
               <span>₹{calculationResult.subtotal.toFixed(2)}</span>
             </div>
@@ -391,7 +391,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                 <span>-₹{calculationResult.totalDiscount.toFixed(2)}</span>
               </div>
             )}
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-theme-text-muted">
               <span>Taxable Amount</span>
               <span>₹{calculationResult.taxableAmount.toFixed(2)}</span>
             </div>
@@ -399,49 +399,49 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
             {/* Dynamic GST Display based on Intra/Inter State */}
             {isIntraState ? (
               <>
-                <div className="flex justify-between text-gray-600 pl-4 text-xs">
+                <div className="flex justify-between text-theme-text-muted pl-4 text-xs">
                   <span>CGST</span>
                   <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-gray-600 pl-4 text-xs border-b border-gray-100 pb-2">
+                <div className="flex justify-between text-theme-text-muted pl-4 text-xs border-b border-theme-border pb-2">
                   <span>SGST</span>
                   <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
                 </div>
               </>
             ) : (
-              <div className="flex justify-between text-gray-600 pl-4 text-xs border-b border-gray-100 pb-2">
+              <div className="flex justify-between text-theme-text-muted pl-4 text-xs border-b border-theme-border pb-2">
                 <span>IGST</span>
                 <span>₹{calculationResult.totalIGST.toFixed(2)}</span>
               </div>
             )}
             
-            <div className="flex justify-between font-medium text-gray-800">
+            <div className="flex justify-between font-medium text-theme-text">
               <span>Gross Amount</span>
               <span>₹{calculationResult.grossAmount.toFixed(2)}</span>
             </div>
 
             {calculationResult.tdsAmount > 0 && (
-              <div className="flex justify-between text-red-600 font-medium pt-2 border-t border-gray-100">
+              <div className="flex justify-between text-red-600 font-medium pt-2 border-t border-theme-border">
                 <span>Less: TDS ({calculationResult.tdsRate}%)</span>
                 <span>-₹{calculationResult.tdsAmount.toFixed(2)}</span>
               </div>
             )}
 
-            <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-              <span className="text-base font-bold text-gray-900">
+            <div className="pt-3 border-t border-theme-border flex justify-between items-center">
+              <span className="text-base font-bold text-theme-text">
                 {calculationResult.tdsAmount > 0 ? "Net Amount" : "Grand Total"}
               </span>
-              <span className="text-2xl font-bold text-blue-600">₹{calculationResult.netAmount.toFixed(2)}</span>
+              <span className="text-2xl font-bold text-theme-primary">₹{calculationResult.netAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 right-0 left-64 p-4 bg-white border-t border-gray-200 flex justify-end gap-3 z-10 shadow-sm">
+      <div className="fixed bottom-0 right-0 left-64 p-4 bg-theme-surface border-t border-theme-border flex justify-end gap-3 z-10 shadow-sm">
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel
@@ -449,7 +449,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         <button
           type="submit"
           disabled={isPending || items.length === 0}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 disabled:opacity-50"
+          className="px-4 py-2 text-sm font-medium text-white bg-theme-primary rounded-lg hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary flex items-center gap-2 disabled:opacity-50"
         >
           {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
           {initialData ? "Save Changes" : "Create Draft"}

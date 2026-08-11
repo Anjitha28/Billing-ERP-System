@@ -39,7 +39,7 @@ export default async function InputTaxCreditPage({
   return (
     <div className="p-6 max-w-7xl mx-auto print:p-0">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 no-print">
-        <h1 className="text-2xl font-bold text-gray-900">Input GST / ITC Analysis</h1>
+        <h1 className="text-2xl font-bold text-theme-text">Input GST / ITC Analysis</h1>
         
         <div className="mt-4 md:mt-0 flex flex-wrap gap-2 items-center">
           <ExportButton data={exportData} filename="Input_Tax_Credit" />
@@ -49,35 +49,35 @@ export default async function InputTaxCreditPage({
 
       <div className="hidden print:block mb-8">
         <h1 className="text-3xl font-bold text-center mb-2">INPUT GST / ITC ANALYSIS</h1>
-        <p className="text-center text-gray-600">
+        <p className="text-center text-theme-text-muted">
           Period: {fromFilter ? new Date(fromFilter).toLocaleDateString() : 'Start'} to {toFilter ? new Date(toFilter).toLocaleDateString() : 'Present'}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500 print:shadow-none print:border print:border-gray-300">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">Total Taxable Purchases</h3>
-          <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(summary.totalTaxablePurchases)}</p>
+        <div className="bg-theme-surface rounded-lg shadow p-4 border-l-4 border-theme-primary print:shadow-none print:border print:border-theme-border">
+          <h3 className="text-xs font-medium text-theme-text-muted uppercase">Total Taxable Purchases</h3>
+          <p className="mt-1 text-xl font-bold text-theme-text">{formatCurrency(summary.totalTaxablePurchases)}</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 border-l-4 border-indigo-500 print:shadow-none print:border print:border-gray-300">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">Total Input CGST</h3>
-          <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(summary.totalInputCGST)}</p>
+        <div className="bg-theme-surface rounded-lg shadow p-4 border-l-4 border-indigo-500 print:shadow-none print:border print:border-theme-border">
+          <h3 className="text-xs font-medium text-theme-text-muted uppercase">Total Input CGST</h3>
+          <p className="mt-1 text-xl font-bold text-theme-text">{formatCurrency(summary.totalInputCGST)}</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500 print:shadow-none print:border print:border-gray-300">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">Total Input SGST</h3>
-          <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(summary.totalInputSGST)}</p>
+        <div className="bg-theme-surface rounded-lg shadow p-4 border-l-4 border-purple-500 print:shadow-none print:border print:border-theme-border">
+          <h3 className="text-xs font-medium text-theme-text-muted uppercase">Total Input SGST</h3>
+          <p className="mt-1 text-xl font-bold text-theme-text">{formatCurrency(summary.totalInputSGST)}</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 border-l-4 border-pink-500 print:shadow-none print:border print:border-gray-300">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">Total Input IGST</h3>
-          <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(summary.totalInputIGST)}</p>
+        <div className="bg-theme-surface rounded-lg shadow p-4 border-l-4 border-pink-500 print:shadow-none print:border print:border-theme-border">
+          <h3 className="text-xs font-medium text-theme-text-muted uppercase">Total Input IGST</h3>
+          <p className="mt-1 text-xl font-bold text-theme-text">{formatCurrency(summary.totalInputIGST)}</p>
         </div>
-        <div className="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 print:shadow-none print:border print:border-gray-300">
-          <h3 className="text-xs font-medium text-gray-500 uppercase">Total Input GST</h3>
-          <p className="mt-1 text-xl font-bold text-gray-900">{formatCurrency(summary.totalInputGST)}</p>
+        <div className="bg-theme-surface rounded-lg shadow p-4 border-l-4 border-green-500 print:shadow-none print:border print:border-theme-border">
+          <h3 className="text-xs font-medium text-theme-text-muted uppercase">Total Input GST</h3>
+          <p className="mt-1 text-xl font-bold text-theme-text">{formatCurrency(summary.totalInputGST)}</p>
         </div>
       </div>
 
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 no-print">
+      <div className="bg-theme-surface-hover border-l-4 border-blue-400 p-4 mb-8 no-print">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg className="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
@@ -85,62 +85,62 @@ export default async function InputTaxCreditPage({
             </svg>
           </div>
           <div className="ml-3">
-            <p className="text-sm text-blue-700">
+            <p className="text-sm text-theme-primary-dark">
               This report provides an analysis of Input GST from approved expenses. It is an operational report and does not constitute a direct government filing.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow border border-gray-100 overflow-hidden print:shadow-none print:border-0">
-        <div className="p-4 border-b border-gray-200 bg-gray-50 no-print">
+      <div className="bg-theme-surface rounded-lg shadow border border-theme-border overflow-hidden print:shadow-none print:border-0">
+        <div className="p-4 border-b border-theme-border bg-theme-surface-hover no-print">
           <form className="flex flex-col md:flex-row gap-3">
-            <input type="date" name="from" defaultValue={fromFilter || ""} className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" title="From Date" />
-            <input type="date" name="to" defaultValue={toFilter || ""} className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" title="To Date" />
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700">Filter</button>
+            <input type="date" name="from" defaultValue={fromFilter || ""} className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary" title="From Date" />
+            <input type="date" name="to" defaultValue={toFilter || ""} className="border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary" title="To Date" />
+            <button type="submit" className="bg-theme-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-theme-primary-dark">Filter</button>
             {(fromFilter || toFilter) && (
-              <Link href="/reports/gst/input-tax-credit" className="bg-white text-gray-500 px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-700 border border-gray-300 flex items-center justify-center">Clear</Link>
+              <Link href="/reports/gst/input-tax-credit" className="bg-theme-surface text-theme-text-muted px-4 py-2 rounded-lg text-sm font-medium hover:text-gray-200 border border-theme-border flex items-center justify-center">Clear</Link>
             )}
           </form>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50 print:bg-white print:border-b-2 print:border-gray-800">
+          <table className="min-w-full divide-y divide-theme-border">
+            <thead className="bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-gray-800">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expense Number</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor / GSTIN</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Taxable</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Input CGST</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Input SGST</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Input IGST</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total Input GST</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Expense Number</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">Vendor / GSTIN</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-theme-text-muted uppercase tracking-wider">State</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-theme-text-muted uppercase tracking-wider">Taxable</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-theme-text-muted uppercase tracking-wider">Input CGST</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-theme-text-muted uppercase tracking-wider">Input SGST</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-theme-text-muted uppercase tracking-wider">Input IGST</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-theme-text-muted uppercase tracking-wider">Total Input GST</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-theme-surface divide-y divide-theme-border">
               {expenses.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-500">No ITC data found for the selected criteria.</td>
+                  <td colSpan={9} className="px-4 py-8 text-center text-sm text-theme-text-muted">No ITC data found for the selected criteria.</td>
                 </tr>
               ) : (
                 expenses.map((exp) => (
-                  <tr key={exp.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-blue-600">
+                  <tr key={exp.id} className="hover:bg-theme-surface-hover">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-theme-primary">
                       <Link href={`/expenses/${exp.id}`}>{exp.expenseNumber}</Link>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{exp.expenseDate.toLocaleDateString('en-IN')}</td>
-                    <td className="px-4 py-3 text-sm text-gray-900 max-w-[200px] truncate">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-theme-text-muted">{exp.expenseDate.toLocaleDateString('en-IN')}</td>
+                    <td className="px-4 py-3 text-sm text-theme-text max-w-[200px] truncate">
                       {exp.vendor?.name || 'Unknown'}
-                      <div className="text-xs text-gray-500 font-mono">{exp.vendor?.gstin || ''}</div>
+                      <div className="text-xs text-theme-text-muted font-mono">{exp.vendor?.gstin || ''}</div>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{exp.vendor?.state || ''}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-500">{formatCurrency(Number(exp.taxableAmount))}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-500">{formatCurrency(Number(exp.inputCGST))}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-500">{formatCurrency(Number(exp.inputSGST))}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-500">{formatCurrency(Number(exp.inputIGST))}</td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-bold text-gray-900">{formatCurrency(Number(exp.totalInputGST))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-theme-text-muted">{exp.vendor?.state || ''}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(exp.taxableAmount))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(exp.inputCGST))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(exp.inputSGST))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-theme-text-muted">{formatCurrency(Number(exp.inputIGST))}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-bold text-theme-text">{formatCurrency(Number(exp.totalInputGST))}</td>
                   </tr>
                 ))
               )}

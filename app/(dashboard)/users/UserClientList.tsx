@@ -54,15 +54,15 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
             setEditingUser(null);
             setShowModal(true);
           }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 text-sm font-medium"
+          className="px-4 py-2 bg-theme-primary text-white rounded-lg shadow hover:bg-theme-primary-dark text-sm font-medium"
         >
           + Create User
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden">
+        <table className="min-w-full divide-y divide-theme-border">
+          <thead className="bg-theme-surface-hover text-xs font-medium text-theme-text-muted uppercase tracking-wider">
             <tr>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">Email ID</th>
@@ -71,10 +71,10 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
               <th className="px-6 py-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200 text-sm">
+          <tbody className="bg-theme-surface divide-y divide-theme-border text-sm">
             {initialUsers.map((user) => (
-              <tr key={user.id} className={!user.isActive ? 'bg-gray-50 opacity-75' : ''}>
-                <td className="px-6 py-4 font-medium text-gray-900">
+              <tr key={user.id} className={!user.isActive ? 'bg-theme-surface-hover opacity-75' : ''}>
+                <td className="px-6 py-4 font-medium text-theme-text">
                   {user.name}
                   {user.mustResetPassword && (
                     <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -82,10 +82,10 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-4 text-gray-500">{user.email}</td>
+                <td className="px-6 py-4 text-theme-text-muted">{user.email}</td>
                 <td className="px-6 py-4">
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                    user.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-theme-surface-hover text-blue-800'
                   }`}>
                     {user.role}
                   </span>
@@ -103,7 +103,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                       setEditingUser(user);
                       setShowModal(true);
                     }}
-                    className="text-gray-500 hover:text-blue-600 font-medium"
+                    className="text-theme-text-muted hover:text-theme-primary font-medium"
                     disabled={isPending}
                   >
                     Edit
@@ -117,7 +117,7 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                   </button>
                   <button
                     onClick={() => handleResetPassword(user.id)}
-                    className="text-gray-500 hover:text-gray-700 font-medium ml-2"
+                    className="text-theme-text-muted hover:text-gray-200 font-medium ml-2"
                     disabled={isPending}
                   >
                     Reset Password
@@ -131,35 +131,35 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+          <div className="bg-theme-surface rounded-xl shadow-xl w-full max-w-md p-6">
             <h3 className="text-lg font-bold mb-4">{editingUser ? 'Edit User' : 'Create User'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
+                <label className="block text-sm font-medium text-gray-200">Name</label>
                 <input 
                   type="text" 
                   name="name" 
                   defaultValue={editingUser?.name} 
                   required 
-                  className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" 
+                  className="mt-1 block w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-theme-primary focus:border-theme-primary" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email ID</label>
+                <label className="block text-sm font-medium text-gray-200">Email ID</label>
                 <input 
                   type="email" 
                   name="email" 
                   defaultValue={editingUser?.email} 
                   required 
-                  className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500" 
+                  className="mt-1 block w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-theme-primary focus:border-theme-primary" 
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Role</label>
+                <label className="block text-sm font-medium text-gray-200">Role</label>
                 <select 
                   name="role" 
                   defaultValue={editingUser?.role || 'USER'} 
-                  className="mt-1 block w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:ring-theme-primary focus:border-theme-primary"
                 >
                   <option value="USER">USER</option>
                   <option value="ADMIN">ADMIN</option>
@@ -176,14 +176,14 @@ export function UserClientList({ initialUsers }: { initialUsers: any[] }) {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm font-medium"
+                  className="px-4 py-2 border border-theme-border rounded-lg text-gray-200 hover:bg-theme-surface-hover text-sm font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium disabled:opacity-50"
+                  className="px-4 py-2 bg-theme-primary text-white rounded-lg hover:bg-theme-primary-dark text-sm font-medium disabled:opacity-50"
                 >
                   {isPending ? 'Saving...' : 'Save User'}
                 </button>

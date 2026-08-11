@@ -155,28 +155,28 @@ export default async function ReportsCenterPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Reports Center</h1>
-      <p className="text-gray-600 mb-8">Access detailed operational and financial data through our comprehensive reporting modules.</p>
+      <h1 className="text-2xl font-bold text-theme-text mb-2">Reports Center</h1>
+      <p className="text-theme-text-muted mb-8">Access detailed operational and financial data through our comprehensive reporting modules.</p>
 
       <div className="space-y-10">
         {reportCategories.map(group => (
           <div key={group.category}>
-            <h2 className="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-theme-text mb-4 pb-2 border-b border-theme-border">
               {group.category}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {group.reports.map(report => (
                 <Link href={report.href} key={report.id} className="block group">
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full hover:shadow-md transition-shadow hover:border-blue-300">
+                  <div className="bg-theme-surface rounded-lg shadow-sm border border-theme-border p-6 h-full hover:shadow-md transition-shadow hover:border-theme-primary">
                     <div className="flex items-center mb-4">
-                      <div className="bg-gray-50 p-3 rounded-lg group-hover:bg-blue-50 transition-colors">
+                      <div className="bg-theme-surface-hover p-3 rounded-lg group-hover:bg-theme-surface-hover transition-colors">
                         {report.icon}
                       </div>
-                      <h3 className="ml-4 text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <h3 className="ml-4 text-lg font-semibold text-theme-text group-hover:text-theme-primary transition-colors">
                         {report.title}
                       </h3>
                     </div>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-theme-text-muted text-sm">
                       {report.description}
                     </p>
                   </div>

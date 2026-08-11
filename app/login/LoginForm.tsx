@@ -11,22 +11,22 @@ export default function LoginForm() {
   const [roleType, setRoleType] = useState<'ADMIN' | 'USER'>('USER');
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-gray-50">
-      <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg border border-gray-100">
+    <div className="flex h-screen w-full items-center justify-center bg-theme-surface-hover">
+      <div className="w-full max-w-md space-y-8 rounded-2xl bg-theme-surface p-8 shadow-lg border border-theme-border">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-theme-text">
             Billing ERP
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-theme-text-muted">
             Sign in to your account
           </p>
         </div>
 
-        <div className="flex bg-gray-100 p-1 rounded-lg">
+        <div className="flex bg-theme-surface-hover p-1 rounded-lg">
           <button
             type="button"
             className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-              roleType === 'ADMIN' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-900'
+              roleType === 'ADMIN' ? 'bg-theme-surface shadow text-theme-text' : 'text-theme-text-muted hover:text-theme-text'
             }`}
             onClick={() => setRoleType('ADMIN')}
           >
@@ -35,7 +35,7 @@ export default function LoginForm() {
           <button
             type="button"
             className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-              roleType === 'USER' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-900'
+              roleType === 'USER' ? 'bg-theme-surface shadow text-theme-text' : 'text-theme-text-muted hover:text-theme-text'
             }`}
             onClick={() => setRoleType('USER')}
           >
@@ -56,7 +56,7 @@ export default function LoginForm() {
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-lg border border-theme-border px-3 py-3 text-theme-text placeholder-gray-500 focus:z-10 focus:border-theme-primary focus:outline-none focus:ring-theme-primary sm:text-sm"
                 placeholder="Email address"
               />
             </div>
@@ -70,7 +70,7 @@ export default function LoginForm() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="relative block w-full appearance-none rounded-lg border border-gray-300 px-3 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
+                className="relative block w-full appearance-none rounded-lg border border-theme-border px-3 py-3 text-theme-text placeholder-gray-500 focus:z-10 focus:border-theme-primary focus:outline-none focus:ring-theme-primary sm:text-sm"
                 placeholder="Password"
               />
             </div>
@@ -80,14 +80,14 @@ export default function LoginForm() {
             <button
               type="submit"
               disabled={isPending}
-              className="group relative flex w-full justify-center rounded-lg border border-transparent bg-blue-600 px-4 py-3 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-400"
+              className="group relative flex w-full justify-center rounded-lg border border-transparent bg-theme-primary px-4 py-3 text-sm font-medium text-white hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary focus:ring-offset-2 disabled:bg-blue-400"
             >
               {isPending ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
           
           {errorMessage && (
-            <div className="text-red-500 text-sm text-center font-medium bg-red-50 py-2 rounded-lg border border-red-100">
+            <div className="text-red-500 text-sm text-center font-medium bg-red-900/20 py-2 rounded-lg border border-red-100">
               {errorMessage}
             </div>
           )}

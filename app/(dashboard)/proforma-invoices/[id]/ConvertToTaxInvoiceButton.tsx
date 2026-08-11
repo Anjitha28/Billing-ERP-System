@@ -39,8 +39,8 @@ export function ConvertToTaxInvoiceButton({ proformaId }: { proformaId: string }
   }
 
   return (
-    <div className="bg-white border border-emerald-200 p-4 rounded-xl shadow-sm text-right flex flex-col items-end gap-3 max-w-sm absolute right-4 mt-12 z-50">
-      <p className="text-sm text-gray-800 font-medium text-left">
+    <div className="bg-theme-surface border border-emerald-200 p-4 rounded-xl shadow-sm text-right flex flex-col items-end gap-3 max-w-sm absolute right-4 mt-12 z-50">
+      <p className="text-sm text-theme-text font-medium text-left">
         Once confirmed, this invoice becomes a finalized business record and cannot be freely edited. 
         Are you sure all customer, item, and tax details are correct?
       </p>
@@ -48,7 +48,7 @@ export function ConvertToTaxInvoiceButton({ proformaId }: { proformaId: string }
         <button
           onClick={() => { setShowConfirm(false); setError(null); }}
           disabled={isPending}
-          className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 disabled:opacity-50"
+          className="px-3 py-1.5 bg-theme-surface-hover text-gray-200 rounded-md text-sm font-medium hover:bg-theme-surface-hover disabled:opacity-50"
         >
           Cancel
         </button>

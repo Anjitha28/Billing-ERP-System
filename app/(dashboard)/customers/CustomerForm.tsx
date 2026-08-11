@@ -81,16 +81,16 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-6">
+    <form onSubmit={handleSubmit} className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 space-y-6">
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
+        <div className="bg-red-900/20 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
           {error}
         </div>
       )}
 
       {/* Customer Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Customer Type</label>
+        <label className="block text-sm font-medium text-gray-200 mb-2">Customer Type</label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -99,10 +99,10 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               value="B2B" 
               checked={customerType === "B2B"}
               onChange={() => setCustomerType("B2B")}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-theme-primary focus:ring-theme-primary"
               disabled={!!initialData} // Cannot change type after creation to keep it simple and safe
             />
-            <span className="text-gray-900 font-medium">B2B (Business to Business)</span>
+            <span className="text-theme-text font-medium">B2B (Business to Business)</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -111,10 +111,10 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               value="B2C" 
               checked={customerType === "B2C"}
               onChange={() => setCustomerType("B2C")}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-theme-primary focus:ring-theme-primary"
               disabled={!!initialData}
             />
-            <span className="text-gray-900 font-medium">B2C (Business to Consumer)</span>
+            <span className="text-theme-text font-medium">B2C (Business to Consumer)</span>
           </label>
         </div>
       </div>
@@ -122,10 +122,10 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Core Info */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Primary Details</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Primary Details</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               {isB2B ? "Legal / Business Name" : "Customer Name"} <span className="text-red-500">*</span>
             </label>
             <input
@@ -134,25 +134,25 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               required
               value={formData.legalName}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
 
           {isB2B && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Trade Name (Optional)</label>
+              <label className="block text-sm font-medium text-gray-200 mb-1">Trade Name (Optional)</label>
               <input
                 type="text"
                 name="tradeName"
                 value={formData.tradeName}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               GSTIN {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -160,56 +160,56 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               name="gstin"
               value={formData.gstin}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase"
               placeholder="e.g. 27ABCDE1234F1Z5"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">PAN (Optional)</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">PAN (Optional)</label>
             <input
               type="text"
               name="pan"
               value={formData.pan}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase"
             />
           </div>
         </div>
 
         {/* Contact Info */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Contact Details</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Contact Details</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">Phone</label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Billing Address</h3>
+        <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Billing Address</h3>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
             Address {isB2B && <span className="text-red-500">*</span>}
           </label>
           <input
@@ -217,23 +217,23 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
           />
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">City</label>
             <input
               type="text"
               name="city"
               value={formData.city}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               State {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -241,11 +241,11 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               name="state"
               value={formData.state}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               State Code {isB2B && <span className="text-red-500">*</span>}
             </label>
             <input
@@ -253,18 +253,18 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               name="stateCode"
               value={formData.stateCode}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               placeholder="e.g. 27"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">PIN Code</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">PIN Code</label>
             <input
               type="text"
               name="pinCode"
               value={formData.pinCode}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
         </div>
@@ -274,7 +274,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel
@@ -282,7 +282,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2"
+          className="px-4 py-2 text-sm font-medium text-white bg-theme-primary rounded-lg hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary flex items-center gap-2"
         >
           {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
           {initialData ? "Save Changes" : "Create Customer"}

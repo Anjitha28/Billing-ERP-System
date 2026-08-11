@@ -77,16 +77,16 @@ export function ProductForm({ initialData }: ProductFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-8">
+    <form onSubmit={handleSubmit} className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 space-y-8">
       {error && (
-        <div className="bg-red-50 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
+        <div className="bg-red-900/20 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
           {error}
         </div>
       )}
 
       {/* Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Item Type</label>
+        <label className="block text-sm font-medium text-gray-200 mb-2">Item Type</label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -95,10 +95,10 @@ export function ProductForm({ initialData }: ProductFormProps) {
               value="PRODUCT" 
               checked={type === "PRODUCT"}
               onChange={() => setType("PRODUCT")}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-theme-primary focus:ring-theme-primary"
               disabled={!!initialData} // Lock type after creation
             />
-            <span className="text-gray-900 font-medium">Product</span>
+            <span className="text-theme-text font-medium">Product</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input 
@@ -107,10 +107,10 @@ export function ProductForm({ initialData }: ProductFormProps) {
               value="SERVICE" 
               checked={type === "SERVICE"}
               onChange={() => setType("SERVICE")}
-              className="text-blue-600 focus:ring-blue-500"
+              className="text-theme-primary focus:ring-theme-primary"
               disabled={!!initialData}
             />
-            <span className="text-gray-900 font-medium">Service</span>
+            <span className="text-theme-text font-medium">Service</span>
           </label>
         </div>
       </div>
@@ -118,10 +118,10 @@ export function ProductForm({ initialData }: ProductFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Basic Info & Classification */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Basic Information</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Basic Information</h3>
           
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-200 mb-1">
               Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -130,24 +130,24 @@ export function ProductForm({ initialData }: ProductFormProps) {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-200 mb-1">Description</label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 HSN / SAC Code <span className="text-red-500">*</span>
               </label>
               <input
@@ -156,11 +156,11 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 required
                 value={formData.hsnSacCode}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 Unit <span className="text-red-500">*</span>
               </label>
               <select
@@ -168,7 +168,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 required
                 value={formData.unit}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
               >
                 <option value="Piece">Piece (pcs)</option>
                 <option value="Kg">Kilogram (kg)</option>
@@ -187,11 +187,11 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
         {/* Pricing & Tax */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Pricing & Taxation</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b pb-2">Pricing & Taxation</h3>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 Selling Price (₹) <span className="text-red-500">*</span>
               </label>
               <input
@@ -202,11 +202,11 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 required
                 value={formData.sellingPrice}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 Custom/Override Price (₹)
               </label>
               <input
@@ -217,14 +217,14 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 value={formData.customPrice}
                 onChange={handleChange}
                 placeholder="Optional override price"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-purple-50"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 bg-purple-50"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 Purchase Price (₹)
               </label>
               <input
@@ -234,14 +234,14 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 name="purchasePrice"
                 value={formData.purchasePrice}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 GST Rate (%) <span className="text-red-500">*</span>
               </label>
               <select
@@ -249,7 +249,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 required
                 value={formData.gstRate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
               >
                 <option value="0">0%</option>
                 <option value="5">5%</option>
@@ -259,7 +259,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
                 Cess Rate (%)
               </label>
               <input
@@ -269,7 +269,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
                 name="cessRate"
                 value={formData.cessRate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
               />
             </div>
           </div>
@@ -280,7 +280,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 text-sm font-medium text-gray-200 bg-theme-surface border border-theme-border rounded-lg hover:bg-theme-surface-hover focus:outline-none focus:ring-2 focus:ring-theme-primary"
           disabled={isPending}
         >
           Cancel
@@ -288,7 +288,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2"
+          className="px-4 py-2 text-sm font-medium text-white bg-theme-primary rounded-lg hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary flex items-center gap-2"
         >
           {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
           {initialData ? "Save Changes" : "Create Item"}

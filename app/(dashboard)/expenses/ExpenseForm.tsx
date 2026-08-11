@@ -26,10 +26,7 @@ export function ExpenseForm({
   const [vendors, setVendors] = useState(initialVendors);
   const [categories, setCategories] = useState(initialCategories);
 
-  // We still keep the header expenseDate because schema.prisma requires it
-  const [expenseDate, setExpenseDate] = useState(
-    initialData?.expenseDate ? new Date(initialData.expenseDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
-  );
+
   const [notes, setNotes] = useState(initialData?.notes || "");
   
   const [items, setItems] = useState<any[]>(
@@ -166,7 +163,7 @@ export function ExpenseForm({
     }
 
     const payload = {
-      expenseDate,
+      expenseDate: items[0]?.date || new Date().toISOString().split('T')[0],
       description: items[0]?.description || "Expense",
       vendorId: items[0]?.vendorId || null,
       categoryId: items[0]?.categoryId || null,
@@ -227,36 +224,18 @@ export function ExpenseForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 font-medium">
+        <div className="p-4 bg-red-900/20 border border-red-200 rounded-lg text-red-600 font-medium">
           {error}
         </div>
       )}
 
-      {/* Main Info */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Expense Date *</label>
-            <input
-              type="date"
-              required
-              value={expenseDate}
-              onChange={e => setExpenseDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          {/* Removed Description, Vendor, and Category from here */}
-        </div>
-      </div>
-
       {/* Items List */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Items</h2>
+      <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border p-6">
+        <h2 className="text-lg font-bold text-theme-text mb-4">Expense Items</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[1400px]">
             <thead>
-              <tr className="border-b-2 border-gray-200 text-sm font-medium text-gray-600">
+              <tr className="border-b-2 border-theme-border text-sm font-medium text-theme-text-muted">
                 <th className="pb-3 px-2 w-36 text-xs uppercase tracking-wider">Date</th>
                 <th className="pb-3 px-2 min-w-[150px] text-xs uppercase tracking-wider">Description</th>
                 <th className="pb-3 px-2 w-40 text-xs uppercase tracking-wider">Vendor</th>
@@ -273,14 +252,14 @@ export function ExpenseForm({
             </thead>
             <tbody className="divide-y divide-gray-100">
               {items.map((item, index) => (
-                <tr key={index} className="group hover:bg-gray-50 transition-colors">
+                <tr key={index} className="group hover:bg-theme-surface-hover transition-colors">
                   <td className="py-2 px-2">
                     <input
                       type="date"
                       required
                       value={item.date}
                       onChange={e => handleItemChange(index, "date", e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary text-xs"
                     />
                   </td>
                   <td className="py-2 px-2">
@@ -290,27 +269,27 @@ export function ExpenseForm({
                       value={item.description}
                       onChange={e => handleItemChange(index, "description", e.target.value)}
                       placeholder="Item description"
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm"
                     />
                   </td>
                   <td className="py-2 px-2">
                     <select
                       value={item.vendorId}
                       onChange={e => handleItemVendorChange(index, e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm bg-theme-surface"
                     >
                       <option value="">No Vendor</option>
                       {vendors.map(v => (
                         <option key={v.id} value={v.id}>{v.name}</option>
                       ))}
-                      <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Vendor</option>
+                      <option value="ADD_NEW" className="font-bold text-theme-primary">+ Add Custom Vendor</option>
                     </select>
                   </td>
                   <td className="py-2 px-2">
                     <select
                       value={item.productId}
                       onChange={e => handleProductChange(index, e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm bg-theme-surface"
                     >
                       <option value="">Select Item</option>
                       {products.map(p => (
@@ -323,13 +302,13 @@ export function ExpenseForm({
                       required
                       value={item.categoryId}
                       onChange={e => handleItemCategoryChange(index, e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm bg-theme-surface"
                     >
                       <option value="">Select Category</option>
                       {categories.map(c => (
                         <option key={c.id} value={c.id}>{c.name}</option>
                       ))}
-                      <option value="ADD_NEW" className="font-bold text-blue-600">+ Add Custom Category</option>
+                      <option value="ADD_NEW" className="font-bold text-theme-primary">+ Add Custom Category</option>
                     </select>
                   </td>
                   <td className="py-2 px-2">
@@ -337,7 +316,7 @@ export function ExpenseForm({
                       type="text"
                       value={item.hsnSacCode}
                       onChange={e => handleItemChange(index, "hsnSacCode", e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm"
                     />
                   </td>
                   <td className="py-2 px-2">
@@ -348,7 +327,7 @@ export function ExpenseForm({
                       required
                       value={item.quantity}
                       onChange={e => handleItemChange(index, "quantity", e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm text-right"
                     />
                   </td>
                   <td className="py-2 px-2">
@@ -359,7 +338,7 @@ export function ExpenseForm({
                       required
                       value={item.unitPrice}
                       onChange={e => handleItemChange(index, "unitPrice", e.target.value)}
-                      className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right"
+                      className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm text-right"
                     />
                   </td>
                   <td className="py-2 px-2">
@@ -374,7 +353,7 @@ export function ExpenseForm({
                             handleItemChange(index, "gstRate", e.target.value);
                           }
                         }}
-                        className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right bg-white"
+                        className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm text-right bg-theme-surface"
                       >
                         <option value="0">0%</option>
                         <option value="5">5%</option>
@@ -392,7 +371,7 @@ export function ExpenseForm({
                           required
                           value={item.gstRate}
                           onChange={e => handleItemChange(index, "gstRate", e.target.value)}
-                          className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-right px-1"
+                          className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm text-right px-1"
                           placeholder="%"
                         />
                         <button 
@@ -401,7 +380,7 @@ export function ExpenseForm({
                             handleItemChange(index, "isCustomGst", false);
                             handleItemChange(index, "gstRate", 0);
                           }}
-                          className="text-gray-400 hover:text-gray-700"
+                          className="text-theme-text-muted hover:text-gray-200"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
@@ -420,7 +399,7 @@ export function ExpenseForm({
                             handleItemChange(index, "tdsRate", e.target.value);
                           }
                         }}
-                        className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs text-right bg-white"
+                        className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary text-xs text-right bg-theme-surface"
                       >
                         <option value="">No TDS</option>
                         <option value="1">1%</option>
@@ -438,7 +417,7 @@ export function ExpenseForm({
                           required
                           value={item.tdsRate}
                           onChange={e => handleItemChange(index, "tdsRate", e.target.value)}
-                          className="w-full border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-xs text-right px-1"
+                          className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary text-xs text-right px-1"
                           placeholder="%"
                         />
                         <button 
@@ -447,14 +426,14 @@ export function ExpenseForm({
                             handleItemChange(index, "isCustomTds", false);
                             handleItemChange(index, "tdsRate", "");
                           }}
-                          className="text-gray-400 hover:text-gray-700"
+                          className="text-theme-text-muted hover:text-gray-200"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                         </button>
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-2 text-right font-medium text-gray-900">
+                  <td className="py-3 px-2 text-right font-medium text-theme-text">
                     ₹{calc.calculatedItems[index].totalAmount.toFixed(2)}
                   </td>
                   <td className="py-2 px-2 text-right">
@@ -475,7 +454,7 @@ export function ExpenseForm({
         <button
           type="button"
           onClick={addItem}
-          className="mt-4 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          className="mt-4 px-4 py-2 border border-theme-border rounded-lg text-sm font-medium text-gray-200 hover:bg-theme-surface-hover flex items-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Add Another Item
@@ -485,16 +464,16 @@ export function ExpenseForm({
       {/* Calculations & Submit */}
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex-1 space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Additional Information</h2>
+          <div className="bg-theme-surface rounded-xl shadow-sm border border-theme-border p-6">
+            <h2 className="text-lg font-bold text-theme-text mb-4">Additional Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-gray-200 mb-1">Notes</label>
                 <textarea
                   value={notes}
                   onChange={e => setNotes(e.target.value)}
                   rows={3}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full border border-theme-border rounded-lg px-4 py-2 focus:ring-theme-primary focus:border-theme-primary"
                   placeholder="Internal notes regarding this expense..."
                 />
               </div>
@@ -503,37 +482,37 @@ export function ExpenseForm({
           </div>
         </div>
 
-        <div className="w-full lg:w-96 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-200 bg-gray-50 flex-1">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Expense Summary</h2>
+        <div className="w-full lg:w-96 bg-theme-surface rounded-xl shadow-sm border border-theme-border overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-theme-border bg-theme-surface-hover flex-1">
+            <h2 className="text-lg font-bold text-theme-text mb-4">Expense Summary</h2>
             <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-theme-text-muted">
                 <span>Subtotal</span>
                 <span>₹{calc.subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-gray-800 font-medium pt-2 border-t border-gray-200">
+              <div className="flex justify-between text-theme-text font-medium pt-2 border-t border-theme-border">
                 <span>Taxable Amount</span>
                 <span>₹{calc.taxableAmount.toFixed(2)}</span>
               </div>
 
               {calc.totalGST > 0 && (
                 <div className="pt-2 pb-2 space-y-2">
-                  <div className="flex justify-between text-gray-600 text-xs">
+                  <div className="flex justify-between text-theme-text-muted text-xs">
                     <span>Input CGST</span>
                     <span>₹{calc.totalCGST.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-gray-600 text-xs">
+                  <div className="flex justify-between text-theme-text-muted text-xs">
                     <span>Input SGST</span>
                     <span>₹{calc.totalSGST.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-gray-600 text-xs">
+                  <div className="flex justify-between text-theme-text-muted text-xs">
                     <span>Input IGST</span>
                     <span>₹{calc.totalIGST.toFixed(2)}</span>
                   </div>
                 </div>
               )}
 
-              <div className="flex justify-between text-gray-900 font-bold pt-2 border-t border-gray-200">
+              <div className="flex justify-between text-theme-text font-bold pt-2 border-t border-theme-border">
                 <span>Gross Amount</span>
                 <span>₹{calc.grossAmount.toFixed(2)}</span>
               </div>
@@ -547,7 +526,7 @@ export function ExpenseForm({
             </div>
           </div>
 
-          <div className="p-6 bg-gray-900 text-white">
+          <div className="p-6 bg-theme-bg text-white">
             <div className="flex justify-between items-center mb-6">
               <span className="font-medium">Net Amount Payable</span>
               <span className="text-2xl font-bold text-emerald-400">₹{calc.netAmount.toFixed(2)}</span>
@@ -564,7 +543,7 @@ export function ExpenseForm({
               <button
                 type="submit"
                 disabled={isPending}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary-dark transition-colors disabled:opacity-50"
               >
                 {isPending ? "Saving..." : initialData ? "Save Draft" : "Record Expense"}
               </button>

@@ -11,8 +11,8 @@ export default async function NewProformaInvoicePage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Create Proforma Invoice</h1>
-        <p className="text-gray-500 text-sm mt-1">Draft a new quotation for a customer.</p>
+        <h1 className="text-2xl font-bold text-theme-text">Create Proforma Invoice</h1>
+        <p className="text-theme-text-muted text-sm mt-1">Draft a new quotation for a customer.</p>
       </div>
       
       <ProformaInvoiceForm customers={customers} products={products} />
