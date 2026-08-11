@@ -107,12 +107,6 @@ export default async function ProformaInvoiceDetailPage({
                   <td className="text-theme-text-muted pr-6 py-1">Invoice Date:</td>
                   <td className="font-medium text-theme-text">{new Date(invoice.invoiceDate).toLocaleDateString()}</td>
                 </tr>
-                {invoice.validUntil && (
-                  <tr>
-                    <td className="text-theme-text-muted pr-6 py-1">Valid Until:</td>
-                    <td className="font-medium text-theme-text">{new Date(invoice.validUntil).toLocaleDateString()}</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>

@@ -97,7 +97,6 @@ export function ProformaInvoiceClientList({
                 <th className="px-6 py-4">Invoice #</th>
                 <th className="px-6 py-4">Customer</th>
                 <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Valid Until</th>
                 <th className="px-6 py-4 text-right">Amount</th>
                 <th className="px-6 py-4 text-center">Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
@@ -124,9 +123,6 @@ export function ProformaInvoiceClientList({
                     </td>
                     <td className="px-6 py-4 text-theme-text-muted">
                       {new Date(invoice.invoiceDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-theme-text-muted">
-                      {invoice.validUntil ? new Date(invoice.validUntil).toLocaleDateString() : '-'}
                     </td>
                     <td className="px-6 py-4 text-right font-medium text-theme-text">
                       ₹{invoice.totalAmount.toString()}

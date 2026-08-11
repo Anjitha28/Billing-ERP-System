@@ -9,7 +9,11 @@ type CalculateInvoiceTaxArgs = {
     grossAmount: number;
     discountAmount: number;
     customerState?: string;
+    isGstEnabled?: boolean;
+    isTdsEnabled?: boolean;
+    isIgstEnabled?: boolean;
     tdsRate?: number;
+    igstRate?: number;
   }[];
   businessState: string;
   customerState: string;
@@ -43,6 +47,9 @@ export class TaxEngine {
         gstRate: item.gstRate,
         businessState,
         customerState: item.customerState || customerState,
+        isGstEnabled: item.isGstEnabled,
+        isIgstEnabled: item.isIgstEnabled,
+        igstRate: item.igstRate,
       });
 
       totalCGST += gst.cgstAmount;
@@ -51,8 +58,9 @@ export class TaxEngine {
       totalGST += gst.totalGST;
 
       const itemTdsRate = item.tdsRate !== undefined ? item.tdsRate : tdsRate;
+      const isTdsEnabled = item.isTdsEnabled !== undefined ? item.isTdsEnabled : true;
       let itemTdsAmount = 0;
-      if (itemTdsRate > 0) {
+      if (isTdsEnabled && itemTdsRate > 0) {
         const tds = TDSCalculator.calculateTDS({
           taxableAmount: item.taxableAmount,
           tdsRate: itemTdsRate,

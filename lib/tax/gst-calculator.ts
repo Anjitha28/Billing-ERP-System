@@ -5,6 +5,9 @@ type CalculateGSTArgs = {
   gstRate: number;
   businessState: string;
   customerState: string;
+  isGstEnabled?: boolean;
+  isIgstEnabled?: boolean;
+  igstRate?: number;
 };
 
 export class GSTCalculator {
@@ -13,9 +16,29 @@ export class GSTCalculator {
     gstRate,
     businessState,
     customerState,
+    isGstEnabled = true,
+    isIgstEnabled = false,
+    igstRate: explicitIgstRate = 0,
   }: CalculateGSTArgs): GSTResult {
-    const isIntraState = businessState.toLowerCase().trim() === customerState.toLowerCase().trim();
+    if (!isGstEnabled && !isIgstEnabled) {
+      return {
+        taxableAmount,
+        gstRate: 0, cgstRate: 0, cgstAmount: 0, sgstRate: 0, sgstAmount: 0, igstRate: 0, igstAmount: 0, totalGST: 0
+      };
+    }
 
+    if (isIgstEnabled) {
+      const igstAmount = Number(((taxableAmount * explicitIgstRate) / 100).toFixed(2));
+      const totalGST = igstAmount;
+      return {
+        taxableAmount,
+        gstRate: 0, cgstRate: 0, cgstAmount: 0, sgstRate: 0, sgstAmount: 0, igstRate: explicitIgstRate, igstAmount, totalGST
+      };
+    }
+
+    // Default auto-calculation if standard GST is enabled but IGST is not explicitly overridden
+    const isIntraState = businessState.toLowerCase().trim() === customerState.toLowerCase().trim();
+    
     let cgstRate = 0;
     let sgstRate = 0;
     let igstRate = 0;
@@ -23,7 +46,7 @@ export class GSTCalculator {
     let cgstAmount = 0;
     let sgstAmount = 0;
     let igstAmount = 0;
-
+    
     const totalGST = Number(((taxableAmount * gstRate) / 100).toFixed(2));
 
     if (isIntraState) {

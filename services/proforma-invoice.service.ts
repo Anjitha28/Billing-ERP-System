@@ -6,17 +6,23 @@ import { BUSINESS_LOCATION } from "@/lib/config/business";
 
 export type CreateProformaInvoiceInput = {
   customerId: string;
+  customerType: string;
+  financialYear: string;
   invoiceDate: string | Date;
-  validUntil?: string | Date | null;
   notes?: string | null;
-  tdsRate?: number;
+  tdsRate?: number; // kept for legacy overall tds if any
   items: {
     productId: string;
     description?: string | null;
     quantity: number;
     unitPrice: number;
     discountPercent: number;
+    isGstEnabled: boolean;
     gstRate: number;
+    isTdsEnabled: boolean;
+    tdsRate: number;
+    isIgstEnabled: boolean;
+    igstRate: number;
     unit: string;
   }[];
 };
@@ -107,9 +113,13 @@ export class ProformaInvoiceService {
     });
 
     return TaxEngine.calculateInvoiceTaxes({
-      items: mappedItems,
+      items: mappedItems.map(item => ({
+        ...item,
+        customerState: item.isIgstEnabled ? "IGST_FORCED" : (customer.state || BUSINESS_LOCATION.state),
+      })),
       businessState: BUSINESS_LOCATION.state,
       customerState: customer.state || BUSINESS_LOCATION.state, // Fallback to intra-state if customer state is missing
+
       tdsRate: data.tdsRate || 0,
     });
   }
@@ -122,8 +132,9 @@ export class ProformaInvoiceService {
       data: {
         invoiceNumber,
         customerId: data.customerId,
+        customerType: data.customerType,
+        financialYear: data.financialYear,
         invoiceDate: new Date(data.invoiceDate),
-        validUntil: data.validUntil ? new Date(data.validUntil) : null,
         notes: data.notes,
         status: "DRAFT",
         
@@ -148,7 +159,13 @@ export class ProformaInvoiceService {
             unitPrice: item.unitPrice,
             discountPercent: item.discountPercent,
             taxableAmount: item.taxableAmount,
+            isGstEnabled: item.isGstEnabled,
             gstRate: item.gstRate,
+            isTdsEnabled: item.isTdsEnabled,
+            tdsRate: item.tdsRate,
+            tdsAmount: item.tdsAmount || 0,
+            isIgstEnabled: item.isIgstEnabled,
+            igstRate: item.igstRate,
             cgstAmount: item.cgstAmount,
             sgstAmount: item.sgstAmount,
             igstAmount: item.igstAmount,
@@ -176,8 +193,9 @@ export class ProformaInvoiceService {
         where: { id },
         data: {
           customerId: data.customerId,
+          customerType: data.customerType,
+          financialYear: data.financialYear,
           invoiceDate: new Date(data.invoiceDate),
-          validUntil: data.validUntil ? new Date(data.validUntil) : null,
           notes: data.notes,
           
           subtotal: calculationResult.subtotal,
@@ -201,7 +219,13 @@ export class ProformaInvoiceService {
               unitPrice: item.unitPrice,
               discountPercent: item.discountPercent,
               taxableAmount: item.taxableAmount,
+              isGstEnabled: item.isGstEnabled,
               gstRate: item.gstRate,
+              isTdsEnabled: item.isTdsEnabled,
+              tdsRate: item.tdsRate,
+              tdsAmount: item.tdsAmount || 0,
+              isIgstEnabled: item.isIgstEnabled,
+              igstRate: item.igstRate,
               cgstAmount: item.cgstAmount,
               sgstAmount: item.sgstAmount,
               igstAmount: item.igstAmount,

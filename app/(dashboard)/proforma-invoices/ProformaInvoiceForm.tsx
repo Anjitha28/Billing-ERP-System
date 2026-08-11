@@ -12,35 +12,46 @@ type FormProps = {
   products: any[];
 };
 
-export function ProformaInvoiceForm({ initialData, customers, products }: FormProps) {
+const GST_RATES = [0, 5, 12, 18, 28];
+
+export function ProformaInvoiceForm({ initialData, customers: initialCustomers, products }: FormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  const [customers, setCustomers] = useState(initialCustomers);
+  const [showAddCustomer, setShowAddCustomer] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({ legalName: '', customerType: 'B2B', state: BUSINESS_LOCATION.state, email: '', phone: '' });
+
   // Form State
   const [customerId, setCustomerId] = useState(initialData?.customerId || "");
+  const [customerType, setCustomerType] = useState(initialData?.customerType || "B2B");
+  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || "FY 2025-26");
   const [invoiceDate, setInvoiceDate] = useState(
     initialData?.invoiceDate ? new Date(initialData.invoiceDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   );
-  const [validUntil, setValidUntil] = useState(
-    initialData?.validUntil ? new Date(initialData.validUntil).toISOString().split('T')[0] : ""
-  );
   const [notes, setNotes] = useState(initialData?.notes || "");
   
-  // New TDS State
-  const [tdsRate, setTdsRate] = useState<number>(initialData?.tdsRate ? Number(initialData.tdsRate) : 0);
-
   // Items State
   const [items, setItems] = useState<any[]>(
     initialData?.items?.map((i: any) => ({
       id: Math.random().toString(), // temporary UI id
       productId: i.productId,
       description: i.description || "",
+      hsnSacCode: products.find(p => p.id === i.productId)?.hsnSacCode || "", // Display only
       quantity: Number(i.quantity),
       unit: i.unit,
       unitPrice: Number(i.unitPrice),
       discountPercent: Number(i.discountPercent),
+      isGstEnabled: i.isGstEnabled ?? true,
       gstRate: Number(i.gstRate),
+      isTdsEnabled: i.isTdsEnabled ?? true,
+      tdsRate: Number(i.tdsRate || 0),
+      isIgstEnabled: i.isIgstEnabled ?? false,
+      igstRate: Number(i.igstRate || 0),
+      customGstRate: false,
+      customTdsRate: false,
+      customIgstRate: false,
     })) || []
   );
 
@@ -60,6 +71,8 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         grossAmount,
         discountAmount,
         taxableAmount,
+        // Override state checks based on item-level igst toggle
+        customerState: item.isIgstEnabled ? "IGST_FORCED" : (selectedCustomer?.state || BUSINESS_LOCATION.state),
       };
     });
 
@@ -67,9 +80,9 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
       items: mappedItems,
       businessState: BUSINESS_LOCATION.state,
       customerState: selectedCustomer?.state || BUSINESS_LOCATION.state,
-      tdsRate,
+      tdsRate: 0, // we use item-level TDS now
     });
-  }, [items, selectedCustomer, tdsRate]);
+  }, [items, selectedCustomer]);
 
   const handleAddItem = () => {
     setItems([
@@ -78,11 +91,20 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         id: Math.random().toString(),
         productId: "",
         description: "",
+        hsnSacCode: "",
         quantity: 1,
         unit: "Piece",
         unitPrice: 0,
         discountPercent: 0,
+        isGstEnabled: true,
         gstRate: 0,
+        isTdsEnabled: true,
+        tdsRate: 0,
+        isIgstEnabled: false,
+        igstRate: 0,
+        customGstRate: false,
+        customTdsRate: false,
+        customIgstRate: false,
       }
     ]);
   };
@@ -100,15 +122,27 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           const product = products.find(p => p.id === value);
           if (product) {
             updated.description = product.description || "";
+            updated.hsnSacCode = product.hsnSacCode || "";
             updated.unit = product.unit;
             updated.unitPrice = Number(product.customPrice || product.sellingPrice);
             updated.gstRate = Number(product.gstRate);
+            if (!GST_RATES.includes(updated.gstRate)) updated.customGstRate = true;
           }
         }
         return updated;
       }
       return item;
     }));
+  };
+
+  const handleCustomerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = e.target.value;
+    if (val === "ADD_NEW") {
+      setShowAddCustomer(true);
+      setCustomerId("");
+    } else {
+      setCustomerId(val);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -124,16 +158,16 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
       if (!item.productId) return setError("Please select a product for all items.");
       if (item.quantity <= 0) return setError("Quantity must be greater than 0.");
       if (item.unitPrice < 0) return setError("Unit price cannot be negative.");
-      if (item.discountPercent < 0 || item.discountPercent > 100) return setError("Discount must be between 0 and 100.");
     }
 
     startTransition(async () => {
       const payload = {
         customerId,
+        customerType,
+        financialYear,
         invoiceDate,
-        validUntil: validUntil || null,
         notes,
-        tdsRate,
+        tdsRate: 0,
         items: items.map(i => ({
           productId: i.productId,
           description: i.description,
@@ -141,7 +175,12 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           unit: i.unit,
           unitPrice: Number(i.unitPrice),
           discountPercent: Number(i.discountPercent),
+          isGstEnabled: Boolean(i.isGstEnabled),
           gstRate: Number(i.gstRate),
+          isTdsEnabled: Boolean(i.isTdsEnabled),
+          tdsRate: Number(i.tdsRate),
+          isIgstEnabled: Boolean(i.isIgstEnabled),
+          igstRate: Number(i.igstRate),
         }))
       };
 
@@ -160,8 +199,6 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
     });
   };
 
-  const isIntraState = !selectedCustomer || (selectedCustomer.state?.toLowerCase().trim() === BUSINESS_LOCATION.state.toLowerCase().trim());
-
   return (
     <form onSubmit={handleSubmit} className="space-y-8 pb-24">
       {error && (
@@ -171,9 +208,12 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
       )}
 
       {/* Primary Details */}
-      <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-3">
-          <h3 className="text-lg font-semibold text-theme-text border-b pb-2 mb-4">Invoice Details</h3>
+      <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="md:col-span-4 flex justify-between items-center border-b border-theme-border pb-2 mb-2">
+          <h3 className="text-lg font-semibold text-theme-text">Invoice Details</h3>
+          <span className="bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            {initialData?.status || "DRAFT"}
+          </span>
         </div>
         
         <div className="md:col-span-1">
@@ -182,7 +222,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           </label>
           <select
             value={customerId}
-            onChange={(e) => setCustomerId(e.target.value)}
+            onChange={handleCustomerChange}
             required
             className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
           >
@@ -192,15 +232,43 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                 {c.legalName} {c.gstin ? `(${c.gstin})` : ''} - {c.state || "State missing"}
               </option>
             ))}
+            <option value="ADD_NEW" className="font-bold text-theme-primary bg-theme-surface-hover">+ Add Custom Customer</option>
           </select>
           {selectedCustomer && (
             <p className="text-xs text-theme-text-muted mt-1">
-              Business: {BUSINESS_LOCATION.state} | Customer: {selectedCustomer.state || "Unknown"}
-              <span className={`ml-2 font-medium ${isIntraState ? 'text-theme-primary' : 'text-purple-600'}`}>
-                ({isIntraState ? 'Intra-State: CGST/SGST' : 'Inter-State: IGST'})
-              </span>
+              State: {selectedCustomer.state || "Unknown"}
             </p>
           )}
+        </div>
+
+        <div className="md:col-span-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
+            Customer Type <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={customerType}
+            onChange={(e) => setCustomerType(e.target.value)}
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
+          >
+            <option value="B2B">B2B</option>
+            <option value="B2C">B2C</option>
+          </select>
+        </div>
+
+        <div className="md:col-span-1">
+          <label className="block text-sm font-medium text-gray-200 mb-1">
+            Financial Year <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={financialYear}
+            onChange={(e) => setFinancialYear(e.target.value)}
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
+          >
+            <option value="FY 2023-24">FY 2023-24</option>
+            <option value="FY 2024-25">FY 2024-25</option>
+            <option value="FY 2025-26">FY 2025-26</option>
+            <option value="FY 2026-27">FY 2026-27</option>
+          </select>
         </div>
 
         <div className="md:col-span-1">
@@ -212,19 +280,7 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
             required
             value={invoiceDate}
             onChange={(e) => setInvoiceDate(e.target.value)}
-            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
-          />
-        </div>
-
-        <div className="md:col-span-1">
-          <label className="block text-sm font-medium text-gray-200 mb-1">
-            Valid Until
-          </label>
-          <input
-            type="date"
-            value={validUntil}
-            onChange={(e) => setValidUntil(e.target.value)}
-            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
+            className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
           />
         </div>
       </div>
@@ -243,39 +299,57 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-left min-w-[1000px]">
             <thead>
               <tr className="bg-theme-surface-hover text-xs uppercase text-theme-text-muted font-semibold">
-                <th className="px-4 py-3 min-w-[200px]">Product/Service</th>
-                <th className="px-4 py-3 w-24">Qty</th>
-                <th className="px-4 py-3 w-32">Price (₹)</th>
-                <th className="px-4 py-3 w-24">Disc (%)</th>
-                <th className="px-4 py-3 w-24">GST (%)</th>
-                <th className="px-4 py-3 text-right w-32">Amount (₹)</th>
-                <th className="px-4 py-3 w-12"></th>
+                <th className="px-3 py-3 w-48">Item & Desc</th>
+                <th className="px-3 py-3 w-24">HSN/SAC</th>
+                <th className="px-3 py-3 w-20">Qty</th>
+                <th className="px-3 py-3 w-24">Rate</th>
+                <th className="px-3 py-3 w-32">GST</th>
+                <th className="px-3 py-3 w-32">TDS</th>
+                <th className="px-3 py-3 w-32">IGST</th>
+                <th className="px-3 py-3 text-right w-24">Amount</th>
+                <th className="px-3 py-3 w-10"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-theme-border">
               {items.map((item, index) => {
                 const calc = calculationResult.calculatedItems[index];
                 return (
-                  <tr key={item.id} className="bg-theme-surface">
-                    <td className="px-4 py-3">
+                  <tr key={item.id} className="bg-theme-surface align-top">
+                    <td className="px-3 py-3 space-y-2">
                       <select
                         value={item.productId}
                         onChange={(e) => handleItemChange(item.id, 'productId', e.target.value)}
                         required
-                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm focus:ring-1 focus:ring-theme-primary"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm focus:ring-1 focus:ring-theme-primary bg-theme-surface"
                       >
                         <option value="">Select...</option>
                         {products.map(p => (
                           <option key={p.id} value={p.id}>
-                            {p.name} {p.customPrice ? '(Custom Price)' : ''}
+                            {p.name}
                           </option>
                         ))}
                       </select>
+                      <input 
+                        type="text"
+                        placeholder="Description"
+                        value={item.description}
+                        onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-xs bg-theme-surface-hover"
+                      />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-3">
+                      <input
+                        type="text"
+                        readOnly
+                        value={item.hsnSacCode}
+                        placeholder="HSN"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm bg-theme-surface-hover opacity-70"
+                      />
+                    </td>
+                    <td className="px-3 py-3">
                       <input
                         type="number"
                         min="1"
@@ -283,10 +357,10 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                         required
                         value={item.quantity}
                         onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
-                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm bg-theme-surface"
                       />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-3">
                       <input
                         type="number"
                         min="0"
@@ -294,29 +368,131 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
                         required
                         value={item.unitPrice}
                         onChange={(e) => handleItemChange(item.id, 'unitPrice', e.target.value)}
-                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
+                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm bg-theme-surface"
                       />
                     </td>
-                    <td className="px-4 py-3">
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value={item.discountPercent}
-                        onChange={(e) => handleItemChange(item.id, 'discountPercent', e.target.value)}
-                        className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm"
-                      />
+                    <td className="px-3 py-3 space-y-2">
+                      <select
+                        value={item.isGstEnabled ? "yes" : "no"}
+                        onChange={(e) => handleItemChange(item.id, 'isGstEnabled', e.target.value === "yes")}
+                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
+                      >
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      {item.isGstEnabled && (
+                        <div className="flex gap-1">
+                          <select 
+                            value={item.customGstRate ? "custom" : item.gstRate.toString()}
+                            onChange={(e) => {
+                              if (e.target.value === "custom") {
+                                handleItemChange(item.id, 'customGstRate', true);
+                              } else {
+                                handleItemChange(item.id, 'customGstRate', false);
+                                handleItemChange(item.id, 'gstRate', Number(e.target.value));
+                              }
+                            }}
+                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                          >
+                            {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
+                            <option value="custom">Custom</option>
+                          </select>
+                          {item.customGstRate && (
+                            <input 
+                              type="number" min="0" step="0.1" 
+                              value={item.gstRate} 
+                              onChange={(e) => handleItemChange(item.id, 'gstRate', e.target.value)}
+                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                            />
+                          )}
+                        </div>
+                      )}
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="px-2 py-1.5 text-sm text-theme-text-muted bg-theme-surface-hover border border-theme-border rounded-md text-center">
-                        {item.gstRate}%
-                      </div>
+                    
+                    <td className="px-3 py-3 space-y-2">
+                      <select
+                        value={item.isTdsEnabled ? "yes" : "no"}
+                        onChange={(e) => handleItemChange(item.id, 'isTdsEnabled', e.target.value === "yes")}
+                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
+                      >
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      {item.isTdsEnabled && (
+                        <div className="flex gap-1">
+                           <select 
+                            value={item.customTdsRate ? "custom" : item.tdsRate.toString()}
+                            onChange={(e) => {
+                              if (e.target.value === "custom") {
+                                handleItemChange(item.id, 'customTdsRate', true);
+                              } else {
+                                handleItemChange(item.id, 'customTdsRate', false);
+                                handleItemChange(item.id, 'tdsRate', Number(e.target.value));
+                              }
+                            }}
+                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                          >
+                            <option value="0">0%</option>
+                            <option value="1">1%</option>
+                            <option value="2">2%</option>
+                            <option value="10">10%</option>
+                            <option value="custom">Custom</option>
+                          </select>
+                          {item.customTdsRate && (
+                            <input 
+                              type="number" min="0" step="0.1" 
+                              value={item.tdsRate} 
+                              onChange={(e) => handleItemChange(item.id, 'tdsRate', e.target.value)}
+                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                            />
+                          )}
+                        </div>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium text-theme-text">
+
+                    <td className="px-3 py-3 space-y-2">
+                      <select
+                        value={item.isIgstEnabled ? "yes" : "no"}
+                        onChange={(e) => handleItemChange(item.id, 'isIgstEnabled', e.target.value === "yes")}
+                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
+                      >
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      {item.isIgstEnabled && (
+                        <div className="flex gap-1">
+                          <select 
+                            value={item.customIgstRate ? "custom" : item.igstRate.toString()}
+                            onChange={(e) => {
+                              if (e.target.value === "custom") {
+                                handleItemChange(item.id, 'customIgstRate', true);
+                              } else {
+                                handleItemChange(item.id, 'customIgstRate', false);
+                                handleItemChange(item.id, 'igstRate', Number(e.target.value));
+                              }
+                            }}
+                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                          >
+                            {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
+                            <option value="custom">Custom</option>
+                          </select>
+                          {item.customIgstRate && (
+                            <input 
+                              type="number" min="0" step="0.1" 
+                              value={item.igstRate} 
+                              onChange={(e) => handleItemChange(item.id, 'igstRate', e.target.value)}
+                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
+                            />
+                          )}
+                        </div>
+                      )}
+                    </td>
+
+                    <td className="px-3 py-3 text-right font-medium text-theme-text">
                       {calc?.totalAmount?.toFixed(2) || "0.00"}
+                      {calc?.tdsAmount > 0 && <div className="text-xs text-red-400 font-normal mt-1">- TDS: {calc.tdsAmount.toFixed(2)}</div>}
                     </td>
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-3 py-3 text-center">
                       <button
                         type="button"
                         onClick={() => handleRemoveItem(item.id)}
@@ -344,26 +520,6 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
       {/* Footer and Totals */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6">
-            <h3 className="text-sm font-semibold text-theme-text mb-3">Optional Deductions</h3>
-            <div>
-              <label className="block text-sm font-medium text-gray-200 mb-1">
-                TDS Application
-              </label>
-              <select
-                value={tdsRate}
-                onChange={(e) => setTdsRate(Number(e.target.value))}
-                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
-              >
-                {TDS_RATES.map(rate => (
-                  <option key={rate.code} value={rate.rate}>
-                    {rate.description} {rate.rate > 0 ? `(${rate.rate}%)` : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-200 mb-1">
               Notes / Terms
@@ -372,64 +528,59 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
-              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary"
+              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
               placeholder="Add any additional notes for the customer..."
             />
           </div>
         </div>
         
         <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6">
-          <h3 className="text-lg font-semibold text-theme-text border-b pb-2 mb-4">Summary</h3>
+          <h3 className="text-lg font-semibold text-theme-text border-b border-theme-border pb-2 mb-4">Summary</h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between text-theme-text-muted">
               <span>Subtotal</span>
               <span>₹{calculationResult.subtotal.toFixed(2)}</span>
             </div>
-            {calculationResult.totalDiscount > 0 && (
-              <div className="flex justify-between text-red-600">
-                <span>Discount</span>
-                <span>-₹{calculationResult.totalDiscount.toFixed(2)}</span>
-              </div>
-            )}
+            
             <div className="flex justify-between text-theme-text-muted">
               <span>Taxable Amount</span>
               <span>₹{calculationResult.taxableAmount.toFixed(2)}</span>
             </div>
             
-            {/* Dynamic GST Display based on Intra/Inter State */}
-            {isIntraState ? (
-              <>
-                <div className="flex justify-between text-theme-text-muted pl-4 text-xs">
-                  <span>CGST</span>
-                  <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-theme-text-muted pl-4 text-xs border-b border-theme-border pb-2">
-                  <span>SGST</span>
-                  <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
-                </div>
-              </>
-            ) : (
-              <div className="flex justify-between text-theme-text-muted pl-4 text-xs border-b border-theme-border pb-2">
-                <span>IGST</span>
+            {calculationResult.totalCGST > 0 && (
+              <div className="flex justify-between text-theme-text-muted pl-4 text-xs">
+                <span>Total CGST</span>
+                <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
+              </div>
+            )}
+            {calculationResult.totalSGST > 0 && (
+              <div className="flex justify-between text-theme-text-muted pl-4 text-xs pb-1">
+                <span>Total SGST</span>
+                <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
+              </div>
+            )}
+            {calculationResult.totalIGST > 0 && (
+              <div className="flex justify-between text-theme-text-muted pl-4 text-xs pb-1">
+                <span>Total IGST</span>
                 <span>₹{calculationResult.totalIGST.toFixed(2)}</span>
               </div>
             )}
             
-            <div className="flex justify-between font-medium text-theme-text">
+            <div className="flex justify-between font-medium text-theme-text border-t border-theme-border pt-2">
               <span>Gross Amount</span>
               <span>₹{calculationResult.grossAmount.toFixed(2)}</span>
             </div>
 
             {calculationResult.tdsAmount > 0 && (
-              <div className="flex justify-between text-red-600 font-medium pt-2 border-t border-theme-border">
-                <span>Less: TDS ({calculationResult.tdsRate}%)</span>
+              <div className="flex justify-between text-red-400 font-medium pt-1">
+                <span>Less: Total TDS</span>
                 <span>-₹{calculationResult.tdsAmount.toFixed(2)}</span>
               </div>
             )}
 
             <div className="pt-3 border-t border-theme-border flex justify-between items-center">
               <span className="text-base font-bold text-theme-text">
-                {calculationResult.tdsAmount > 0 ? "Net Amount" : "Grand Total"}
+                Net Amount
               </span>
               <span className="text-2xl font-bold text-theme-primary">₹{calculationResult.netAmount.toFixed(2)}</span>
             </div>
@@ -452,9 +603,46 @@ export function ProformaInvoiceForm({ initialData, customers, products }: FormPr
           className="px-4 py-2 text-sm font-medium text-white bg-theme-primary rounded-lg hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-theme-primary flex items-center gap-2 disabled:opacity-50"
         >
           {isPending && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
-          {initialData ? "Save Changes" : "Create Draft"}
+          Save as Draft
         </button>
       </div>
+
+      {showAddCustomer && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+           <div className="bg-theme-surface rounded-xl border border-theme-border p-6 w-full max-w-md shadow-xl">
+             <h3 className="text-lg font-bold text-theme-text mb-4 border-b border-theme-border pb-2">Add Custom Customer</h3>
+             <div className="space-y-4">
+               <div>
+                 <label className="block text-sm text-gray-200 mb-1">Legal Name *</label>
+                 <input type="text" value={newCustomer.legalName} onChange={e => setNewCustomer({...newCustomer, legalName: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm" />
+               </div>
+               <div>
+                 <label className="block text-sm text-gray-200 mb-1">Customer Type</label>
+                 <select value={newCustomer.customerType} onChange={e => setNewCustomer({...newCustomer, customerType: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm">
+                   <option value="B2B">B2B</option>
+                   <option value="B2C">B2C</option>
+                 </select>
+               </div>
+               <div>
+                 <label className="block text-sm text-gray-200 mb-1">State</label>
+                 <input type="text" value={newCustomer.state} onChange={e => setNewCustomer({...newCustomer, state: e.target.value})} className="w-full bg-theme-surface-hover border border-theme-border rounded-md px-3 py-2 text-sm" />
+               </div>
+               <div className="flex gap-4 pt-4 border-t border-theme-border justify-end">
+                 <button type="button" onClick={() => setShowAddCustomer(false)} className="text-sm px-4 py-2 text-gray-300 hover:text-white">Cancel</button>
+                 <button type="button" onClick={async () => {
+                   if (!newCustomer.legalName) return alert("Legal Name is required");
+                   // In a real implementation this would call createCustomerAction
+                   // Mocking the result for the UI
+                   const mockedCustomer = { id: Math.random().toString(), ...newCustomer };
+                   setCustomers([...customers, mockedCustomer]);
+                   setCustomerId(mockedCustomer.id);
+                   setShowAddCustomer(false);
+                 }} className="text-sm px-4 py-2 bg-theme-primary text-white rounded-md hover:bg-theme-primary-dark">Save Customer</button>
+               </div>
+             </div>
+           </div>
+        </div>
+      )}
     </form>
   );
 }

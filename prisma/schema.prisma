@@ -111,7 +111,8 @@ model ProformaInvoice {
   customerId      String
   customer        Customer @relation(fields: [customerId], references: [id])
   invoiceDate     DateTime @default(now())
-  validUntil      DateTime?
+  customerType    String?
+  financialYear   String?
   status          ProformaInvoiceStatus @default(DRAFT)
   subtotal        Decimal
   totalDiscount   Decimal @default(0)
@@ -142,11 +143,20 @@ model ProformaInvoiceItem {
   unitPrice         Decimal
   discountPercent   Decimal @default(0)
   taxableAmount     Decimal
+  isGstEnabled      Boolean @default(true)
   gstRate           Decimal
   cgstAmount        Decimal @default(0)
   sgstAmount        Decimal @default(0)
   igstAmount        Decimal @default(0)
   totalGST          Decimal @default(0)
+  
+  isTdsEnabled      Boolean @default(true)
+  tdsRate           Decimal @default(0)
+  tdsAmount         Decimal @default(0)
+  
+  isIgstEnabled     Boolean @default(false)
+  igstRate          Decimal @default(0)
+
   totalAmount       Decimal
 }
 
