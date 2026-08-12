@@ -4,11 +4,11 @@ import { FinancialTransactionService } from "./financial-transaction.service";
 
 
 export class TaxInvoiceService {
-  private static async generateInvoiceNumber(): Promise<string> {
+  private static async generateInvoiceNumber(tx: Prisma.TransactionClient): Promise<string> {
     const year = new Date().getFullYear();
     const prefix = `INV-${year}-`;
     
-    const latestInvoice = await prisma.taxInvoice.findFirst({
+    const latestInvoice = await tx.taxInvoice.findFirst({
       where: {
         invoiceNumber: {
           startsWith: prefix,
@@ -106,7 +106,7 @@ export class TaxInvoiceService {
 
     // 2. Transaction
     return await prisma.$transaction(async (tx) => {
-      const invoiceNumber = await this.generateInvoiceNumber();
+      const invoiceNumber = await this.generateInvoiceNumber(tx);
 
       const taxInvoice = await tx.taxInvoice.create({
         data: {
@@ -194,7 +194,7 @@ export class TaxInvoiceService {
       });
 
       return taxInvoice;
-    });
+    }, { timeout: 15000 });
   }
 
   static async cancelTaxInvoice(id: string, reason: string) {

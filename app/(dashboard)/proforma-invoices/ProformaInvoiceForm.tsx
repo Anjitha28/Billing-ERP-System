@@ -14,6 +14,27 @@ type FormProps = {
 
 const GST_RATES = [0, 5, 12, 18, 28];
 
+const getCurrentFinancialYear = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  // month is 0-indexed. April is 3.
+  if (today.getMonth() >= 3) {
+    return `FY ${year}-${(year + 1).toString().slice(2)}`;
+  } else {
+    return `FY ${year - 1}-${year.toString().slice(2)}`;
+  }
+};
+
+const getFinancialYearsList = () => {
+  const today = new Date();
+  const currentStartYear = today.getMonth() >= 3 ? today.getFullYear() : today.getFullYear() - 1;
+  // Generate 5 years centered around the current FY
+  return Array.from({ length: 5 }, (_, i) => {
+    const start = currentStartYear - 2 + i;
+    return `FY ${start}-${(start + 1).toString().slice(2)}`;
+  });
+};
+
 export function ProformaInvoiceForm({ initialData, customers: initialCustomers, products }: FormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -27,7 +48,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   // Form State
   const [customerId, setCustomerId] = useState(initialData?.customerId || "");
   const [customerType, setCustomerType] = useState(initialData?.customerType || "B2B");
-  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || "FY 2025-26");
+  const [financialYear, setFinancialYear] = useState(initialData?.financialYear || getCurrentFinancialYear());
   const [invoiceDate, setInvoiceDate] = useState(
     initialData?.invoiceDate ? new Date(initialData.invoiceDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   );
@@ -279,10 +300,9 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             onChange={(e) => setFinancialYear(e.target.value)}
             className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary bg-theme-surface"
           >
-            <option value="FY 2023-24">FY 2023-24</option>
-            <option value="FY 2024-25">FY 2024-25</option>
-            <option value="FY 2025-26">FY 2025-26</option>
-            <option value="FY 2026-27">FY 2026-27</option>
+            {getFinancialYearsList().map(fy => (
+              <option key={fy} value={fy}>{fy}</option>
+            ))}
           </select>
         </div>
 
