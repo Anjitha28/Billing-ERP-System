@@ -372,29 +372,25 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                       </select>
                       {item.isGstEnabled && (
                         <div className="flex gap-1">
-                          <select 
-                            value={item.customGstRate ? "custom" : item.gstRate.toString()}
+                          <input
+                            type="text"
+                            list={`gst-list-${item.id}`}
+                            value={item.gstRateInput !== undefined ? item.gstRateInput : `${item.gstRate}%`}
                             onChange={(e) => {
-                              if (e.target.value === "custom") {
-                                handleItemChange(item.id, 'customGstRate', true);
-                              } else {
-                                handleItemChange(item.id, 'customGstRate', false);
-                                handleItemChange(item.id, 'gstRate', Number(e.target.value));
-                              }
+                              const val = e.target.value;
+                              handleItemChange(item.id, 'gstRateInput', val);
+                              const parsed = parseFloat(val.replace(/[^0-9.]/g, ''));
+                              handleItemChange(item.id, 'gstRate', isNaN(parsed) ? 0 : parsed);
                             }}
-                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                          >
-                            {GST_RATES.map(r => <option key={r} value={r}>{r}%</option>)}
-                            <option value="custom">Custom</option>
-                          </select>
-                          {item.customGstRate && (
-                            <input 
-                              type="number" min="0" step="0.1" 
-                              value={item.gstRate} 
-                              onChange={(e) => handleItemChange(item.id, 'gstRate', e.target.value)}
-                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                            />
-                          )}
+                            onBlur={() => {
+                              handleItemChange(item.id, 'gstRateInput', `${item.gstRate}%`);
+                            }}
+                            className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface focus:ring-1 focus:ring-theme-primary"
+                            placeholder="0%"
+                          />
+                          <datalist id={`gst-list-${item.id}`}>
+                            {GST_RATES.map(r => <option key={r} value={`${r}%`} />)}
+                          </datalist>
                         </div>
                       )}
                     </td>
@@ -410,32 +406,28 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                       </select>
                       {item.isTdsEnabled && (
                         <div className="flex gap-1">
-                           <select 
-                            value={item.customTdsRate ? "custom" : item.tdsRate.toString()}
+                          <input
+                            type="text"
+                            list={`tds-list-${item.id}`}
+                            value={item.tdsRateInput !== undefined ? item.tdsRateInput : `${item.tdsRate}%`}
                             onChange={(e) => {
-                              if (e.target.value === "custom") {
-                                handleItemChange(item.id, 'customTdsRate', true);
-                              } else {
-                                handleItemChange(item.id, 'customTdsRate', false);
-                                handleItemChange(item.id, 'tdsRate', Number(e.target.value));
-                              }
+                              const val = e.target.value;
+                              handleItemChange(item.id, 'tdsRateInput', val);
+                              const parsed = parseFloat(val.replace(/[^0-9.]/g, ''));
+                              handleItemChange(item.id, 'tdsRate', isNaN(parsed) ? 0 : parsed);
                             }}
-                            className="w-full border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                          >
-                            <option value="0">0%</option>
-                            <option value="1">1%</option>
-                            <option value="2">2%</option>
-                            <option value="10">10%</option>
-                            <option value="custom">Custom</option>
-                          </select>
-                          {item.customTdsRate && (
-                            <input 
-                              type="number" min="0" step="0.1" 
-                              value={item.tdsRate} 
-                              onChange={(e) => handleItemChange(item.id, 'tdsRate', e.target.value)}
-                              className="w-12 border border-theme-border rounded-md px-1 py-1 text-xs bg-theme-surface"
-                            />
-                          )}
+                            onBlur={() => {
+                              handleItemChange(item.id, 'tdsRateInput', `${item.tdsRate}%`);
+                            }}
+                            className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface focus:ring-1 focus:ring-theme-primary"
+                            placeholder="0%"
+                          />
+                          <datalist id={`tds-list-${item.id}`}>
+                            <option value="0%" />
+                            <option value="1%" />
+                            <option value="2%" />
+                            <option value="10%" />
+                          </datalist>
                         </div>
                       )}
                     </td>

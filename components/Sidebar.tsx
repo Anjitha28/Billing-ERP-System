@@ -133,7 +133,7 @@ export function Sidebar({ userRole }: { userRole?: string }) {
   }
 
   return (
-    <aside className="w-64 bg-theme-bg text-white min-h-screen p-4 flex flex-col">
+    <aside className="w-64 bg-theme-sidebar text-white min-h-screen p-4 flex flex-col">
       <div className="text-xl font-bold mb-8 px-2 text-white">Billing ERP</div>
       <nav className="flex-1 overflow-y-auto">
         <ul className="space-y-1">
@@ -145,11 +145,11 @@ export function Sidebar({ userRole }: { userRole?: string }) {
                   href={item.href}
                   className={`flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                     active
-                      ? "bg-gray-800 text-white"
-                      : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                      ? "bg-theme-primary text-white shadow-sm"
+                      : "text-gray-200 hover:bg-theme-sidebar-hover hover:text-white"
                   }`}
                 >
-                  <span className={active ? "text-blue-400" : "text-theme-text-muted"}>
+                  <span className={active ? "text-white" : "text-gray-300 group-hover:text-white"}>
                     {item.icon}
                   </span>
                   {item.name}
