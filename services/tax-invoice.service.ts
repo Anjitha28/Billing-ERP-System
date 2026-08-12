@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { PrismaClient, TaxInvoiceStatus } from "@prisma/client";
+import { PrismaClient, Prisma, TaxInvoiceStatus } from "@prisma/client";
 import { FinancialTransactionService } from "./financial-transaction.service";
 
 
