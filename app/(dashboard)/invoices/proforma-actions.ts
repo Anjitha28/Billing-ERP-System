@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function createProformaInvoiceAction(data: any) {
   try {
     const invoice = await ProformaInvoiceService.createProformaInvoiceWithUnits(data);
-    revalidatePath("/proforma-invoices");
+    revalidatePath("/invoices");
     return { success: true, id: invoice.id };
   } catch (error: any) {
     console.error("Create Invoice Error:", error);
@@ -18,7 +18,7 @@ export async function createProformaInvoiceAction(data: any) {
 export async function updateProformaInvoiceAction(id: string, data: any) {
   try {
     const invoice = await ProformaInvoiceService.updateProformaInvoice(id, data);
-    revalidatePath("/proforma-invoices");
+    revalidatePath("/invoices");
     revalidatePath(`/proforma-invoices/${id}`);
     return { success: true, id: invoice.id };
   } catch (error: any) {
@@ -30,7 +30,7 @@ export async function updateProformaInvoiceAction(id: string, data: any) {
 export async function updateProformaInvoiceStatusAction(id: string, status: ProformaInvoiceStatus) {
   try {
     await ProformaInvoiceService.updateStatus(id, status);
-    revalidatePath("/proforma-invoices");
+    revalidatePath("/invoices");
     revalidatePath(`/proforma-invoices/${id}`);
     return { success: true };
   } catch (error: any) {

@@ -7,7 +7,6 @@ export async function convertProformaToTaxInvoiceAction(proformaId: string) {
   try {
     const invoice = await TaxInvoiceService.convertProformaToTaxInvoice(proformaId);
     revalidatePath("/invoices");
-    revalidatePath("/proforma-invoices");
     revalidatePath(`/proforma-invoices/${proformaId}`);
     return { success: true, data: invoice };
   } catch (error: any) {

@@ -18,6 +18,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const [customers, setCustomers] = useState(initialCustomers);
   const [showAddCustomer, setShowAddCustomer] = useState(false);
@@ -151,6 +152,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccess(null);
 
     // Validation
     if (!customerId) return setError("Please select a customer.");
@@ -197,7 +199,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       }
 
       if (res.success) {
-        router.push("/proforma-invoices");
+        setSuccess("Proforma Invoice saved as draft successfully.");
+        setTimeout(() => {
+          router.push("/invoices?tab=proforma");
+        }, 1500);
       } else {
         setError(res.error);
       }
@@ -209,6 +214,11 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       {error && (
         <div className="bg-red-900/20 text-red-700 p-4 rounded-lg text-sm font-medium border border-red-200">
           {error}
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-900/20 text-green-700 p-4 rounded-lg text-sm font-medium border border-green-200">
+          {success}
         </div>
       )}
 
