@@ -11,6 +11,10 @@ export type CreateProformaInvoiceInput = {
   invoiceDate: string | Date;
   notes?: string | null;
   tdsRate?: number; // kept for legacy overall tds if any
+  globalGstRate?: number;
+  isGlobalGstEnabled?: boolean;
+  globalTdsRate?: number;
+  isGlobalTdsEnabled?: boolean;
   items: {
     productId: string;
     description?: string | null;
@@ -121,6 +125,10 @@ export class ProformaInvoiceService {
       customerState: customer.state || BUSINESS_LOCATION.state, // Fallback to intra-state if customer state is missing
 
       tdsRate: data.tdsRate || 0,
+      globalGstRate: data.globalGstRate,
+      isGlobalGstEnabled: data.isGlobalGstEnabled,
+      globalTdsRate: data.globalTdsRate,
+      isGlobalTdsEnabled: data.isGlobalTdsEnabled,
     });
   }
 

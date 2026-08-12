@@ -31,6 +31,12 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
     initialData?.invoiceDate ? new Date(initialData.invoiceDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   );
   const [notes, setNotes] = useState(initialData?.notes || "");
+
+  // Global Tax State
+  const [isGlobalGstEnabled, setIsGlobalGstEnabled] = useState(true);
+  const [globalGstRate, setGlobalGstRate] = useState(0);
+  const [isGlobalTdsEnabled, setIsGlobalTdsEnabled] = useState(true);
+  const [globalTdsRate, setGlobalTdsRate] = useState(initialData?.tdsRate ? Number(initialData.tdsRate) : 0);
   
   // Items State
   const [items, setItems] = useState<any[]>(
@@ -76,9 +82,13 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       items: mappedItems,
       businessState: BUSINESS_LOCATION.state,
       customerState: selectedCustomer?.state || BUSINESS_LOCATION.state,
-      tdsRate: 0, // we use item-level TDS now
+      tdsRate: 0, 
+      globalGstRate,
+      isGlobalGstEnabled,
+      globalTdsRate,
+      isGlobalTdsEnabled,
     });
-  }, [items, selectedCustomer]);
+  }, [items, selectedCustomer, globalGstRate, isGlobalGstEnabled, globalTdsRate, isGlobalTdsEnabled]);
 
   const handleAddItem = () => {
     setItems([
@@ -161,6 +171,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         invoiceDate,
         notes,
         tdsRate: 0,
+        globalGstRate,
+        isGlobalGstEnabled,
+        globalTdsRate,
+        isGlobalTdsEnabled,
         items: items.map(i => ({
           productId: i.productId,
           description: i.description,
@@ -168,10 +182,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
           unit: i.unit,
           unitPrice: Number(i.unitPrice),
           discountPercent: Number(i.discountPercent),
-          isGstEnabled: Boolean(i.isGstEnabled),
-          gstRate: Number(i.gstRate),
-          isTdsEnabled: Boolean(i.isTdsEnabled),
-          tdsRate: Number(i.tdsRate),
+          isGstEnabled: false,
+          gstRate: 0,
+          isTdsEnabled: false,
+          tdsRate: 0,
         }))
       };
 
@@ -297,8 +311,6 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                 <th className="px-3 py-3 w-24">HSN/SAC</th>
                 <th className="px-3 py-3 w-20">Qty</th>
                 <th className="px-3 py-3 w-24">Rate</th>
-                <th className="px-3 py-3 w-32">GST</th>
-                <th className="px-3 py-3 w-32">TDS</th>
                 <th className="px-3 py-3 text-right w-24">Amount</th>
                 <th className="px-3 py-3 w-10"></th>
               </tr>
@@ -361,79 +373,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                         className="w-full border border-theme-border rounded-md px-2 py-1.5 text-sm bg-theme-surface"
                       />
                     </td>
-                    <td className="px-3 py-3 space-y-2">
-                      <select
-                        value={item.isGstEnabled ? "yes" : "no"}
-                        onChange={(e) => handleItemChange(item.id, 'isGstEnabled', e.target.value === "yes")}
-                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
-                      >
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                      {item.isGstEnabled && (
-                        <div className="flex gap-1">
-                          <input
-                            type="text"
-                            list={`gst-list-${item.id}`}
-                            value={item.gstRateInput !== undefined ? item.gstRateInput : `${item.gstRate}%`}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              handleItemChange(item.id, 'gstRateInput', val);
-                              const parsed = parseFloat(val.replace(/[^0-9.]/g, ''));
-                              handleItemChange(item.id, 'gstRate', isNaN(parsed) ? 0 : parsed);
-                            }}
-                            onBlur={() => {
-                              handleItemChange(item.id, 'gstRateInput', `${item.gstRate}%`);
-                            }}
-                            className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface focus:ring-1 focus:ring-theme-primary"
-                            placeholder="0%"
-                          />
-                          <datalist id={`gst-list-${item.id}`}>
-                            {GST_RATES.map(r => <option key={r} value={`${r}%`} />)}
-                          </datalist>
-                        </div>
-                      )}
-                    </td>
-                    
-                    <td className="px-3 py-3 space-y-2">
-                      <select
-                        value={item.isTdsEnabled ? "yes" : "no"}
-                        onChange={(e) => handleItemChange(item.id, 'isTdsEnabled', e.target.value === "yes")}
-                        className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface"
-                      >
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                      {item.isTdsEnabled && (
-                        <div className="flex gap-1">
-                          <input
-                            type="text"
-                            list={`tds-list-${item.id}`}
-                            value={item.tdsRateInput !== undefined ? item.tdsRateInput : `${item.tdsRate}%`}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              handleItemChange(item.id, 'tdsRateInput', val);
-                              const parsed = parseFloat(val.replace(/[^0-9.]/g, ''));
-                              handleItemChange(item.id, 'tdsRate', isNaN(parsed) ? 0 : parsed);
-                            }}
-                            onBlur={() => {
-                              handleItemChange(item.id, 'tdsRateInput', `${item.tdsRate}%`);
-                            }}
-                            className="w-full border border-theme-border rounded-md px-2 py-1 text-xs bg-theme-surface focus:ring-1 focus:ring-theme-primary"
-                            placeholder="0%"
-                          />
-                          <datalist id={`tds-list-${item.id}`}>
-                            <option value="0%" />
-                            <option value="1%" />
-                            <option value="2%" />
-                            <option value="10%" />
-                          </datalist>
-                        </div>
-                      )}
-                    </td>
                     <td className="px-3 py-3 text-right font-medium text-theme-text">
-                      {calc?.totalAmount?.toFixed(2) || "0.00"}
-                      {calc?.tdsAmount > 0 && <div className="text-xs text-red-600 font-normal mt-1">- TDS: {calc.tdsAmount.toFixed(2)}</div>}
+                      {calc?.taxableAmount?.toFixed(2) || "0.00"}
                     </td>
                     <td className="px-3 py-3 text-center">
                       <button
@@ -458,6 +399,71 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             </div>
           )}
         </div>
+
+        {/* Common GST and TDS */}
+        {items.length > 0 && (
+          <div className="p-4 bg-theme-surface-hover border-t border-theme-border flex flex-wrap gap-8 items-center">
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-theme-text">GST:</label>
+              <select
+                value={isGlobalGstEnabled ? "yes" : "no"}
+                onChange={(e) => setIsGlobalGstEnabled(e.target.value === "yes")}
+                className="border border-theme-border rounded-md px-2 py-1 text-sm bg-theme-surface focus:ring-1 focus:ring-theme-primary"
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+              
+              <div className="flex items-center gap-1">
+                <label className="text-sm text-theme-text-muted">GST Rate:</label>
+                <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    disabled={!isGlobalGstEnabled}
+                    value={globalGstRate}
+                    onChange={(e) => setGlobalGstRate(Number(e.target.value))}
+                    className="w-16 px-2 py-1 text-sm bg-transparent outline-none disabled:opacity-50"
+                  />
+                  <span className="px-2 py-1 text-sm bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <label className="text-sm font-medium text-theme-text">TDS:</label>
+              <select
+                value={isGlobalTdsEnabled ? "yes" : "no"}
+                onChange={(e) => setIsGlobalTdsEnabled(e.target.value === "yes")}
+                className="border border-theme-border rounded-md px-2 py-1 text-sm bg-theme-surface focus:ring-1 focus:ring-theme-primary"
+              >
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+
+              <div className="flex items-center gap-1">
+                <label className="text-sm text-theme-text-muted">TDS Rate:</label>
+                <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    disabled={!isGlobalTdsEnabled}
+                    value={globalTdsRate}
+                    onChange={(e) => setGlobalTdsRate(Number(e.target.value))}
+                    className="w-16 px-2 py-1 text-sm bg-transparent outline-none disabled:opacity-50"
+                  />
+                  <span className="px-2 py-1 text-sm bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
+                    %
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer and Totals */}
@@ -485,45 +491,23 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               <span>₹{calculationResult.subtotal.toFixed(2)}</span>
             </div>
             
-            <div className="flex justify-between text-theme-text-muted">
-              <span>Taxable Amount</span>
-              <span>₹{calculationResult.taxableAmount.toFixed(2)}</span>
-            </div>
-            
-            {calculationResult.totalCGST > 0 && (
-              <div className="flex justify-between text-theme-text-muted pl-4 text-xs">
-                <span>Total CGST</span>
-                <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
+            {calculationResult.totalGST > 0 && (
+              <div className="flex justify-between text-theme-text-muted">
+                <span>GST</span>
+                <span>₹{calculationResult.totalGST.toFixed(2)}</span>
               </div>
             )}
-            {calculationResult.totalSGST > 0 && (
-              <div className="flex justify-between text-theme-text-muted pl-4 text-xs pb-1">
-                <span>Total SGST</span>
-                <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
-              </div>
-            )}
-            {calculationResult.totalIGST > 0 && (
-              <div className="flex justify-between text-theme-text-muted pl-4 text-xs pb-1">
-                <span>Total IGST</span>
-                <span>₹{calculationResult.totalIGST.toFixed(2)}</span>
-              </div>
-            )}
-            
-            <div className="flex justify-between font-medium text-theme-text border-t border-theme-border pt-2">
-              <span>Gross Amount</span>
-              <span>₹{calculationResult.grossAmount.toFixed(2)}</span>
-            </div>
 
             {calculationResult.tdsAmount > 0 && (
-              <div className="flex justify-between text-red-600 font-medium pt-1">
-                <span>Less: Total TDS</span>
+              <div className="flex justify-between text-red-600 font-medium">
+                <span>TDS</span>
                 <span>-₹{calculationResult.tdsAmount.toFixed(2)}</span>
               </div>
             )}
 
             <div className="pt-3 border-t border-theme-border flex justify-between items-center">
               <span className="text-base font-bold text-theme-text">
-                Net Amount
+                Grand Total
               </span>
               <span className="text-2xl font-bold text-theme-primary">₹{calculationResult.netAmount.toFixed(2)}</span>
             </div>
