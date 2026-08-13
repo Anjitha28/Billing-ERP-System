@@ -345,16 +345,20 @@ export function ExpenseForm({
                       </select>
                     ) : (
                       <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.1"
-                          required
-                          value={item.gstRate}
-                          onChange={e => handleItemChange(index, "gstRate", e.target.value)}
-                          className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary sm:text-sm text-right px-1"
-                          placeholder="%"
-                        />
+                        <div className="flex items-center w-full border border-theme-border rounded focus-within:ring-1 focus-within:ring-theme-primary focus-within:border-theme-primary bg-theme-surface">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                            required
+                            value={item.gstRate}
+                            onChange={e => handleItemChange(index, "gstRate", e.target.value)}
+                            className="w-full border-none focus:ring-0 bg-transparent sm:text-sm text-right px-1 py-1.5"
+                            style={{ boxShadow: 'none' }}
+                          />
+                          <span className="text-theme-text-muted pr-2 text-sm font-medium">%</span>
+                        </div>
                         <button 
                           type="button" 
                           onClick={() => {
@@ -391,16 +395,20 @@ export function ExpenseForm({
                       </select>
                     ) : (
                       <div className="flex items-center gap-1">
-                        <input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          required
-                          value={item.tdsRate}
-                          onChange={e => handleItemChange(index, "tdsRate", e.target.value)}
-                          className="w-full border-theme-border rounded focus:ring-theme-primary focus:border-theme-primary text-xs text-right px-1"
-                          placeholder="%"
-                        />
+                        <div className="flex items-center w-full border border-theme-border rounded focus-within:ring-1 focus-within:ring-theme-primary focus-within:border-theme-primary bg-theme-surface">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            step="0.01"
+                            required
+                            value={item.tdsRate}
+                            onChange={e => handleItemChange(index, "tdsRate", e.target.value)}
+                            className="w-full border-none focus:ring-0 bg-transparent text-xs text-right px-1 py-1.5"
+                            style={{ boxShadow: 'none' }}
+                          />
+                          <span className="text-theme-text-muted pr-2 text-xs font-medium">%</span>
+                        </div>
                         <button 
                           type="button" 
                           onClick={() => {
