@@ -4,11 +4,11 @@ import { FinancialTransactionService } from "./financial-transaction.service";
 
 
 export class ExpenseService {
-  private static async generateExpenseNumber(): Promise<string> {
+  private static async generateExpenseNumber(tx: Omit<PrismaClient, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">): Promise<string> {
     const year = new Date().getFullYear();
     const prefix = `EXP-${year}-`;
     
-    const latestExpense = await prisma.expense.findFirst({
+    const latestExpense = await tx.expense.findFirst({
       where: { expenseNumber: { startsWith: prefix } },
       orderBy: { expenseNumber: 'desc' },
     });
@@ -83,7 +83,7 @@ export class ExpenseService {
 
   static async createExpense(data: any) {
     return await prisma.$transaction(async (tx) => {
-      const expenseNumber = await this.generateExpenseNumber();
+      const expenseNumber = await this.generateExpenseNumber(tx);
 
       const expense = await tx.expense.create({
         data: {
