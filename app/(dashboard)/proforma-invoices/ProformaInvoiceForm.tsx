@@ -85,12 +85,19 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   // Live Calculations utilizing the unified TaxEngine
   const calculationResult = useMemo(() => {
     const mappedItems = items.map(item => {
-      const grossAmount = Number((item.quantity * item.unitPrice).toFixed(2));
-      const discountAmount = Number(((grossAmount * item.discountPercent) / 100).toFixed(2));
+      const qty = Number(item.quantity) || 0;
+      const price = Number(item.unitPrice) || 0;
+      const discount = Number(item.discountPercent) || 0;
+
+      const grossAmount = Number((qty * price).toFixed(2));
+      const discountAmount = Number(((grossAmount * discount) / 100).toFixed(2));
       const taxableAmount = Number((grossAmount - discountAmount).toFixed(2));
 
       return {
         ...item,
+        quantity: qty,
+        unitPrice: price,
+        discountPercent: discount,
         grossAmount,
         discountAmount,
         taxableAmount,
@@ -419,7 +426,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                       />
                     </td>
                     <td className="px-3 py-3 text-right font-medium text-theme-text">
-                      {calc?.taxableAmount?.toFixed(2) || "0.00"}
+                      {Number(calc?.taxableAmount || 0).toFixed(2)}
                     </td>
                     <td className="px-3 py-3 text-center">
                       <button
@@ -474,7 +481,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               <div className="flex items-center gap-2 ml-auto">
                 <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">Base Amount:</label>
                 <span className="text-sm font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded min-w-max">
-                  ₹{revGstBaseAmount.toFixed(2)}
+                  ₹{Number(revGstBaseAmount || 0).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -593,7 +600,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                   <td className="py-2 px-2 text-gray-600">{item.hsnSacCode}</td>
                   <td className="py-2 px-2 text-right">{Number(item.quantity || 0)}</td>
                   <td className="py-2 px-2 text-right">₹{Number(item.unitPrice || 0).toFixed(2)}</td>
-                  <td className="py-2 px-2 text-right font-medium">₹{itemCalc.taxableAmount.toFixed(2)}</td>
+                  <td className="py-2 px-2 text-right font-medium">₹{Number(itemCalc?.taxableAmount || 0).toFixed(2)}</td>
                 </tr>
               )
             })}
