@@ -58,13 +58,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   const [isGlobalGstEnabled, setIsGlobalGstEnabled] = useState(true);
   const [globalGstRate, setGlobalGstRate] = useState(0);
 
-  // Reverse GST Calculator State
-  const [revGstInclusiveAmount, setRevGstInclusiveAmount] = useState<number | "">("");
-  const [revGstRate, setRevGstRate] = useState<number | "">(18);
-  const revGstBaseAmount = (typeof revGstInclusiveAmount === 'number' && typeof revGstRate === 'number' && revGstRate >= 0)
-    ? (revGstInclusiveAmount / (1 + (revGstRate / 100)))
-    : 0;
-  
+  // Reverse GST Calculator is now computed automatically below after calculationResult
   // Items State
   const [items, setItems] = useState<any[]>(
     initialData?.items?.map((i: any) => ({
@@ -116,6 +110,15 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       isGlobalTdsEnabled: false,
     });
   }, [items, selectedCustomer, globalGstRate, isGlobalGstEnabled]);
+
+  const revGstBaseAmount = useMemo(() => {
+    return calculationResult.calculatedItems.reduce((total, itemCalc, index) => {
+      const item = items[index];
+      const appliedGstRate = isGlobalGstEnabled ? globalGstRate : (item?.gstRate || 0);
+      const inclusiveAmt = itemCalc.taxableAmount || 0;
+      return total + (inclusiveAmt / (1 + (appliedGstRate / 100)));
+    }, 0);
+  }, [calculationResult, items, isGlobalGstEnabled, globalGstRate]);
 
   const handleAddItem = () => {
     setItems([
@@ -470,38 +473,6 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
 
             <div className="flex items-center gap-4 bg-theme-surface px-4 py-2 rounded-lg border border-theme-border flex-1">
               <span className="text-sm font-bold text-theme-text min-w-max">Reverse GST Calculator</span>
-              
-              <div className="flex items-center gap-2">
-                <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">Inclusive Amount:</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={revGstInclusiveAmount}
-                  onChange={(e) => setRevGstInclusiveAmount(e.target.value ? Number(e.target.value) : "")}
-                  className="w-24 px-2 py-1 text-sm bg-theme-bg border border-theme-border rounded outline-none focus:border-theme-primary"
-                  placeholder="0.00"
-                />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">GST Rate:</label>
-                <div className="flex items-center border border-theme-border rounded overflow-hidden bg-theme-bg focus-within:border-theme-primary">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={revGstRate}
-                    onChange={(e) => setRevGstRate(e.target.value ? Number(e.target.value) : "")}
-                    className="w-14 px-2 py-1 text-sm bg-transparent outline-none text-right"
-                    placeholder="18"
-                  />
-                  <span className="px-2 py-1 text-xs bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
-                    %
-                  </span>
-                </div>
-              </div>
-
               <div className="flex items-center gap-2 ml-auto">
                 <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">Base Amount:</label>
                 <span className="text-sm font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded min-w-max">
