@@ -591,8 +591,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
                     {item.description && <p className="text-xs text-gray-500">{item.description}</p>}
                   </td>
                   <td className="py-2 px-2 text-gray-600">{item.hsnSacCode}</td>
-                  <td className="py-2 px-2 text-right">{item.quantity}</td>
-                  <td className="py-2 px-2 text-right">₹{item.unitPrice.toFixed(2)}</td>
+                  <td className="py-2 px-2 text-right">{Number(item.quantity || 0)}</td>
+                  <td className="py-2 px-2 text-right">₹{Number(item.unitPrice || 0).toFixed(2)}</td>
                   <td className="py-2 px-2 text-right font-medium">₹{itemCalc.taxableAmount.toFixed(2)}</td>
                 </tr>
               )
