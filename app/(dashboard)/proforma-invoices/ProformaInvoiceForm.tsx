@@ -57,8 +57,13 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   // Global Tax State
   const [isGlobalGstEnabled, setIsGlobalGstEnabled] = useState(true);
   const [globalGstRate, setGlobalGstRate] = useState(0);
-  const [isGlobalTdsEnabled, setIsGlobalTdsEnabled] = useState(true);
-  const [globalTdsRate, setGlobalTdsRate] = useState(initialData?.tdsRate ? Number(initialData.tdsRate) : 0);
+
+  // Reverse GST Calculator State
+  const [revGstInclusiveAmount, setRevGstInclusiveAmount] = useState<number | "">("");
+  const [revGstRate, setRevGstRate] = useState<number | "">(18);
+  const revGstBaseAmount = (typeof revGstInclusiveAmount === 'number' && typeof revGstRate === 'number' && revGstRate >= 0)
+    ? (revGstInclusiveAmount / (1 + (revGstRate / 100)))
+    : 0;
   
   // Items State
   const [items, setItems] = useState<any[]>(
@@ -107,10 +112,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       tdsRate: 0, 
       globalGstRate,
       isGlobalGstEnabled,
-      globalTdsRate,
-      isGlobalTdsEnabled,
+      globalTdsRate: 0,
+      isGlobalTdsEnabled: false,
     });
-  }, [items, selectedCustomer, globalGstRate, isGlobalGstEnabled, globalTdsRate, isGlobalTdsEnabled]);
+  }, [items, selectedCustomer, globalGstRate, isGlobalGstEnabled]);
 
   const handleAddItem = () => {
     setItems([
@@ -196,8 +201,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         tdsRate: 0,
         globalGstRate,
         isGlobalGstEnabled,
-        globalTdsRate,
-        isGlobalTdsEnabled,
+        globalTdsRate: 0,
+        isGlobalTdsEnabled: false,
         items: items.map(i => ({
           productId: i.productId,
           description: i.description,
@@ -463,33 +468,45 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-theme-text">TDS:</label>
-              <select
-                value={isGlobalTdsEnabled ? "yes" : "no"}
-                onChange={(e) => setIsGlobalTdsEnabled(e.target.value === "yes")}
-                className="border border-theme-border rounded-md px-2 py-1 text-sm bg-theme-surface focus:ring-1 focus:ring-theme-primary"
-              >
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
+            <div className="flex items-center gap-4 bg-theme-surface px-4 py-2 rounded-lg border border-theme-border flex-1">
+              <span className="text-sm font-bold text-theme-text min-w-max">Reverse GST Calculator</span>
+              
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">Inclusive Amount:</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={revGstInclusiveAmount}
+                  onChange={(e) => setRevGstInclusiveAmount(e.target.value ? Number(e.target.value) : "")}
+                  className="w-24 px-2 py-1 text-sm bg-theme-bg border border-theme-border rounded outline-none focus:border-theme-primary"
+                  placeholder="0.00"
+                />
+              </div>
 
-              <div className="flex items-center gap-1">
-                <label className="text-sm text-theme-text-muted">TDS Rate:</label>
-                <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
+              <div className="flex items-center gap-2">
+                <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">GST Rate:</label>
+                <div className="flex items-center border border-theme-border rounded overflow-hidden bg-theme-bg focus-within:border-theme-primary">
                   <input
                     type="number"
                     min="0"
                     step="0.01"
-                    disabled={!isGlobalTdsEnabled}
-                    value={globalTdsRate}
-                    onChange={(e) => setGlobalTdsRate(Number(e.target.value))}
-                    className="w-16 px-2 py-1 text-sm bg-transparent outline-none disabled:opacity-50"
+                    value={revGstRate}
+                    onChange={(e) => setRevGstRate(e.target.value ? Number(e.target.value) : "")}
+                    className="w-14 px-2 py-1 text-sm bg-transparent outline-none text-right"
+                    placeholder="18"
                   />
-                  <span className="px-2 py-1 text-sm bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
+                  <span className="px-2 py-1 text-xs bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
                     %
                   </span>
                 </div>
+              </div>
+
+              <div className="flex items-center gap-2 ml-auto">
+                <label className="text-xs text-theme-text-muted uppercase font-semibold min-w-max">Base Amount:</label>
+                <span className="text-sm font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded min-w-max">
+                  ₹{revGstBaseAmount.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
@@ -528,12 +545,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               </div>
             )}
 
-            {calculationResult.tdsAmount > 0 && (
-              <div className="flex justify-between text-red-600 font-medium">
-                <span>TDS</span>
-                <span>-₹{calculationResult.tdsAmount.toFixed(2)}</span>
-              </div>
-            )}
+
 
             <div className="pt-3 border-t border-theme-border flex justify-between items-center">
               <span className="text-base font-bold text-theme-text">
