@@ -55,7 +55,6 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   const [notes, setNotes] = useState(initialData?.notes || "");
 
   // Global Tax State
-  const [isGlobalGstEnabled, setIsGlobalGstEnabled] = useState(true);
   const [globalGstRate, setGlobalGstRate] = useState(0);
 
   // Reverse GST Calculator is now computed automatically below after calculationResult
@@ -99,26 +98,28 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       };
     });
 
+    const isB2BExport = customerType === "B2B Export";
     return TaxEngine.calculateInvoiceTaxes({
       items: mappedItems,
       businessState: BUSINESS_LOCATION.state,
-      customerState: selectedCustomer?.state || BUSINESS_LOCATION.state,
+      customerState: selectedCustomer?.state || "",
       tdsRate: 0, 
-      globalGstRate,
-      isGlobalGstEnabled,
+      globalGstRate: isB2BExport ? 0 : globalGstRate,
+      isGlobalGstEnabled: true,
       globalTdsRate: 0,
       isGlobalTdsEnabled: false,
     });
-  }, [items, selectedCustomer, globalGstRate, isGlobalGstEnabled]);
+  }, [items, selectedCustomer, globalGstRate, customerType]);
 
   const revGstBaseAmount = useMemo(() => {
+    const isB2BExport = customerType === "B2B Export";
     return calculationResult.calculatedItems.reduce((total, itemCalc, index) => {
       const item = items[index];
-      const appliedGstRate = isGlobalGstEnabled ? globalGstRate : (item?.gstRate || 0);
+      const appliedGstRate = isB2BExport ? 0 : globalGstRate;
       const inclusiveAmt = itemCalc.taxableAmount || 0;
       return total + (inclusiveAmt / (1 + (appliedGstRate / 100)));
     }, 0);
-  }, [calculationResult, items, isGlobalGstEnabled, globalGstRate]);
+  }, [calculationResult, items, globalGstRate, customerType]);
 
   const handleAddItem = () => {
     setItems([
@@ -185,6 +186,11 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
 
     // Validation
     if (!customerId) return setError("Please select a customer.");
+    
+    if (customerType !== "B2B Export" && (!selectedCustomer?.state || selectedCustomer.state.trim() === "")) {
+      return setError("Customer must have a valid State for GST calculation. Please update the customer details.");
+    }
+
     if (!invoiceDate) return setError("Invoice Date is required.");
     if (items.length === 0) return setError("At least one item is required.");
     
@@ -202,8 +208,8 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         invoiceDate,
         notes,
         tdsRate: 0,
-        globalGstRate,
-        isGlobalGstEnabled,
+        globalGstRate: customerType === "B2B Export" ? 0 : globalGstRate,
+        isGlobalGstEnabled: true,
         globalTdsRate: 0,
         isGlobalTdsEnabled: false,
         items: items.map(i => ({
@@ -296,6 +302,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
           >
             <option value="B2B">B2B</option>
             <option value="B2C">B2C</option>
+            <option value="B2B Export">B2B Export</option>
           </select>
         </div>
 
@@ -441,35 +448,26 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         {/* Common GST and TDS */}
         {items.length > 0 && (
           <div className="p-4 bg-theme-surface-hover border-t border-theme-border flex flex-wrap gap-8 items-center">
-            <div className="flex items-center gap-3">
-              <label className="text-sm font-medium text-theme-text">GST:</label>
-              <select
-                value={isGlobalGstEnabled ? "yes" : "no"}
-                onChange={(e) => setIsGlobalGstEnabled(e.target.value === "yes")}
-                className="border border-theme-border rounded-md px-2 py-1 text-sm bg-theme-surface focus:ring-1 focus:ring-theme-primary"
-              >
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-              
-              <div className="flex items-center gap-1">
-                <label className="text-sm text-theme-text-muted">GST Rate:</label>
-                <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    disabled={!isGlobalGstEnabled}
-                    value={globalGstRate}
-                    onChange={(e) => setGlobalGstRate(Number(e.target.value))}
-                    className="w-16 px-2 py-1 text-sm bg-transparent outline-none disabled:opacity-50"
-                  />
-                  <span className="px-2 py-1 text-sm bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
-                    %
-                  </span>
+            {customerType !== "B2B Export" && (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  <label className="text-sm font-semibold text-theme-text uppercase">GST Rate:</label>
+                  <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={globalGstRate}
+                      onChange={(e) => setGlobalGstRate(Number(e.target.value))}
+                      className="w-16 px-2 py-1 text-sm bg-transparent outline-none"
+                    />
+                    <span className="px-2 py-1 text-sm bg-theme-surface-hover border-l border-theme-border text-theme-text-muted select-none">
+                      %
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="flex items-center gap-4 bg-theme-surface px-4 py-2 rounded-lg border border-theme-border flex-1">
               <span className="text-sm font-bold text-theme-text min-w-max">Reverse GST Calculator</span>
@@ -509,20 +507,131 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               <span>₹{calculationResult.subtotal.toFixed(2)}</span>
             </div>
             
-            {calculationResult.totalGST > 0 && (
-              <div className="flex justify-between text-theme-text-muted">
-                <span>GST</span>
-                <span>₹{calculationResult.totalGST.toFixed(2)}</span>
-              </div>
+            {calculationResult.totalGST > 0 && customerType !== "B2B Export" && (
+              <>
+                {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
+                  <>
+                    <div className="flex justify-between text-theme-text-muted">
+                      <span>CGST</span>
+                      <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-theme-text-muted">
+                      <span>SGST</span>
+                      <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-between text-theme-text-muted">
+                    <span>IGST</span>
+                    <span>₹{calculationResult.totalIGST.toFixed(2)}</span>
+                  </div>
+                )}
+              </>
             )}
-
-
 
             <div className="pt-3 border-t border-theme-border flex justify-between items-center">
               <span className="text-base font-bold text-theme-text">
                 Grand Total
               </span>
               <span className="text-2xl font-bold text-theme-primary">₹{calculationResult.netAmount.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Live Preview */}
+      <div className="bg-white border border-theme-border rounded-xl shadow-lg p-8 mx-auto w-full text-black">
+        <div className="text-center mb-6 pb-6 border-b border-gray-200">
+          <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-800">Proforma Invoice Preview</h2>
+          {customerType === "B2B Export" && (
+            <span className="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded text-xs uppercase tracking-widest">
+              B2B Export
+            </span>
+          )}
+        </div>
+        
+        <div className="flex justify-between mb-8">
+          <div>
+            <h4 className="font-bold text-gray-700 mb-1">Billed To:</h4>
+            {selectedCustomer ? (
+              <div className="text-sm text-gray-600">
+                <p className="font-bold text-gray-800 text-base">{selectedCustomer.legalName}</p>
+                <p>State: {selectedCustomer.state || <span className="text-red-500 font-bold">MISSING STATE</span>}</p>
+                {selectedCustomer.gstin && <p>GSTIN: {selectedCustomer.gstin}</p>}
+                <p>Type: {customerType}</p>
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 italic">Select a customer</p>
+            )}
+          </div>
+          <div className="text-right text-sm text-gray-600">
+            <p><span className="font-bold text-gray-700">Financial Year:</span> {financialYear}</p>
+            <p><span className="font-bold text-gray-700">Date:</span> {invoiceDate}</p>
+            <p><span className="font-bold text-gray-700">Place of Supply:</span> {selectedCustomer?.state || BUSINESS_LOCATION.state}</p>
+          </div>
+        </div>
+
+        <table className="w-full text-left text-sm mb-6 border-collapse">
+          <thead>
+            <tr className="border-y-2 border-gray-800 font-bold text-gray-700">
+              <th className="py-2 px-2">Item</th>
+              <th className="py-2 px-2">HSN/SAC</th>
+              <th className="py-2 px-2 text-right">Qty</th>
+              <th className="py-2 px-2 text-right">Rate</th>
+              <th className="py-2 px-2 text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {calculationResult.calculatedItems.map((itemCalc, idx) => {
+              const item = items[idx];
+              return (
+                <tr key={idx}>
+                  <td className="py-2 px-2">
+                    <p className="font-medium text-gray-800">{products.find(p => p.id === item.productId)?.name || "N/A"}</p>
+                    {item.description && <p className="text-xs text-gray-500">{item.description}</p>}
+                  </td>
+                  <td className="py-2 px-2 text-gray-600">{item.hsnSacCode}</td>
+                  <td className="py-2 px-2 text-right">{item.quantity}</td>
+                  <td className="py-2 px-2 text-right">₹{item.unitPrice.toFixed(2)}</td>
+                  <td className="py-2 px-2 text-right font-medium">₹{itemCalc.taxableAmount.toFixed(2)}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+
+        <div className="flex justify-end border-t border-gray-200 pt-4">
+          <div className="w-72 space-y-2 text-sm">
+            <div className="flex justify-between font-bold text-gray-700">
+              <span>Subtotal:</span>
+              <span>₹{calculationResult.taxableAmount.toFixed(2)}</span>
+            </div>
+            
+            {calculationResult.totalGST > 0 && customerType !== "B2B Export" && (
+              <>
+                {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
+                  <>
+                    <div className="flex justify-between text-gray-600">
+                      <span>CGST:</span>
+                      <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-gray-600">
+                      <span>SGST:</span>
+                      <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-between text-gray-600">
+                    <span>IGST:</span>
+                    <span>₹{calculationResult.totalIGST.toFixed(2)}</span>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div className="flex justify-between items-center border-t-2 border-gray-800 pt-2 mt-2">
+              <span className="font-bold text-lg text-gray-800">Grand Total:</span>
+              <span className="font-black text-xl text-theme-primary">₹{calculationResult.netAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>
