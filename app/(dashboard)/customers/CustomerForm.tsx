@@ -33,6 +33,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
   });
 
   const isB2B = customerType === "B2B";
+  const isB2BExport = customerType === "B2B_EXPORT";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -116,6 +117,18 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             />
             <span className="text-theme-text font-medium">B2C (Business to Consumer)</span>
           </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input 
+              type="radio" 
+              name="customerType" 
+              value="B2B_EXPORT" 
+              checked={customerType === "B2B_EXPORT"}
+              onChange={() => setCustomerType("B2B_EXPORT")}
+              className="text-theme-primary focus:ring-theme-primary"
+              disabled={!!initialData}
+            />
+            <span className="text-theme-text font-medium">B2B Export</span>
+          </label>
         </div>
       </div>
 
@@ -126,7 +139,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
           
           <div>
             <label className="block text-sm font-medium text-theme-text mb-1">
-              {isB2B ? "Legal / Business Name" : "Customer Name"} <span className="text-red-500">*</span>
+              {isB2B || isB2BExport ? "Legal / Business Name" : "Customer Name"} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -138,7 +151,7 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             />
           </div>
 
-          {isB2B && (
+          {(isB2B || isB2BExport) && (
             <div>
               <label className="block text-sm font-medium text-theme-text mb-1">Trade Name (Optional)</label>
               <input
@@ -160,8 +173,9 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
               name="gstin"
               value={formData.gstin}
               onChange={handleChange}
-              className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase"
-              placeholder="e.g. 27ABCDE1234F1Z5"
+              disabled={isB2BExport}
+              className={`w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase ${isB2BExport ? 'bg-theme-surface-hover opacity-50 cursor-not-allowed' : ''}`}
+              placeholder={isB2BExport ? "Not applicable for B2B Export" : "e.g. 27ABCDE1234F1Z5"}
             />
           </div>
 

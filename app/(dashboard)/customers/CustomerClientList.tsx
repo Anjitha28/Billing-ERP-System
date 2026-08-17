@@ -86,6 +86,7 @@ export function CustomerClientList({
             <option value="ALL">All Types</option>
             <option value="B2B">B2B Only</option>
             <option value="B2C">B2C Only</option>
+            <option value="B2B_EXPORT">B2B Export Only</option>
           </select>
           <select
             className="border border-theme-border text-sm rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-theme-primary"
@@ -132,8 +133,8 @@ export function CustomerClientList({
                     {c.tradeName && <div className="text-xs text-theme-text-muted">{c.tradeName}</div>}
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${c.customerType === 'B2B' ? 'bg-indigo-100 text-indigo-700' : 'bg-green-100 text-green-700'}`}>
-                      {c.customerType}
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${c.customerType === 'B2B' ? 'bg-indigo-100 text-indigo-700' : c.customerType === 'B2B_EXPORT' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                      {c.customerType === 'B2B_EXPORT' ? 'B2B Export' : c.customerType}
                     </span>
                   </td>
                   <td className="px-6 py-4 font-mono text-xs">{c.gstin || "-"}</td>

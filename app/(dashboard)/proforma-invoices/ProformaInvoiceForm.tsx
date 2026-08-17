@@ -105,7 +105,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       };
     });
 
-    const isB2BExport = customerType === "B2B Export";
+    const isB2BExport = customerType === "B2B_EXPORT";
     return TaxEngine.calculateInvoiceTaxes({
       items: mappedItems,
       businessState: BUSINESS_LOCATION.state,
@@ -119,7 +119,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   }, [items, selectedCustomer, globalGstRate, customerType]);
 
   const revGstBaseAmount = useMemo(() => {
-    const isB2BExport = customerType === "B2B Export";
+    const isB2BExport = customerType === "B2B_EXPORT";
     return calculationResult.calculatedItems.reduce((total, itemCalc, index) => {
       const item = items[index];
       const appliedGstRate = isB2BExport ? 0 : globalGstRate;
@@ -194,7 +194,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
     // Validation
     if (!customerId) return setError("Please select a customer.");
     
-    if (customerType !== "B2B Export" && (!selectedCustomer?.state || selectedCustomer.state.trim() === "")) {
+    if (customerType !== "B2B_EXPORT" && (!selectedCustomer?.state || selectedCustomer.state.trim() === "")) {
       return setError("Customer must have a valid State for GST calculation. Please update the customer details.");
     }
 
@@ -215,7 +215,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         invoiceDate,
         notes,
         tdsRate: 0,
-        globalGstRate: customerType === "B2B Export" ? 0 : globalGstRate,
+        globalGstRate: customerType === "B2B_EXPORT" ? 0 : globalGstRate,
         isGlobalGstEnabled: true,
         globalTdsRate: 0,
         isGlobalTdsEnabled: false,
@@ -309,7 +309,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
           >
             <option value="B2B">B2B</option>
             <option value="B2C">B2C</option>
-            <option value="B2B Export">B2B Export</option>
+            <option value="B2B_EXPORT">B2B Export</option>
           </select>
         </div>
 
@@ -455,7 +455,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         {/* Common GST and TDS */}
         {items.length > 0 && (
           <div className="p-4 bg-theme-surface-hover border-t border-theme-border flex flex-wrap gap-8 items-center">
-            {customerType !== "B2B Export" && (
+            {customerType !== "B2B_EXPORT" && (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
                   <label className="text-sm font-semibold text-theme-text uppercase">GST Rate:</label>
@@ -514,7 +514,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               <span>₹{calculationResult.subtotal.toFixed(2)}</span>
             </div>
             
-            {calculationResult.totalGST > 0 && customerType !== "B2B Export" && (
+            {calculationResult.totalGST > 0 && customerType !== "B2B_EXPORT" && (
               <>
                 {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
                   <>
@@ -550,7 +550,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       <div className="bg-white border border-theme-border rounded-xl shadow-lg p-8 mx-auto w-full text-black">
         <div className="text-center mb-6 pb-6 border-b border-gray-200">
           <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-800">Proforma Invoice Preview</h2>
-          {customerType === "B2B Export" && (
+          {customerType === "B2B_EXPORT" && (
             <span className="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded text-xs uppercase tracking-widest">
               B2B Export
             </span>
@@ -614,7 +614,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
               <span>₹{calculationResult.taxableAmount.toFixed(2)}</span>
             </div>
             
-            {calculationResult.totalGST > 0 && customerType !== "B2B Export" && (
+            {calculationResult.totalGST > 0 && customerType !== "B2B_EXPORT" && (
               <>
                 {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
                   <>

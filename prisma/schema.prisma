@@ -44,6 +44,7 @@ model CompanySettings {
 enum CustomerType {
   B2B
   B2C
+  B2B_EXPORT
 }
 
 model Customer {
