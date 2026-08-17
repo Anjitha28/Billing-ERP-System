@@ -164,20 +164,21 @@ export function CustomerForm({ initialData }: CustomerFormProps) {
             </div>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-theme-text mb-1">
-              GSTIN {isB2B && <span className="text-red-500">*</span>}
-            </label>
-            <input
-              type="text"
-              name="gstin"
-              value={formData.gstin}
-              onChange={handleChange}
-              disabled={isB2BExport}
-              className={`w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase ${isB2BExport ? 'bg-theme-surface-hover opacity-50 cursor-not-allowed' : ''}`}
-              placeholder={isB2BExport ? "Not applicable for B2B Export" : "e.g. 27ABCDE1234F1Z5"}
-            />
-          </div>
+          {!isB2BExport && (
+            <div>
+              <label className="block text-sm font-medium text-theme-text mb-1">
+                GSTIN {isB2B && <span className="text-red-500">*</span>}
+              </label>
+              <input
+                type="text"
+                name="gstin"
+                value={formData.gstin}
+                onChange={handleChange}
+                className="w-full border border-theme-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-theme-primary uppercase"
+                placeholder="e.g. 27ABCDE1234F1Z5"
+              />
+            </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-theme-text mb-1">PAN (Optional)</label>
