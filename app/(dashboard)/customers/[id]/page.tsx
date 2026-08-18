@@ -26,9 +26,6 @@ export default async function CustomerDetailPage({
       <Link href="/customers" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark">
         ← Back to Customers
       </Link>
-      <Link href="/customers" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark">
-        ← Back to Customers
-      </Link>
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-theme-text">{customer.legalName}</h1>
