@@ -174,7 +174,7 @@ export function Sidebar({ userRole }: { userRole?: string }) {
         </button>
       </div>
       
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden px-3 custom-scrollbar">
+      <nav className="flex-1 px-3">
         <ul className="space-y-2">
           {filteredNavItems.map((item) => {
             const active = isItemActive(item.href);
