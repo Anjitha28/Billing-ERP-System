@@ -157,10 +157,7 @@ export default async function TaxInvoiceDetailPage({
                   <th className="pb-2">GST Rate</th>
                   <th className="pb-2 text-right">Taxable Amt</th>
                   {isIntraState ? (
-                    <>
-                      <th className="pb-2 text-right">CGST</th>
-                      <th className="pb-2 text-right">SGST</th>
-                    </>
+                    <th className="pb-2 text-right">GST</th>
                   ) : (
                     <th className="pb-2 text-right">IGST</th>
                   )}
@@ -173,10 +170,7 @@ export default async function TaxInvoiceDetailPage({
                     <td className="py-2">{group.gstRate}%</td>
                     <td className="py-2 text-right">₹{group.taxableAmount.toFixed(2)}</td>
                     {isIntraState ? (
-                      <>
-                        <td className="py-2 text-right">₹{group.cgstAmount.toFixed(2)}</td>
-                        <td className="py-2 text-right">₹{group.sgstAmount.toFixed(2)}</td>
-                      </>
+                      <td className="py-2 text-right">₹{(group.cgstAmount + group.sgstAmount).toFixed(2)}</td>
                     ) : (
                       <td className="py-2 text-right">₹{group.igstAmount.toFixed(2)}</td>
                     )}
@@ -225,16 +219,10 @@ export default async function TaxInvoiceDetailPage({
               </div>
               
               {isIntraState ? (
-                <>
-                  <div className="flex justify-between text-theme-text-muted px-2 text-xs">
-                    <span>CGST</span>
-                    <span>₹{invoice.totalCGST.toString()}</span>
-                  </div>
-                  <div className="flex justify-between text-theme-text-muted px-2 text-xs">
-                    <span>SGST</span>
-                    <span>₹{invoice.totalSGST.toString()}</span>
-                  </div>
-                </>
+                <div className="flex justify-between text-theme-text-muted px-2 text-xs">
+                  <span>GST</span>
+                  <span>₹{(Number(invoice.totalCGST) + Number(invoice.totalSGST)).toFixed(2)}</span>
+                </div>
               ) : (
                 <div className="flex justify-between text-theme-text-muted px-2 text-xs">
                   <span>IGST</span>

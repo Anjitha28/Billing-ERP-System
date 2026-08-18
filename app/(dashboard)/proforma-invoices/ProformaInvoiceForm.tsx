@@ -517,16 +517,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             {calculationResult.totalGST > 0 && customerType !== "B2B_EXPORT" && (
               <>
                 {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
-                  <>
-                    <div className="flex justify-between text-theme-text-muted">
-                      <span>CGST</span>
-                      <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-theme-text-muted">
-                      <span>SGST</span>
-                      <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
-                    </div>
-                  </>
+                  <div className="flex justify-between text-theme-text-muted">
+                    <span>GST</span>
+                    <span>₹{(calculationResult.totalCGST + calculationResult.totalSGST).toFixed(2)}</span>
+                  </div>
                 ) : (
                   <div className="flex justify-between text-theme-text-muted">
                     <span>IGST</span>
@@ -617,16 +611,10 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             {calculationResult.totalGST > 0 && customerType !== "B2B_EXPORT" && (
               <>
                 {calculationResult.totalCGST > 0 || calculationResult.totalSGST > 0 ? (
-                  <>
-                    <div className="flex justify-between text-gray-600">
-                      <span>CGST:</span>
-                      <span>₹{calculationResult.totalCGST.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-gray-600">
-                      <span>SGST:</span>
-                      <span>₹{calculationResult.totalSGST.toFixed(2)}</span>
-                    </div>
-                  </>
+                  <div className="flex justify-between text-gray-600">
+                    <span>GST:</span>
+                    <span>₹{(calculationResult.totalCGST + calculationResult.totalSGST).toFixed(2)}</span>
+                  </div>
                 ) : (
                   <div className="flex justify-between text-gray-600">
                     <span>IGST:</span>
