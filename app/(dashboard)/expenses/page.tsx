@@ -1,5 +1,5 @@
 import { requireAuth } from '@/lib/auth-utils';
-import Link from 'next/link';
+import { OptimisticTabs } from '@/components/OptimisticTabs';
 import { ExpensesList } from './ExpensesList';
 import { ExpenseCategories } from './ExpenseCategories';
 
@@ -22,34 +22,14 @@ export default async function ExpensesHubPage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-theme-border">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          <Link
-            href="/expenses?tab=list"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'list'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Expenses
-          </Link>
-          <Link
-            href="/expenses?tab=categories"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'categories'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Expense Categories
-          </Link>
-        </nav>
-      </div>
+      <OptimisticTabs 
+        basePath="/expenses"
+        defaultTab="list"
+        tabs={[
+          { id: "list", label: "Expenses" },
+          { id: "categories", label: "Expense Categories" }
+        ]}
+      />
 
       {/* Tab Content */}
       <div className="mt-2">

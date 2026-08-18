@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/auth-utils';
-import Link from 'next/link';
+import { OptimisticTabs } from '@/components/OptimisticTabs';
 import { RevenueLedger } from './RevenueLedger';
 import { UnifiedLedger } from './UnifiedLedger';
 
@@ -22,34 +22,14 @@ export default async function FinanceHubPage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-theme-border">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-          <Link
-            href="/finance?tab=revenue"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'revenue'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Revenue Ledger
-          </Link>
-          <Link
-            href="/finance?tab=unified"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'unified'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Unified Ledger
-          </Link>
-        </nav>
-      </div>
+      <OptimisticTabs 
+        basePath="/finance"
+        defaultTab="revenue"
+        tabs={[
+          { id: "revenue", label: "Revenue Ledger" },
+          { id: "unified", label: "Unified Ledger" }
+        ]}
+      />
 
       {/* Tab Content */}
       <div className="mt-2">

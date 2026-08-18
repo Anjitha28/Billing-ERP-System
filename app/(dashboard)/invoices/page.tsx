@@ -2,6 +2,7 @@ import { requireAuth } from '@/lib/auth-utils';
 import Link from 'next/link';
 import { ProformaInvoices } from './ProformaInvoices';
 import { ConfirmedInvoices } from './ConfirmedInvoices';
+import { OptimisticTabs } from '@/components/OptimisticTabs';
 
 export default async function InvoicesHubPage({
   searchParams
@@ -22,46 +23,15 @@ export default async function InvoicesHubPage({
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-theme-border flex overflow-x-auto custom-scrollbar">
-        <nav className="-mb-px flex space-x-8 min-w-max" aria-label="Tabs">
-          <Link
-            href="/invoices?tab=proforma"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'proforma'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Proforma Invoice
-          </Link>
-          <Link
-            href="/invoices?tab=confirmed"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'confirmed'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Confirmed Invoice
-          </Link>
-          <Link
-            href="/invoices?tab=purchase_order"
-            className={`
-              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-              ${activeTab === 'purchase_order'
-                ? 'border-theme-primary text-theme-primary'
-                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
-              }
-            `}
-          >
-            Purchase Order
-          </Link>
-        </nav>
-      </div>
+      <OptimisticTabs 
+        basePath="/invoices"
+        defaultTab="proforma"
+        tabs={[
+          { id: "proforma", label: "Proforma Invoice" },
+          { id: "confirmed", label: "Confirmed Invoice" },
+          { id: "purchase_order", label: "Purchase Order" }
+        ]}
+      />
 
       {/* Tab Content */}
       <div className="mt-6">

@@ -1,0 +1,59 @@
+"use client";
+
+import { useTransition, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+export interface TabOption {
+  id: string;
+  label: string;
+}
+
+export interface OptimisticTabsProps {
+  basePath: string;
+  searchParamName?: string;
+  defaultTab: string;
+  tabs: TabOption[];
+}
+
+export function OptimisticTabs({ basePath, searchParamName = "tab", defaultTab, tabs }: OptimisticTabsProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const serverTab = searchParams.get(searchParamName) || defaultTab;
+  
+  const [isPending, startTransition] = useTransition();
+  const [optimisticTab, setOptimisticTab] = useState<string | null>(null);
+
+  const activeTab = isPending && optimisticTab ? optimisticTab : serverTab;
+
+  const handleTabChange = (tabId: string) => {
+    setOptimisticTab(tabId);
+    startTransition(() => {
+      router.push(`${basePath}?${searchParamName}=${tabId}`);
+    });
+  };
+
+  return (
+    <div className="border-b border-theme-border flex overflow-x-auto custom-scrollbar">
+      <nav className="-mb-px flex space-x-8 min-w-max" aria-label="Tabs">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => handleTabChange(tab.id)}
+            className={`
+              whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 flex items-center gap-2
+              ${activeTab === tab.id
+                ? 'border-theme-primary text-theme-primary'
+                : 'border-transparent text-theme-text-muted hover:text-theme-text hover:border-theme-border'
+              }
+            `}
+          >
+            {tab.label}
+            {isPending && optimisticTab === tab.id && (
+              <div className="w-3 h-3 border-2 border-theme-primary border-t-transparent rounded-full animate-spin"></div>
+            )}
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
