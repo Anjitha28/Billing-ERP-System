@@ -458,7 +458,11 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
             {customerType !== "B2B_EXPORT" && (
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-1">
-                  <label className="text-sm font-semibold text-theme-text uppercase">GST Rate:</label>
+                  <label className="text-sm font-semibold text-theme-text uppercase">
+                    {selectedCustomer?.state && selectedCustomer.state.toLowerCase() !== BUSINESS_LOCATION.state.toLowerCase() 
+                      ? "IGST Rate:" 
+                      : "GST Rate:"}
+                  </label>
                   <div className="flex items-center border border-theme-border rounded-md overflow-hidden bg-theme-surface focus-within:ring-1 focus-within:ring-theme-primary">
                     <input
                       type="number"
