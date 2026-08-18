@@ -48,9 +48,6 @@ export function OptimisticTabs({ basePath, searchParamName = "tab", defaultTab, 
             `}
           >
             {tab.label}
-            {isPending && optimisticTab === tab.id && (
-              <div className="w-3 h-3 border-2 border-theme-primary border-t-transparent rounded-full animate-spin"></div>
-            )}
           </button>
         ))}
       </nav>

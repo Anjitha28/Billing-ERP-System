@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 const navItems = [
@@ -90,6 +90,7 @@ const navItems = [
 
 export function Sidebar({ userRole }: { userRole?: string }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -101,25 +102,36 @@ export function Sidebar({ userRole }: { userRole?: string }) {
     }
   }, []);
 
+  const [isPending, startTransition] = React.useTransition();
+  const [optimisticHref, setOptimisticHref] = useState<string | null>(null);
+
   const toggleSidebar = () => {
     const newState = !isCollapsed;
     setIsCollapsed(newState);
     localStorage.setItem("sidebarCollapsed", String(newState));
   };
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (href: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    
     if (!isCollapsed) {
        setIsCollapsed(true);
        localStorage.setItem("sidebarCollapsed", "true");
     }
+
+    setOptimisticHref(href);
+    startTransition(() => {
+      router.push(href);
+    });
   };
 
   const isItemActive = (href: string) => {
-    if (href === "/dashboard") return pathname === "/dashboard";
-    if (href === "/invoices") return pathname.startsWith("/invoices") || pathname.startsWith("/proforma-invoices");
-    if (href === "/finance") return pathname.startsWith("/finance") || pathname.startsWith("/revenue") || pathname.startsWith("/ledger");
-    if (href === "/expenses") return pathname.startsWith("/expenses") || pathname.startsWith("/expense-categories");
-    return pathname.startsWith(href);
+    const currentHref = isPending && optimisticHref ? optimisticHref : pathname;
+    if (href === "/dashboard") return currentHref === "/dashboard";
+    if (href === "/invoices") return currentHref.startsWith("/invoices") || currentHref.startsWith("/proforma-invoices");
+    if (href === "/finance") return currentHref.startsWith("/finance") || currentHref.startsWith("/revenue") || currentHref.startsWith("/ledger");
+    if (href === "/expenses") return currentHref.startsWith("/expenses") || currentHref.startsWith("/expense-categories");
+    return currentHref.startsWith(href);
   };
 
   const filteredNavItems = navItems.filter((item) => {
@@ -182,7 +194,7 @@ export function Sidebar({ userRole }: { userRole?: string }) {
               <li key={item.name} className="relative group">
                 <Link
                   href={item.href}
-                  onClick={handleLinkClick}
+                  onClick={(e) => handleLinkClick(item.href, e)}
                   className={`flex items-center rounded-lg text-sm font-medium transition-all duration-200 ${
                     isCollapsed ? "justify-center p-3" : "px-3 py-3"
                   } ${
