@@ -22,6 +22,9 @@ export default async function ExpenseDetailPage({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
+      <Link href="/expenses" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark">
+        ← Back to Expenses
+      </Link>
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-theme-surface p-6 rounded-xl shadow-sm border border-theme-border">
         <div>

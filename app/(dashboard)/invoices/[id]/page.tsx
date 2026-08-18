@@ -6,6 +6,7 @@ import { BUSINESS_LOCATION } from "@/lib/config/business";
 import { numberToWords } from "@/lib/utils/number-to-words";
 import { CancelInvoiceButton } from "./CancelInvoiceButton";
 import { PrintButton } from "./PrintButton";
+import Link from "next/link";
 
 export default async function TaxInvoiceDetailPage({
   params,
@@ -44,6 +45,9 @@ export default async function TaxInvoiceDetailPage({
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
+      <Link href="/invoices" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark print:hidden">
+        ← Back to Invoices
+      </Link>
       {/* Header Actions (Hidden in Print) */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border print:hidden">
         <div>

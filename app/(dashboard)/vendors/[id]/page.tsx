@@ -18,6 +18,9 @@ export default async function VendorDetailPage({
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <Link href="/vendors" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark">
+        ← Back to Vendors
+      </Link>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-theme-surface p-6 rounded-xl shadow-sm border border-theme-border">
         <div>
           <div className="flex items-center gap-3">
