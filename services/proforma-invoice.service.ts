@@ -10,6 +10,7 @@ export type CreateProformaInvoiceInput = {
   financialYear: string;
   invoiceDate: string | Date;
   notes?: string | null;
+  isPurchaseOrder?: boolean;
   tdsRate?: number; // kept for legacy overall tds if any
   globalGstRate?: number;
   isGlobalGstEnabled?: boolean;
@@ -144,6 +145,7 @@ export class ProformaInvoiceService {
         financialYear: data.financialYear,
         invoiceDate: new Date(data.invoiceDate),
         notes: data.notes,
+        isPurchaseOrder: data.isPurchaseOrder || false,
         status: "DRAFT",
         
         subtotal: calculationResult.subtotal,
@@ -202,6 +204,7 @@ export class ProformaInvoiceService {
           financialYear: data.financialYear,
           invoiceDate: new Date(data.invoiceDate),
           notes: data.notes,
+          isPurchaseOrder: data.isPurchaseOrder || false,
           
           subtotal: calculationResult.subtotal,
           totalDiscount: calculationResult.totalDiscount,

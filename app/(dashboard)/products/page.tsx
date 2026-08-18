@@ -16,15 +16,15 @@ export default async function ProductsPage() {
   const totalServices = products.filter((p: any) => p.type === "SERVICE").length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-theme-text">Products & Services</h1>
-          <p className="text-theme-text-muted text-sm mt-1">Manage products and services used for billing and invoicing.</p>
+          <p className="text-theme-text-muted mt-1 text-sm">Manage products and services used for billing and invoicing.</p>
         </div>
         <Link
           href="/products/new"
-          className="inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-theme-primary hover:bg-theme-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-primary"
+          className="inline-flex items-center justify-center px-4 py-2 bg-theme-primary hover:bg-theme-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm gap-2"
         >
           <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

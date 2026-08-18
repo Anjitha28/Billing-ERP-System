@@ -154,9 +154,13 @@ export default async function ReportsCenterPage() {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold text-theme-text mb-2">Reports Center</h1>
-      <p className="text-theme-text-muted mb-8">Access detailed operational and financial data through our comprehensive reporting modules.</p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Reports Center</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Access detailed operational and financial data through our comprehensive reporting modules.</p>
+        </div>
+      </div>
 
       <div className="space-y-10">
         {reportCategories.map(group => (

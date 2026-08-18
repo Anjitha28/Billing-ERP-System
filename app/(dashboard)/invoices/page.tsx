@@ -16,10 +16,12 @@ export default async function InvoicesHubPage({
   const activeTab = params.tab || 'proforma';
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-theme-text">Invoices</h1>
-        <p className="text-theme-text-muted mt-1">Manage both draft estimates (Proforma) and finalized Tax Invoices.</p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Invoices</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Manage both draft estimates (Proforma) and finalized Tax Invoices.</p>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -28,25 +30,16 @@ export default async function InvoicesHubPage({
         defaultTab="proforma"
         tabs={[
           { id: "proforma", label: "Proforma Invoice" },
-          { id: "confirmed", label: "Confirmed Invoice" },
-          { id: "purchase_order", label: "Purchase Order" }
+          { id: "confirmed", label: "Confirmed Invoice" }
         ]}
       />
 
       {/* Tab Content */}
-      <div className="mt-6">
+      <div>
         {activeTab === 'proforma' ? (
           <ProformaInvoices />
-        ) : activeTab === 'confirmed' ? (
-          <ConfirmedInvoices searchParams={params as any} />
         ) : (
-          <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-12 text-center">
-            <svg className="w-16 h-16 mx-auto text-theme-text-muted opacity-50 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <h3 className="text-xl font-bold text-theme-text mb-2">Purchase Orders</h3>
-            <p className="text-theme-text-muted">Purchase Order functionality is coming soon.</p>
-          </div>
+          <ConfirmedInvoices searchParams={params as any} />
         )}
       </div>
     </div>

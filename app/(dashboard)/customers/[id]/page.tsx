@@ -22,11 +22,11 @@ export default async function CustomerDetailPage({
   const outstandingBalance = totalRevenue - totalPaid;
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
       <Link href="/customers" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark">
         ← Back to Customers
       </Link>
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-theme-text">{customer.legalName}</h1>
           <div className="flex items-center gap-3 mt-2 text-sm">
@@ -41,16 +41,16 @@ export default async function CustomerDetailPage({
             </span>
           </div>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Link
             href={`/customers/${customer.id}/statement`}
-            className="px-4 py-2 bg-theme-surface-hover border border-blue-200 text-theme-primary-dark rounded-lg text-sm font-medium hover:bg-theme-surface-hover transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 bg-theme-surface hover:bg-theme-surface-hover text-theme-text text-sm font-medium rounded-lg border border-theme-border transition-colors gap-2"
           >
             View Statement
           </Link>
           <Link
             href={`/customers/${customer.id}/edit`}
-            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 bg-theme-surface hover:bg-theme-surface-hover text-theme-text text-sm font-medium rounded-lg border border-theme-border transition-colors gap-2"
           >
             Edit Profile
           </Link>

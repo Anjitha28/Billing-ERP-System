@@ -156,6 +156,18 @@ export function ExpenseForm({
       return;
     }
 
+    // State Validation for Vendors
+    const missingStateVendors = items.filter(i => {
+      if (!i.vendorId) return false;
+      const vendor = vendors.find(v => v.id === i.vendorId);
+      return !vendor?.state || vendor.state.trim() === "";
+    });
+
+    if (missingStateVendors.length > 0) {
+      setError("One or more selected vendors are missing a State. Please update the vendor's profile with a valid State before proceeding. State is required for accurate tax calculation.");
+      return;
+    }
+
     const payload = {
       expenseDate: items[0]?.date || new Date().toISOString().split('T')[0],
       vendorId: items[0]?.vendorId || null,

@@ -52,6 +52,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
   const [invoiceDate, setInvoiceDate] = useState(
     initialData?.invoiceDate ? new Date(initialData.invoiceDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
   );
+  const [isPurchaseOrder, setIsPurchaseOrder] = useState(initialData?.isPurchaseOrder || false);
   const [notes, setNotes] = useState(initialData?.notes || "");
 
   // Global Tax State
@@ -213,6 +214,7 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
         customerType,
         financialYear,
         invoiceDate,
+        isPurchaseOrder,
         notes,
         tdsRate: 0,
         globalGstRate: customerType === "B2B_EXPORT" ? 0 : globalGstRate,
@@ -267,7 +269,18 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       {/* Primary Details */}
       <div className="bg-theme-surface border border-theme-border rounded-xl shadow-sm p-6 grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="md:col-span-4 flex justify-between items-center border-b border-theme-border pb-2 mb-2">
-          <h3 className="text-lg font-semibold text-theme-text">Invoice Details</h3>
+          <div className="flex items-center gap-4">
+            <h3 className="text-lg font-semibold text-theme-text">Invoice Details</h3>
+            <label className="flex items-center gap-2 bg-theme-surface-hover px-3 py-1.5 rounded-lg border border-theme-border cursor-pointer">
+              <input 
+                type="checkbox" 
+                checked={isPurchaseOrder} 
+                onChange={(e) => setIsPurchaseOrder(e.target.checked)}
+                className="w-4 h-4 text-theme-primary focus:ring-theme-primary border-theme-border rounded"
+              />
+              <span className="text-sm font-medium text-theme-text">Purchase Order</span>
+            </label>
+          </div>
           <span className="bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             {initialData?.status || "DRAFT"}
           </span>
@@ -547,7 +560,9 @@ export function ProformaInvoiceForm({ initialData, customers: initialCustomers, 
       {/* Live Preview */}
       <div className="bg-white border border-theme-border rounded-xl shadow-lg p-8 mx-auto w-full text-black">
         <div className="text-center mb-6 pb-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-800">Proforma Invoice Preview</h2>
+          <h2 className="text-2xl font-bold uppercase tracking-wider text-gray-800">
+            {isPurchaseOrder ? "Purchase Order Preview" : "Proforma Invoice Preview"}
+          </h2>
           {customerType === "B2B_EXPORT" && (
             <span className="inline-block mt-2 px-3 py-1 bg-blue-100 text-blue-800 font-bold rounded text-xs uppercase tracking-widest">
               B2B Export

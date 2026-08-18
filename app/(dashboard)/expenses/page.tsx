@@ -15,10 +15,12 @@ export default async function ExpensesHubPage({
   const activeTab = params.tab || 'list';
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-theme-text">Expenses</h1>
-        <p className="text-theme-text-muted mt-1">Manage and track your business expenses and expense categories.</p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Expenses</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Manage and track your business expenses and expense categories.</p>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -32,7 +34,7 @@ export default async function ExpensesHubPage({
       />
 
       {/* Tab Content */}
-      <div className="mt-2">
+      <div>
         {activeTab === 'list' ? (
           <ExpensesList searchParams={params as any} />
         ) : (

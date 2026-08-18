@@ -14,7 +14,7 @@ export default async function VendorsPage({
   const vendors = await VendorService.getVendors({ search: query, isActive: isActiveFilter });
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-theme-text">Vendors</h1>
@@ -22,7 +22,7 @@ export default async function VendorsPage({
         </div>
         <Link 
           href="/vendors/new" 
-          className="px-4 py-2 bg-theme-primary text-white rounded-lg text-sm font-medium hover:bg-theme-primary-dark transition-colors"
+          className="inline-flex items-center justify-center px-4 py-2 bg-theme-primary hover:bg-theme-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm gap-2"
         >
           Add Vendor
         </Link>

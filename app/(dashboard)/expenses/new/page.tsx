@@ -11,10 +11,12 @@ export default async function NewExpensePage() {
   ]);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-theme-text">Record New Expense</h1>
-        <p className="text-theme-text-muted text-sm mt-1">Create a new draft expense record.</p>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Record New Expense</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Create a new draft expense record.</p>
+        </div>
       </div>
 
       <ExpenseForm vendors={vendors} categories={categories} products={products} />

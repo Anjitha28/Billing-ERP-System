@@ -45,12 +45,12 @@ export default async function ProformaInvoiceDetailPage({
   })));
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 pb-20 print:p-0 print:space-y-0">
       <Link href="/invoices?tab=proforma" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark print:hidden">
         ← Back to Invoices
       </Link>
       {/* Header Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border print:hidden">
         <div>
           <h1 className="text-xl font-bold text-theme-text">{invoice.invoiceNumber}</h1>
           <p className="text-theme-text-muted text-sm">Created on {new Date(invoice.createdAt).toLocaleDateString()}</p>
@@ -59,13 +59,13 @@ export default async function ProformaInvoiceDetailPage({
           {invoice.status === "DRAFT" && (
             <Link
               href={`/proforma-invoices/${invoice.id}/edit`}
-              className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors"
+              className="inline-flex items-center justify-center px-4 py-2 bg-theme-surface hover:bg-theme-surface-hover text-theme-text text-sm font-medium rounded-lg border border-theme-border transition-colors gap-2"
             >
               Edit Draft
             </Link>
           )}
           <button
-            className="px-4 py-2 bg-theme-surface border border-theme-border rounded-lg text-sm font-medium text-theme-text hover:bg-theme-surface-hover transition-colors flex items-center gap-2"
+            className="inline-flex items-center justify-center px-4 py-2 bg-theme-surface hover:bg-theme-surface-hover text-theme-text text-sm font-medium rounded-lg border border-theme-border transition-colors gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
             Print
@@ -84,7 +84,9 @@ export default async function ProformaInvoiceDetailPage({
         {/* Invoice Header */}
         <div className="p-8 border-b border-theme-border flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
-            <h2 className="text-3xl font-bold text-theme-text tracking-tight">PROFORMA INVOICE</h2>
+            <h2 className="text-3xl font-bold text-theme-text tracking-tight">
+              {invoice.isPurchaseOrder ? "PURCHASE ORDER" : "PROFORMA INVOICE"}
+            </h2>
             <p className="text-theme-text-muted mt-1 font-medium">NOT A TAX INVOICE</p>
             
             <div className="mt-8 space-y-1 text-sm text-theme-text-muted">
@@ -263,7 +265,7 @@ export default async function ProformaInvoiceDetailPage({
 
         {/* Footer */}
         <div className="p-8 border-t border-theme-border text-center text-xs text-theme-text-muted">
-          This is a computer generated proforma invoice and does not require a signature.
+          This is a computer generated {invoice.isPurchaseOrder ? "purchase order" : "proforma invoice"} and does not require a signature.
         </div>
       </div>
     </div>

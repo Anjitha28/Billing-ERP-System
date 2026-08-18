@@ -35,11 +35,14 @@ export default async function ProfitLossPage({
   ]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto print:p-0">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 no-print">
-        <h1 className="text-2xl font-bold text-theme-text">Profit & Loss</h1>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 print:p-0 print:space-y-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Profit & Loss</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Detailed financial statement and performance overview.</p>
+        </div>
         
-        <div className="mt-4 md:mt-0 flex flex-wrap gap-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center">
           <form className="flex flex-wrap gap-3">
             <input
               type="date"
@@ -74,14 +77,14 @@ export default async function ProfitLossPage({
         </div>
       </div>
 
-      <div className="hidden print:block mb-8">
+      <div className="hidden print:block">
         <h1 className="text-3xl font-bold text-center mb-2">PROFIT & LOSS STATEMENT</h1>
         <p className="text-center text-theme-text-muted">
           Period: {fromFilter ? new Date(fromFilter).toLocaleDateString() : 'Start'} to {toFilter ? new Date(toFilter).toLocaleDateString() : 'Present'}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-theme-surface rounded-lg shadow p-6 border-t-4 border-green-500 print:shadow-none print:border print:border-theme-border">
           <h3 className="text-sm font-medium text-theme-text-muted uppercase">Total Revenue</h3>
           <p className="mt-2 text-2xl font-bold text-theme-text">{formatCurrency(kpis.totalRevenue)}</p>
@@ -102,7 +105,7 @@ export default async function ProfitLossPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 no-print">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 no-print">
         <div className="bg-theme-surface p-6 rounded-lg shadow border border-theme-border">
           <h3 className="text-lg font-semibold mb-4">Revenue vs Expenses</h3>
           <RevenueVsExpenseChart data={trends} />
@@ -113,7 +116,7 @@ export default async function ProfitLossPage({
         </div>
       </div>
 
-      <div className="bg-theme-surface rounded-lg shadow border border-theme-border overflow-hidden mb-8 print:shadow-none print:border-0">
+      <div className="bg-theme-surface rounded-lg shadow border border-theme-border overflow-hidden print:shadow-none print:border-0">
         <div className="p-4 border-b border-theme-border bg-theme-surface-hover print:bg-theme-surface print:border-b-2 print:border-theme-border">
           <h3 className="text-lg font-bold text-theme-text uppercase">Formal Profit & Loss Statement</h3>
         </div>
@@ -166,7 +169,7 @@ export default async function ProfitLossPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 no-print">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 no-print">
         <div className="bg-theme-surface p-6 rounded-lg shadow border border-theme-border">
           <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
           <ExpenseCategoryChart data={expenseCategories} />

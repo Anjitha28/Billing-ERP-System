@@ -26,15 +26,15 @@ export default async function CustomersPage({
   });
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-theme-text">Customers</h1>
-          <p className="text-theme-text-muted text-sm mt-1">Manage your B2B and B2C clients.</p>
+          <p className="text-theme-text-muted mt-1 text-sm">Manage your B2B and B2C clients.</p>
         </div>
         <Link 
           href="/customers/new" 
-          className="bg-theme-primary hover:bg-theme-primary-dark text-white px-4 py-2 rounded-lg font-medium transition-colors"
+          className="inline-flex items-center justify-center px-4 py-2 bg-theme-primary hover:bg-theme-primary-dark text-white text-sm font-medium rounded-lg transition-colors shadow-sm gap-2"
         >
           + New Customer
         </Link>

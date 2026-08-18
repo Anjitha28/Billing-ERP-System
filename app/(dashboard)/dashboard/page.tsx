@@ -40,12 +40,15 @@ export default async function DashboardPage({
   ]);
 
   return (
-    <div className="p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 className="text-2xl font-bold text-theme-text">Profit & Loss Dashboard</h1>
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-theme-text">Profit & Loss Dashboard</h1>
+          <p className="text-theme-text-muted mt-1 text-sm">Overview of financial performance.</p>
+        </div>
         
         {/* Date Filter */}
-        <form className="mt-4 md:mt-0 flex flex-wrap gap-3">
+        <form className="flex flex-wrap items-center gap-3">
           <input
             type="date"
             name="from"
@@ -79,7 +82,7 @@ export default async function DashboardPage({
 
       {/* Financial Insights */}
       {insights.length > 0 && (
-        <div className="bg-theme-surface-hover border-l-4 border-theme-primary p-4 mb-8 rounded-r-lg">
+        <div className="bg-theme-surface-hover border-l-4 border-theme-primary p-4 rounded-r-lg">
           <div className="flex">
             <div className="flex-shrink-0">
               <svg className="h-5 w-5 text-blue-700" viewBox="0 0 20 20" fill="currentColor">
@@ -101,7 +104,7 @@ export default async function DashboardPage({
       )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-theme-surface rounded-lg shadow p-6 border-l-4 border-green-500">
           <h3 className="text-sm font-medium text-theme-text-muted uppercase">Total Revenue</h3>
           <p className="mt-2 text-2xl font-bold text-theme-text">{formatCurrency(kpis.totalRevenue)}</p>
@@ -123,7 +126,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Secondary KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-theme-surface rounded-lg shadow p-6 border-l-4 border-orange-400">
           <h3 className="text-sm font-medium text-theme-text-muted uppercase">Outstanding Receivables</h3>
           <p className="mt-2 text-2xl font-bold text-theme-text">{formatCurrency(kpis.outstandingReceivables)}</p>
@@ -137,7 +140,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Charts Row 1 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-theme-surface p-6 rounded-lg shadow border border-theme-border">
           <h3 className="text-lg font-semibold mb-4">Revenue vs Expenses</h3>
           <RevenueVsExpenseChart data={trends} />
@@ -149,7 +152,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Charts Row 2 */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-theme-surface p-6 rounded-lg shadow border border-theme-border">
           <h3 className="text-lg font-semibold mb-4">Expenses by Category</h3>
           <ExpenseCategoryChart data={expenseCategories} />
@@ -177,7 +180,7 @@ export default async function DashboardPage({
       </div>
 
       {/* Tables Row */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <div className="bg-theme-surface rounded-lg shadow border border-theme-border overflow-hidden">
           <div className="p-4 border-b border-theme-border bg-theme-surface-hover">
             <h3 className="text-lg font-semibold text-theme-text">Monthly Financial Table</h3>

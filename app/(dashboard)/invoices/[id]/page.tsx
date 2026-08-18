@@ -44,12 +44,12 @@ export default async function TaxInvoiceDetailPage({
   })));
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8 pb-20 print:p-0 print:space-y-0">
       <Link href="/invoices" className="mb-2 inline-flex items-center text-sm font-medium text-theme-primary hover:text-theme-primary-dark print:hidden">
         ← Back to Invoices
       </Link>
       {/* Header Actions (Hidden in Print) */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border print:hidden">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-theme-surface p-4 rounded-xl shadow-sm border border-theme-border print:hidden">
         <div>
           <h1 className="text-xl font-bold text-theme-text">{invoice.invoiceNumber}</h1>
           <p className="text-theme-text-muted text-sm">Confirmed on {new Date(invoice.createdAt).toLocaleDateString()}</p>
